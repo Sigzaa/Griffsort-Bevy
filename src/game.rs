@@ -8,14 +8,12 @@ mod player_logic;
 mod rapier;
 mod networking;
 pub mod components;
-
 mod ui;
 
 pub struct Game;
 impl Plugin for Game {
     fn build(&self, app: &mut App) {
         app
-            
             .add_startup_system(say_hi)
             //.add_startup_system(rapier::rapier_entry)
             .add_plugin(ui::Ui)
@@ -25,14 +23,10 @@ impl Plugin for Game {
             .add_plugin(PhysicsPlugin::default())
             .add_plugin(player_logic::Logic)
             .add_plugin(networking::Networking)
-            
-            
             //.add_plugin(characters::soul::Soul)
             ;
     }
 }
-
-
 fn say_hi(){
     println!("Moba is online");
 }
