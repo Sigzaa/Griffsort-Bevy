@@ -5,8 +5,8 @@ use bootleg_networking::*;
 use std::env;
 use std::sync::Arc;
 use std::io::{self, BufRead};   
-
-const MESSAGE_CHANNEL_ID: MessageChannelID = MessageChannelID::new(0);
+//use super::MESSAGE_CHANNEL_ID;
+/*
 const MESSAGE_SETTINGS: MessageChannelSettings = MessageChannelSettings {
     channel: MESSAGE_CHANNEL_ID.id,
     channel_mode: MessageChannelMode::Unreliable,
@@ -65,8 +65,8 @@ pub fn receive(
             .collect();
             
             
-            
-            //println!("input: {:?}", message);
+            //println!("net: {:?}", net);
+            println!("input: {:?}", message);
 
             for (mut ctrl, id, mut transform, ent) in
                 q_cores.iter_mut()
@@ -74,11 +74,11 @@ pub fn receive(
                 if id.0 == input[0] as i32{
                 let input_translation = Vec3::new(input[1], input[2], input[3]);
                 let diff = input_translation - transform.translation;
-                println!("diff: {}", &diff);
+                //println!("diff: {}", &diff);
                 let max = diff.min_element().abs().max(diff.max_element());
                     if max > 0.3{
                         if flag {
-                            println!("back-roll");
+                            //println!("back-roll");
                             flag = false;
                         }
                         transform.translation[0] = input[1];
@@ -105,3 +105,4 @@ fn boo(num: f32) -> bool{
         true
     }
 }
+*/

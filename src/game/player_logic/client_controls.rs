@@ -8,9 +8,6 @@ pub fn client_moving(
     
 
 ) {
-        
-    
-
     for mut ctrl in q_selected.iter_mut() {
         if buttons.pressed(MouseButton::Left) {
             ctrl.lmb = true;

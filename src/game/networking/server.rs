@@ -2,10 +2,8 @@ use crate::game::components::{filters::*, player_states::*, *};
 use bevy::prelude::*;
 use bootleg_networking::*;
 use std::env;
- 
-
-const MESSAGE_CHANNEL_ID: MessageChannelID = MessageChannelID::new(0);
-
+//use super::MESSAGE_CHANNEL_ID;
+/*
 pub fn send(
     mut net: ResMut<NetworkResource>,
     mut q_cores: Query<(&Control, &Id, &Transform), (With<Core>, Without<ThreeDCam>)>,
@@ -82,4 +80,4 @@ fn boo(num: f32) -> bool{
     } else {
         true
     }
-}
+}*/

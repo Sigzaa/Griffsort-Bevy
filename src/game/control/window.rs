@@ -1,10 +1,10 @@
 use bevy::prelude::*;
+use crate::game::components::*;
 
 pub(crate) fn window_control(
     input: Res<Input<KeyCode>>,
 
 ) {
-
     if input.pressed(KeyCode::Delete) {
         std::process::exit(0);
     }
@@ -13,6 +13,7 @@ pub fn cursor_grab_system(
     mut windows: ResMut<Windows>,
     btn: Res<Input<MouseButton>>,
     key: Res<Input<KeyCode>>,
+    
 ) {
     let window = windows.get_primary_mut().unwrap();
 

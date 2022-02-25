@@ -18,6 +18,12 @@ use bevy::prelude::*;
 
 // Resources -->
 #[derive(Default)]
+pub struct MyAddr(pub i32);
+#[derive(Default)]
+pub struct MyPort(pub i32);
+#[derive(Default)]
+pub struct Connected(pub Vec<String>);
+#[derive(Default)]
 pub struct BindedId(pub i32);
 #[derive(Default)]
 pub struct GrabbedCursor(pub bool);

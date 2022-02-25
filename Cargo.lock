@@ -718,6 +718,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "bevy_simple_networking"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "72bdedb4f0b48933482bea27c763afce7bce38f8b86475004fff4e126f92298e"
+dependencies = [
+ "bevy",
+ "bytes",
+]
+
+[[package]]
 name = "bevy_sprite"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2483,6 +2493,7 @@ version = "0.1.0"
 dependencies = [
  "bevy",
  "bevy_egui",
+ "bevy_simple_networking",
  "bootleg_networking",
  "heron",
 ]
