@@ -4,6 +4,16 @@
 pub const SENSITIVITY: f32 = 0.0019;
 pub const RESPAWNGAP: f32 = 9.;
 // <--
+pub static MODE: &'static str = "client";
+pub static mut ADDRESS: &'static str = "171.0.1.1:4567";
+
+use serde::{Serialize, Deserialize};
+#[derive(Deserialize)]
+pub struct Data {
+    mode: String,
+    addres: String,
+    password: String,
+}
 
 // Events structs -->
 pub struct BindControls(pub i32);
@@ -19,11 +29,15 @@ use bevy::prelude::*;
 // Resources -->
 #[derive(Default)]
 pub struct MyAddr(pub i32);
-#[derive(Default)]
-pub struct MyPort(pub i32);
-#[derive(Default)]
-pub struct Connected(pub Vec<String>);
-#[derive(Default)]
+//pub struct ConnectedList(pub Vec<std::net::SocketAddr>);
+pub enum Addr{
+    Server,
+    My
+}
+pub struct Config{
+    pub mode: String,
+    pub address: String,
+}
 pub struct BindedId(pub i32);
 #[derive(Default)]
 pub struct GrabbedCursor(pub bool);
@@ -79,7 +93,7 @@ pub mod filters{
 // <--
 
 // Information about players in Bevy entities -->
-pub mod player_states {
+pub mod player_data {
     use bevy::prelude::*;
     #[derive(Bundle, Component)]
     pub struct States{
@@ -145,6 +159,8 @@ pub mod player_states {
     }
     #[derive(Component)]
     pub struct Id(pub i32);
+    #[derive(Component)]
+    pub struct HeadRotation(pub Quat); // Uses for defining head rotation.
     #[derive(Component)]
     pub struct CharName(pub &'static str);
     #[derive(Component)]

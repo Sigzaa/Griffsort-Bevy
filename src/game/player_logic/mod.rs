@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use crate::game::components::{
-     filters::*, player_states::*, *};
+     filters::*, player_data::*, *};
 mod physics;
 mod shooting;
 mod client_controls;
@@ -11,7 +11,7 @@ impl Plugin for Logic {
         app
             
             .add_plugin(shooting::Shooting)
-            .add_system(client_controls::client_moving)
+            .add_system(client_controls::client_events)
             .add_system(physics::head_movement_system)
             .add_system(physics::gravity)
             .add_system(physics::movement)

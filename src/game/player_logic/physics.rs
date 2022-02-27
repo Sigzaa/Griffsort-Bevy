@@ -1,10 +1,12 @@
-use crate::game::components::{filters::*, player_states::*, *};
+use crate::game::components::{filters::*, player_data::*, *};
 use bevy::{input::mouse::MouseMotion, prelude::*};
-
+use std::env;
 pub fn gravity(
     time: Res<Time>,
     mut player: Query<(&mut Transform, &mut VerticalVelocity), With<Core>>,
 ) {
+    let args: Vec<String> = env::args().collect();
+    if &args[1] != "server" { return; }
     for (mut transform, mut velocity) in player.iter_mut() {
         let height = transform.translation[1];
         if velocity.0 > 0. || height > 0.5 {
@@ -36,6 +38,8 @@ pub fn movement(
     mut q_camera: Query<&mut Transform, With<ThreeDCam>>,
     mut motion_evr: EventReader<MouseMotion>,
 ) {
+    let args: Vec<String> = env::args().collect();
+    if &args[1] != "server" { return; }
     let mut camera = q_camera.single_mut();
     for (mut transform, mut velocity, jump_value, hor_velocity, mut ctrl, selected) in
         q_cores.iter_mut()
@@ -68,7 +72,7 @@ pub fn movement(
         if ctrl.jump && velocity.0 == 0. {
             velocity.0 = jump_value.0;
         }
-        if let Some(_selected) = selected { // For minimisation mouse latency it reads mouse event directly from input ev.
+        /*if let Some(_selected) = selected { // For minimisation mouse latency it reads mouse event directly from input ev.
             ctrl.delta_x = 0.;
             ctrl.delta_y = 0.;
             for ev in motion_evr.iter() {
@@ -80,25 +84,31 @@ pub fn movement(
             }
         } else {
             //println!("{},{}", ctrl.delta_x, ctrl.delta_y);
-            //transform.rotation *= Quat::from_rotation_y(ctrl.delta_x * SENSITIVITY * 5.);
+            
             //camera.rotation *= Quat::from_rotation_x(ctrl.delta_y * SENSITIVITY);
         }
+        */
+        //transform.rotation *= Quat::from_rotation_y(ctrl.delta_x * SENSITIVITY * 5.);
+        ctrl.delta_x = 0.;
+        ctrl.delta_y = 0.;
         transform.translation += time.delta_seconds() * coef * direction;
     }
 }
 
 pub fn head_movement_system(
     mut motion_evr: EventReader<MouseMotion>,
-    q_parent: Query<(&mut Transform, &Control, &Children), (With<Core>, Without<CustomHeadMovement>)>,
+    q_parent: Query<(&mut Transform, &Control, &HeadRotation, &Children), (With<Core>, Without<CustomHeadMovement>)>,
     mut q_child: Query<&mut Transform, Without<Core>>,
 ) {
-    for (_transform, ctrl, children) in q_parent.iter() {
+    let args: Vec<String> = env::args().collect();
+    //if &args[1] != "server" { return; }
+    for (_transform, ctrl, head_rotation, children) in q_parent.iter() {
         for &child in children.iter() {
             
                 let mut transform = q_child.get_mut(child).unwrap();
-                if ctrl.delta_y != 0.{
-                    transform.rotation *= Quat::from_rotation_x(ctrl.delta_y * SENSITIVITY * 4.);
-                }
+
+                transform.rotation = head_rotation.0;
+                
             
         }
     }

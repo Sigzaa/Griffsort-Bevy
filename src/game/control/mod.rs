@@ -11,6 +11,7 @@ pub struct Control;
 impl Plugin for Control {
     fn build(&self, app: &mut App) {
         app 
+            .insert_resource(GrabbedCursor(false))
             .add_startup_system(say_hi)
             .add_event::<BindControls>()
             .add_system(window::window_control)

@@ -1,6 +1,6 @@
 
 use bevy::prelude::*;
-use crate::game::components::{*, filters::*, player_states::* };
+use crate::game::components::{*, filters::*, player_data::* };
 
 
 pub fn control_bind( // Binds camera and <Selected>  according to BindedId resource.

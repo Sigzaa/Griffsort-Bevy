@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 mod simple_client;
 mod simple_server;
-
+pub mod bevy_simple_networking;
 pub struct Networking;
 impl Plugin for Networking {
     fn build(&self, app: &mut App) {
@@ -11,3 +11,4 @@ impl Plugin for Networking {
             .run();
     }
 }
+

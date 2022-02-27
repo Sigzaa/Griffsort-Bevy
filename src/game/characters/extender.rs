@@ -1,6 +1,6 @@
 // This module represents master for all <Core> entities.
 // Any changes may brake entire game. Be careful.
-use crate::game::components::{*, player_states::*, filters::*};
+use crate::game::components::{*, player_data::*, filters::*};
 use bevy::{ prelude::*};
 use heron::prelude::*;
 
@@ -29,6 +29,7 @@ pub fn extend(
             .insert(RigidBody::Dynamic)
             .insert(RotationConstraints::lock())
             .insert(Extended)
+            .insert(HeadRotation(Quat::from_rotation_y(0.)))
             .id();
 
         let head = commands

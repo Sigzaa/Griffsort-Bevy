@@ -1,6 +1,6 @@
 use bevy::{ prelude::*};
 use heron::prelude::*;
-use crate::game::components::{bullet_states::*, filters::*, player_states::*, *};
+use crate::game::components::{bullet_states::*, filters::*, player_data::*, *};
 pub struct Shooting;
 impl Plugin for Shooting {
     fn build(&self, app: &mut App) {
