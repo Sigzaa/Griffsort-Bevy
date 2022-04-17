@@ -7,7 +7,7 @@ mod connection_handler;
 mod tick;
 use tick::*;
 use super::a_list::AList;
-use super::bevy_simple_networking::{ ServerPlugin };
+use bevy_simple_networking::{ ServerPlugin };
 use bevy_rapier3d::{physics::*, prelude::*};
 use crate::game::networking::additional::*;
 

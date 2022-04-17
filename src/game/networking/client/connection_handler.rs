@@ -1,4 +1,4 @@
-use super::super::bevy_simple_networking::NetworkEvent;
+use bevy_simple_networking::NetworkEvent;
 use super::components::*;
 use crate::game::components::{filters::*, player_data::*, *};
 use crate::game::networking::additional::*;

@@ -1,6 +1,5 @@
 use bevy::{math::*, prelude::*};
 pub mod a_list;
-pub mod bevy_simple_networking;
 pub mod additional;
 use bevy_rapier3d::{prelude::*, physics::TimestepMode};
 

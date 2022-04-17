@@ -605,6 +605,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "bevy_simple_networking"
+version = "0.3.0"
+source = "git+https://github.com/ggaast/bevy_simple_networking#8793de65d1fbb65ac2a88f27e11b65d3077b9f36"
+dependencies = [
+ "bevy",
+ "bytes",
+]
+
+[[package]]
 name = "bevy_sprite"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2062,6 +2071,7 @@ dependencies = [
  "bevy",
  "bevy_egui",
  "bevy_rapier3d",
+ "bevy_simple_networking",
  "bytes",
  "priority-queue",
  "rapier3d",

@@ -1,4 +1,4 @@
-use super::super::bevy_simple_networking::Transport;
+use bevy_simple_networking::Transport;
 use super::components::*;
 use crate::game::components::{filters::*, player_data::*, *};
 use bevy_rapier3d::prelude::*;
