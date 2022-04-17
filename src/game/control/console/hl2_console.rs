@@ -138,7 +138,7 @@ fn console_system(
                 config.top_pos + config.height,
             ),
         ))
-        .show(egui_context.ctx_mut(), |ui| {
+        .show(egui_context.ctx(), |ui| {
             ui.set_min_height(config.height);
             ui.set_min_width(config.width);
             ScrollArea::vertical()
@@ -150,7 +150,7 @@ fn console_system(
                             ui.label(line);
                         }
                     });
-                    ui.scroll_to_cursor(Some(Align::BOTTOM));
+                    ui.scroll_to_cursor(Align::BOTTOM);
                 });
 
             ui.separator();

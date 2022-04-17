@@ -7,8 +7,8 @@ edition = "2021"
 
 [dependencies]
 bevy = { version = "0.6.0", features = [ "trace"]}
-bevy_rapier3d = { path = "./bevy_rapier/bevy_rapier3d", features = [ "enhanced-determinism", "render" ] }
-bevy_egui = "0"
+bevy_rapier3d = { git = "https://github.com/ggaast/bevy_rapier.git", features = [ "enhanced-determinism", "render" ] }
+bevy_egui = "0.10"
 rapier3d = { version = "^0.12.0-alpha.0", default-features = false, features = [ "dim3", "f32" ] }
 
 bytes = "1"
