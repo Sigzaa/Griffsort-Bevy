@@ -7,14 +7,23 @@ mod game;
 
 //use crate::bevy_console::*;
 fn main() {
+
+    let args: Vec<String> = env::args().collect();
+    let sync = 
+        if &args[1] != "client" {
+            true
+        } else {
+            false
+        };
+
     App::new()
     //
     .add_startup_system(main_setup)
     .insert_resource(WindowDescriptor {
         title: "Moba".to_string(),
-        width: 920.,
-        height: 700.,
-        vsync: false,
+        width: 720.,
+        height: 500.,
+        vsync: false, 
         //mode: bevy::window::WindowMode::Fullscreen,
         ..Default::default()
     })

@@ -1,6 +1,5 @@
 use bevy::prelude::{*, };
 use crate::game::components::{*, filters::*, player_data::*};
-use heron::prelude::*;
 #[derive(Component)]
 pub struct Wall;
 
@@ -13,10 +12,7 @@ pub fn large_shield(
     mut materials: ResMut<super::Assets<StandardMaterial>>,
     time: Res<Time>,
 ){  
-    
-    
     for (transform, ctrl, mut timer, team) in q_core.iter_mut(){
-        
         if ctrl.q && timer.0 <= 0.{
             for entity in q_wall.iter_mut(){
                 commands.entity(entity).despawn();
@@ -47,7 +43,7 @@ pub fn large_shield(
             .insert(Counter(0.))
             .insert(Wall)
             .insert_bundle((
-                CollisionShape::Cuboid { half_extends: Vec3::new(4.0,2.5,0.2) , border_radius: None}, // <-- A physics collision shape
+                //CollisionShape::Cuboid { half_extends: Vec3::new(4.0,2.5,0.2) , border_radius: None}, // <-- A physics collision shape
                 Transform {
                     translation: transform.translation,
                     rotation: transform.rotation,
@@ -60,10 +56,10 @@ pub fn large_shield(
                 },
             ))
             //.insert(CollisionShape::Cuboid { half_extends: Vec3::new(8.0,3.5,0.4) , border_radius: None})
-            .insert(RigidBody::Sensor)
+            //.insert(RigidBody::Sensor)
             ;      
         } else if timer.0 > 0. {
-            println!("q could: {}", timer.0);
+            //println!("q could: {}", timer.0);
             timer.0 -= time.delta_seconds();
         }
     }

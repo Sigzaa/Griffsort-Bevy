@@ -7,6 +7,7 @@ pub fn gravity(
 ) {
     let args: Vec<String> = env::args().collect();
     if &args[1] != "server" { return; }
+    return;
     for (mut transform, mut velocity) in player.iter_mut() {
         let height = transform.translation[1];
         if velocity.0 > 0. || height > 0.5 {
@@ -39,7 +40,8 @@ pub fn movement(
     mut motion_evr: EventReader<MouseMotion>,
 ) {
     let args: Vec<String> = env::args().collect();
-    if &args[1] != "server" { return; }
+    if &args[1] != "server" || true { return; }
+    return;
     let mut camera = q_camera.single_mut();
     for (mut transform, mut velocity, jump_value, hor_velocity, mut ctrl, selected) in
         q_cores.iter_mut()

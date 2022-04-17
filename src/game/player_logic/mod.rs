@@ -2,19 +2,19 @@ use bevy::prelude::*;
 use crate::game::components::{
      filters::*, player_data::*, *};
 mod physics;
-mod shooting;
-mod client_controls;
+pub mod shooting;
+pub mod client_controls;
 
 pub struct Logic;
 impl Plugin for Logic {
     fn build(&self, app: &mut App) {
         app
-            
+            //.add_system(client_controls::smooth_camera)
             .add_plugin(shooting::Shooting)
-            .add_system(client_controls::client_events)
+            //.add_system(client_controls::collect_inputs_sys)
             .add_system(physics::head_movement_system)
-            .add_system(physics::gravity)
-            .add_system(physics::movement)
+            //.add_system(physics::gravity)
+            //.add_system(physics::movement)
             .add_system(respawn_system)
             .add_system(death_system)
             //.add_system(client_controls::client_shoot)
