@@ -1,4 +1,4 @@
-use super::bevy_simple_networking::ClientPlugin;
+use bevy_simple_networking::ClientPlugin;
 use priority_queue::PriorityQueue;
 use crate::game::components::{filters::*, player_data::*, *};
 use bevy::{core::FixedTimestep, ecs::schedule::ShouldRun, input::mouse::MouseMotion, prelude::*};
