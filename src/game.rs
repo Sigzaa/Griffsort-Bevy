@@ -1,5 +1,5 @@
 use bevy::{ prelude::* };
-use heron::prelude::*;
+
 use control::Control;
 use characters::Characters;
 mod control;
@@ -20,7 +20,6 @@ impl Plugin for Game {
             .add_plugin(Control)
             .add_plugin(Characters)
             //.insert_resource(Gravity::from(Vec3::new(0.0, -9.81, 0.0)))
-            .add_plugin(PhysicsPlugin::default())
             .add_plugin(player_logic::Logic)
             .add_plugin(networking::Networking)
             //.add_plugin(characters::soul::Soul)
@@ -30,3 +29,4 @@ impl Plugin for Game {
 fn say_hi(){
     println!("Moba is online");
 }
+

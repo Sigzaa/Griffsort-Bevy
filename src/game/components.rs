@@ -1,14 +1,20 @@
 //This file is a place, where you can put bevy components, events etc.
 
 // Constants -->
-pub const SENSITIVITY: f32 = 0.0019;
+pub const SENSITIVITY: f32 = 0.002;
 pub const RESPAWNGAP: f32 = 9.;
+pub const TICKRATE: f64 = 1. / 100.;
+pub const SPEED: f32 = 300. * TICKRATE as f32;
 // <--
+pub static MODE: &'static str = "client";
+pub static mut ADDRESS: &'static str = "171.0.1.1:4567";
+
+
 
 // Events structs -->
 pub struct BindControls(pub i32);
-pub struct SpawnCharacter( pub &'static str , pub i32, pub i32 ); // Character name/code, player_id, team.
-pub struct ExtendCharacter( pub bevy::prelude::Entity, pub i32, pub i32); // Entity of existing, player_id, team.
+pub struct SpawnCharacter(pub &'static str, pub i32, pub i32); // Character name/code, player_id, team.
+pub struct ExtendCharacter(pub bevy::prelude::Entity, pub i32, pub i32); // Entity of existing, player_id, team.
 pub struct _DespawnCharacter(pub i16 /* id */);
 // Movement events -->
 pub struct Forward(pub bool);
@@ -18,6 +24,17 @@ use bevy::prelude::*;
 
 // Resources -->
 #[derive(Default)]
+pub struct MyAddr(pub i32);
+
+//pub struct ConnectedList(pub Vec<std::net::SocketAddr>);
+pub enum Addr {
+    Server,
+    My,
+}
+pub struct Config {
+    pub mode: String,
+    pub address: String,
+}
 pub struct BindedId(pub i32);
 #[derive(Default)]
 pub struct GrabbedCursor(pub bool);
@@ -25,7 +42,7 @@ pub struct GrabbedCursor(pub bool);
 pub struct LetMePlay(pub bool); // If true - player can contol character.
 #[derive(Default)]
 pub struct GameMode(pub i8); // 0 - std, 1 - partial spectator (for died players), 2 - spectator, 3 - invincible.
-// <--
+                             // <--
 
 // Timers and counters -->
 #[derive(Component)]
@@ -33,16 +50,18 @@ pub struct Timer1(pub f32);
 #[derive(Component)]
 pub struct Timer2(pub f32, pub f32);
 #[derive(Component)]
-pub struct Timer3(pub f32,pub f32,pub f32);
+pub struct Timer3(pub f32, pub f32, pub f32);
 #[derive(Component)]
 pub struct Counter(pub f32);
 // <--
 
 // Bevy Filters -->
-pub mod filters{
+pub mod filters {
     use bevy::prelude::*;
     #[derive(Component)]
     pub struct CustomGravity;
+    #[derive(Component)]
+    pub struct Reconcile;
     #[derive(Component)]
     pub struct CustomHeadMovement;
     #[derive(Component)]
@@ -62,7 +81,9 @@ pub mod filters{
     #[derive(Component)]
     pub struct Selected;
     #[derive(Component)]
-    pub struct Killed { pub timer: f32 }
+    pub struct Killed {
+        pub timer: f32,
+    }
     #[derive(Component)]
     pub struct FpsText;
     #[derive(Component)]
@@ -73,10 +94,18 @@ pub mod filters{
 // <--
 
 // Information about players in Bevy entities -->
-pub mod player_states {
+pub mod player_data {
     use bevy::prelude::*;
+
+    #[derive(Component)]
+    pub struct Vel_n_Rot {
+        pub velocity: Vec3,
+        pub rotation: Vec4,
+
+    }
+
     #[derive(Bundle, Component)]
-    pub struct States{
+    pub struct States {
         pub character_name: CharName,
         pub id: Id,
         pub team: Team,
@@ -86,6 +115,7 @@ pub mod player_states {
         pub vert_vel: VerticalVelocity,
         pub hor_vel: Speed,
         pub weight: Weight,
+
     }
     impl Default for States {
         fn default() -> Self {
@@ -94,16 +124,18 @@ pub mod player_states {
                 team: Team(0),
                 hp: Hp(500),
                 max_hp: MaxHp(500),
-                hor_vel: Speed(10.),
+                hor_vel: Speed(100.),
                 jump_value: JumpValue(15.),
                 id: Id(118),
                 vert_vel: VerticalVelocity(0.),
-                weight: Weight(20.)
+                weight: Weight(20.),
+
             }
         }
     }
-    #[derive(Component, Debug)]
-    pub struct Control{ // Events
+    #[derive(Component, Debug, Copy, Clone)]
+    pub struct Control {
+        // Events
         pub delta_x: f32,
         pub delta_y: f32,
         pub jump: bool,
@@ -117,6 +149,8 @@ pub mod player_states {
         pub shift: bool,
         pub lmb: bool,
         pub rmb: bool,
+        pub velocity: Vec3, 
+        pub rotation: Vec4,
     }
     impl Default for Control {
         fn default() -> Self {
@@ -134,11 +168,27 @@ pub mod player_states {
                 shift: false,
                 lmb: false,
                 rmb: false,
+                velocity:  Vec3::new(0.,0.,0.),
+                rotation: Vec4::new(0.,0.,0.,0.),
             }
         }
+        
     }
-    #[derive(Component)]
+    impl Control{
+        pub fn or(&mut self, ctrl: Control){ // painless remove it
+            self.q = ctrl.q | self.q;
+            self.jump = ctrl.jump | self.jump;
+            self.forward = ctrl.forward | self.forward;
+            self.back = ctrl.back | self.back;
+            self.shift = ctrl.q | self.q;
+            self.q = ctrl.q | self.q;
+            self.q = ctrl.q | self.q;
+        }
+    }
+    #[derive(Component, Debug)]
     pub struct Id(pub i32);
+    #[derive(Component)]
+    pub struct HeadRotation(pub Quat); // Uses for defining head rotation.
     #[derive(Component)]
     pub struct CharName(pub &'static str);
     #[derive(Component)]
@@ -177,4 +227,3 @@ pub mod bullet_states {
 pub struct Spawn {
     pub respawn_coords: Vec3,
 }
-

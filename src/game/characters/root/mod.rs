@@ -1,6 +1,5 @@
-use crate::game::components::{filters::*, player_states::*, *};
+use crate::game::components::{filters::*, player_data::*, *};
 use bevy::prelude::*;
-use heron::prelude::*;
 
 pub struct Root;
 impl Plugin for Root {
@@ -39,10 +38,10 @@ pub fn spawn(
                     base_color: Color::rgba(0.1, 0.2, 0.3, 0.5),
                     ..Default::default()
                 }),
-                transform: Transform::from_xyz(id as f32 * 2.0, 0.5, 15.0),
+                transform: Transform::from_xyz(id as f32 * 2.0 - 1., 0.5, 7.0),
                 ..Default::default()
             })          
-            .insert(Spawn{ respawn_coords: Vec3::new(id as f32 * 2.0, 0.5, 15.0)}) // Change it.
+            .insert(Spawn{ respawn_coords: Vec3::new(id as f32 * 2.0, 0.5, 5.0)}) // Change it.
             .insert_bundle(
                 States{
                     character_name: CharName("Root"),
@@ -57,7 +56,7 @@ pub fn spawn(
                 ..Default::default()})
             .insert(Core)
             .insert(RootFilter)
-            .insert(CollisionShape::Cuboid { half_extends: Vec3::new(0.5,0.5,0.5) , border_radius: None})
+            //.insert(CollisionShape::Cuboid { half_extends: Vec3::new(0.5,0.5,0.5) , border_radius: None})
             .id();
             extend_writer.send(ExtendCharacter(entity_id, id, team));
         }     

@@ -1,5 +1,5 @@
 use bevy::{ prelude::*};
-use crate::game::components::{ filters::*, player_states::*, };
+use crate::game::components::{ filters::*, player_data::*, };
 pub fn name_and_hp_tags_update_system(
     q_camera: Query<(&Camera, &GlobalTransform), With<ThreeDCam>>,
     mut text: Query<(&mut Style, &CalculatedSize, &mut Text), (With<HpText>, Without<Selected>)>,

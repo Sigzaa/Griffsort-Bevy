@@ -150,7 +150,7 @@ fn console_system(
                             ui.label(line);
                         }
                     });
-                    ui.scroll_to_cursor(Align::BOTTOM);
+                    ui.scroll_to_cursor(Some(Align::BOTTOM));
                 });
 
             ui.separator();
