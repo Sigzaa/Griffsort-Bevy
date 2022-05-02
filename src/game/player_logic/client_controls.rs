@@ -11,6 +11,7 @@ pub fn collect_inputs_sys(
     mut motion_evr: EventReader<MouseMotion>,
     time: Res<Time>,
 ) {
+    //println!("collinputs");
     if !grabbed_flag.0 {
         return;
     }

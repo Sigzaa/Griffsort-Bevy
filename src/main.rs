@@ -1,4 +1,5 @@
 use game::components::Config;
+use bevy::window::PresentMode;
 use bevy::prelude::*;
 use game::Game;
 use std::env;
@@ -23,7 +24,7 @@ fn main() {
         title: "Moba".to_string(),
         width: 720.,
         height: 500.,
-        vsync: false, 
+        present_mode: PresentMode::Immediate,
         //mode: bevy::window::WindowMode::Fullscreen,
         ..Default::default()
     })

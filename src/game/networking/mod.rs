@@ -1,8 +1,7 @@
 use bevy::{math::*, prelude::*};
 pub mod a_list;
-pub mod bevy_simple_networking;
 pub mod additional;
-use bevy_rapier3d::{prelude::*, physics::TimestepMode};
+use bevy_rapier3d::{prelude::*};
 
 pub mod client;
 mod server;
@@ -13,8 +12,8 @@ impl Plugin for Networking {
         app
             .insert_resource(
                 RapierConfiguration {
-                    physics_pipeline_active: true,
-                    timestep_mode: TimestepMode::FixedTimestep,
+                    physics_pipeline_active: false,
+                    query_pipeline_active: false,
                     ..Default::default()
                 }
             )

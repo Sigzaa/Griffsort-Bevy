@@ -1,15 +1,16 @@
-use super::super::bevy_simple_networking::{NetworkEvent, Transport};
+use bevy_simple_networking::{NetworkEvent, Transport};
 use super::components::*;
 use crate::game::components::{filters::*, player_data::*};
 use bevy::{math::*, prelude::*};
 use crate::game::networking::additional::*;
-
+    
 pub fn handler(
     mut events: EventReader<NetworkEvent>,
     mut transport: ResMut<Transport>,
     mut con: ResMut<ConnectedList>,
     mut q_core: Query<(Entity, &mut Control, &Id, &mut Transform, &mut HeadRotation), With<Core>>,
     mut buf: ResMut<Buffer>,
+    s_tick: Res<TickCounter>
 ) {
     
     for event in events.iter() {
@@ -34,6 +35,7 @@ pub fn handler(
                 // Listening for msg from clients to push it in the buffer.
                 let msg_pack = msg_to_MsgPack(msg);
                 // pushing input pack to the buffer.
+                //println!("server tick: {:?}, client tick: {}", s_tick.0 , msg_pack.tick);
                 buf.0.push(msg_pack.clone(), - msg_pack.tick); /* Magic trick to opposite priority. Maybe make it better for optimisation */
                 
             }

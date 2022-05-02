@@ -1,4 +1,4 @@
-use super::super::bevy_simple_networking::Transport;
+use bevy_simple_networking::Transport;
 use super::components::*;
 use crate::game::components::{filters::*, player_data::*, *};
 use crate::game::networking::additional::*;
@@ -16,6 +16,7 @@ pub fn send_message(
 ) {
     for (_id, ctrl, transform, head_rotation) in q_selected.iter_mut() {
         //
+        //println!("send");
         let msg = msg_structure {
             ctrl: ctrl.clone(),
             rotation: transform.rotation,
@@ -24,14 +25,14 @@ pub fn send_message(
             tick: tick_counter.0,
         }
         .pack();
-        //println!("msg: {}", msg);
+
 
         // msg_pack : msg_struct -> string to send.
         // msg_unpack : received string -> msg_struct.
 
         //let msg = msg_s.pack(); // Can also use msg_pack(msg_s)
 
-        // Filling the history buffer.
+        // Filling the history buffer. AKA Snapshot
         inp_his.0.push(HisPack {
             tick: tick_counter.0,
             input: ctrl.clone(),
@@ -62,21 +63,20 @@ pub fn predict_sys(
             &mut Control,
             &mut Transform,
             &mut HeadRotation,
-            &ColliderShapeComponent,
-            &RigidBodyPositionComponent,
-            &mut RigidBodyVelocityComponent,
+            &mut Velocity,
         ),
-        With<Selected>,
+        With<Core>,
     >,
     mut tick_counter: ResMut<TickCounter>,
     mut is_started: ResMut<IsStarted>, // Will be replaced with reconsiliation system
     
 ) {
     //println!("tick {}:", tick_counter.0);
-    for (id, mut ctrl, mut transform, mut head_rotation, collider, rb_position, mut rb_velocity) in
+     //println!("predict");
+    // println!();
+    for (id, mut ctrl, mut transform, mut head_rotation, mut rb_velocity) in
         q_core.iter_mut()
     {
-        transform.translation = rb_position.position.translation.into();
 
         // Simulating -->
         let mut rb_vel = Vec3::ZERO;
@@ -88,6 +88,7 @@ pub fn predict_sys(
             is_started.0 = true;
             rb_vel = Vec3::new(0., rb_velocity.linvel[1], 0.);
         } //<--
+        //println!("{}{}", ctrl.velocity, rb_vel);
         rb_velocity.linvel = (ctrl.velocity + rb_vel).into();
         //println!("pos: {}", rb_position.position.translation);
 
@@ -105,14 +106,12 @@ pub fn camera_movement(
             &mut Control,
             &mut Transform,
             &mut HeadRotation,
-            &ColliderShapeComponent,
-            &RigidBodyPositionComponent,
-            &mut RigidBodyVelocityComponent,
+            &mut Velocity,
         ),
         With<Selected>,
     >,
 ) {
-    for (mut ctrl, mut transform, mut head_rotation, collider, rb_position, mut rb_velocity) in
+    for (mut ctrl, mut transform, mut head_rotation, mut rb_velocity) in
         q_selected.iter_mut()
     {
         for mut camera in q_camera.iter_mut() {
@@ -131,6 +130,7 @@ pub fn camera_movement(
 }
 pub fn update_tick(mut s_tick: ResMut<TickCounter>) {
     s_tick.0 += 1;
+    //println!("tick end");
     //println!();
     //println!("server tick end: {}", s_tick.0);
 }
@@ -142,9 +142,7 @@ pub fn fill_his_sys(
             &mut Control,
             &mut Transform,
             &mut HeadRotation,
-            &ColliderShapeComponent,
-            &RigidBodyPositionComponent,
-            &mut RigidBodyVelocityComponent,
+            &mut Velocity,
         ),
         With<Selected>,
     >,
@@ -153,7 +151,7 @@ pub fn fill_his_sys(
     if q_selected.is_empty(){
         return;
     }
-    let (mut ctrl, mut transform, mut head_rotation, collider, rb_position, mut rb_velocity) =
+    let (mut ctrl, mut transform, mut head_rotation, mut rb_velocity) =
     q_selected.single_mut();
 
 

@@ -3,13 +3,11 @@
 // Constants -->
 pub const SENSITIVITY: f32 = 0.002;
 pub const RESPAWNGAP: f32 = 9.;
-pub const TICKRATE: f64 = 1. / 100.;
-pub const SPEED: f32 = 300. * TICKRATE as f32;
+pub const TICKRATE: f64 = 60.;
+pub const SPEED: f32 = TICKRATE as f32 * 0.05;
 // <--
 pub static MODE: &'static str = "client";
 pub static mut ADDRESS: &'static str = "171.0.1.1:4567";
-
-
 
 // Events structs -->
 pub struct BindControls(pub i32);
@@ -98,10 +96,14 @@ pub mod player_data {
     use bevy::prelude::*;
 
     #[derive(Component)]
+    pub struct VelocityBuffer {
+        pub linvel: Vec3,
+    }
+
+    #[derive(Component)]
     pub struct Vel_n_Rot {
         pub velocity: Vec3,
         pub rotation: Vec4,
-
     }
 
     #[derive(Bundle, Component)]
@@ -115,7 +117,6 @@ pub mod player_data {
         pub vert_vel: VerticalVelocity,
         pub hor_vel: Speed,
         pub weight: Weight,
-
     }
     impl Default for States {
         fn default() -> Self {
@@ -129,7 +130,6 @@ pub mod player_data {
                 id: Id(118),
                 vert_vel: VerticalVelocity(0.),
                 weight: Weight(20.),
-
             }
         }
     }
@@ -149,7 +149,7 @@ pub mod player_data {
         pub shift: bool,
         pub lmb: bool,
         pub rmb: bool,
-        pub velocity: Vec3, 
+        pub velocity: Vec3,
         pub rotation: Vec4,
     }
     impl Default for Control {
@@ -168,14 +168,14 @@ pub mod player_data {
                 shift: false,
                 lmb: false,
                 rmb: false,
-                velocity:  Vec3::new(0.,0.,0.),
-                rotation: Vec4::new(0.,0.,0.,0.),
+                velocity: Vec3::new(0., 0., 0.),
+                rotation: Vec4::new(0., 0., 0., 0.),
             }
         }
-        
     }
-    impl Control{
-        pub fn or(&mut self, ctrl: Control){ // painless remove it
+    impl Control {
+        pub fn or(&mut self, ctrl: Control) {
+            // painless remove it
             self.q = ctrl.q | self.q;
             self.jump = ctrl.jump | self.jump;
             self.forward = ctrl.forward | self.forward;

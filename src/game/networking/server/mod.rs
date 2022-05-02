@@ -7,8 +7,8 @@ mod connection_handler;
 mod tick;
 use tick::*;
 use super::a_list::AList;
-use super::bevy_simple_networking::{ ServerPlugin };
-use bevy_rapier3d::{physics::*, prelude::*};
+use bevy_simple_networking::{ ServerPlugin };
+use bevy_rapier3d::{dynamics::*, prelude::*};
 use crate::game::networking::additional::*;
 
 use bevy::{ app::ScheduleRunnerSettings };
@@ -23,15 +23,13 @@ fn run_if_started(
             &mut Control,
             &mut Transform,
             &mut HeadRotation,
-            &ColliderShapeComponent,
-            &RigidBodyPositionComponent,
-            &mut RigidBodyVelocityComponent,
+            &mut Velocity,
         ),
         With<Selected>,
     >,
     mut is_started: ResMut<IsStarted>,
 ) -> ShouldRun {
-    for (id, mut ctrl, mut transform, mut head_rotation, collider, rb_position, mut rb_velocity) in
+    for (id, mut ctrl, mut transform, mut head_rotation, mut rb_velocity) in
         q_core.iter_mut()
     {
         if !is_started.0 && ctrl.velocity == Vec3::ZERO{
@@ -82,14 +80,14 @@ impl Plugin for Server {
             .add_system(connection_handler::handler.label("msg_collect"))
             .add_system_set(
                 SystemSet::new()
-                    .with_run_criteria(FixedTimestep::step(TICKRATE))
-                    .with_system(crate::game::player_logic::shooting::shoot_system.label("addition").after("msg_collect"))
-                    .with_system(pop_buffer.label("buffer").after("addition"))
+                    .with_run_criteria(FixedTimestep::steps_per_second(TICKRATE))
+                    //.with_system(crate::game::player_logic::shooting::shoot_system.label("addition").after("msg_collect"))
+                    .with_system(pop_buffer.label("buffer").after("msg_collect"))
                     .with_system(crate::game::player_logic::client_controls::velocity_vector_sys.label("vector").after("buffer"))
                     
                     .with_system(simulate_sys.label("sim").after("vector"))
                     .with_system(update_tick.label("tick").after("sim"))
-                    .with_system(step_world_system::<NoUserData>.label("world_step").after("tick"))
+                    //.with_system(step_world_system::<NoUserData>.label("world_step").after("tick"))
                     .with_system(send_sys.after("world_step"))
             )
             //.add_system(send_message)

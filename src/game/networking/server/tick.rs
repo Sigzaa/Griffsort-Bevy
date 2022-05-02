@@ -1,7 +1,8 @@
-use super::super::bevy_simple_networking::Transport;
+use bevy_simple_networking::Transport;
 use super::components::*;
 use crate::game::components::{filters::*, player_data::*, *};
 use bevy_rapier3d::prelude::*;
+use bevy_rapier3d::dynamics::*;
 use crate::game::networking::additional::*;
 use bevy::prelude::*;
 
@@ -68,11 +69,11 @@ pub fn simulate_sys(
             &mut Control,
             &mut Transform,
             &mut HeadRotation,
-            &ColliderShapeComponent,
-            &mut RigidBodyPositionComponent,
-            &mut RigidBodyVelocityComponent,
+
+
+            &mut Velocity,
         ),
-        With<Selected>,
+        With<Core>,
     >,
     mut s_tick: ResMut<TickCounter>,
     mut timer: ResMut<Timer1>,
@@ -80,7 +81,7 @@ pub fn simulate_sys(
     mut is_started: ResMut<IsStarted>, // Will be replaced with reconsiliation system
 
 ) {
-    for (_id, mut ctrl, mut transform, mut head_rotation, collider, mut rb_position, mut rb_velocity) in
+    for (_id, mut ctrl, mut transform, mut head_rotation, mut rb_velocity) in
         q_core.iter_mut()
     {
         // Simulating -->
@@ -98,7 +99,7 @@ pub fn simulate_sys(
         quat_pack(0., ctrl.rotation[1], 0., ctrl.rotation[3]);
         head_rotation.0 = quat_pack(ctrl.rotation[0], 0., 0., ctrl.rotation[2]);
 
-        transform.translation = rb_position.position.translation.into();
+        // transform.translation = rb_position.position.translation.into();
         let mut rb_vel = Vec3::ZERO;
         if !is_started.0 && ctrl.velocity == Vec3::ZERO {
             
@@ -133,7 +134,7 @@ pub fn send_sys(
         q_core.iter_mut()
     {
         let v = transform.translation;
-        let msg = format!("{} {} {} {} {}", id.0,  s_tick.0 , v[0],v[1],v[2]);
+        let msg = format!("{} {} {} {} {}", id.0,  s_tick.0, v[0],v[1],v[2]);
 
         for index in 0..con.0.len() { // Worse send_all_clients()
             match con.0.is_empty(index) {

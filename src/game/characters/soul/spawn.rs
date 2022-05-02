@@ -14,41 +14,50 @@ pub fn spawn(
             let id = spawn.1;
             let team = spawn.2;
 
-            let locked_dofs = RigidBodyMassPropsFlags::ROTATION_LOCKED_X
-                | RigidBodyMassPropsFlags::ROTATION_LOCKED_Z
-                | RigidBodyMassPropsFlags::ROTATION_LOCKED_Y;
+            // let locked_dofs = RigidBodyMassPropsFlags::ROTATION_LOCKED_X
+            //     | RigidBodyMassPropsFlags::ROTATION_LOCKED_Z
+            //     | RigidBodyMassPropsFlags::ROTATION_LOCKED_Y;
 
-            let rigid_body = RigidBodyBundle {
-                //body_type: RigidBodyTypeComponent(RigidBodyType::KinematicVelocityBased),
-                position: Vec3::new(id as f32 * 2.0, 50.0, 0.0).into(),
-                velocity: RigidBodyVelocity {
-                    linvel: Vec3::new(0.0, 0.0, 0.0).into(),
-                    angvel: Vec3::new(0.0, 0.0, 0.0).into(),
-                }
-                .into(),
-                forces: RigidBodyForces {
-                    gravity_scale: 2.0,
-                    ..Default::default()
-                }
-                .into(),
-                activation: RigidBodyActivation::cannot_sleep().into(),
-                ccd: RigidBodyCcd {
-                    ccd_enabled: true,
-                    ..Default::default()
-                }
-                .into(),
-                mass_properties: locked_dofs.into(),
-                ..Default::default()
-            };
-            let collider = ColliderBundle {
-                shape: ColliderShape::ball(0.5).into(),
-                material: ColliderMaterial {
-                    restitution: 0.,
-                    ..Default::default()
-                }
-                .into(),
-                ..Default::default()
-            };
+            // let rigid_body = RigidBodyBundle {
+            //     //body_type: RigidBodyTypeComponent(RigidBodyType::KinematicVelocityBased),
+            //     position: Vec3::new(id as f32 * 2.0, 50.0, 0.0).into(),
+            //     velocity: RigidBodyVelocity {
+            //         linvel: Vec3::new(0.0, 0.0, 0.0).into(),
+            //         angvel: Vec3::new(0.0, 0.0, 0.0).into(),
+            //     }
+            //     .into(),
+            //     forces: RigidBodyForces {
+            //         gravity_scale: 2.0,
+            //         ..Default::default()
+            //     }
+            //     .into(),
+            //     activation: RigidBodyActivation::cannot_sleep().into(),
+            //     ccd: RigidBodyCcd {
+            //         ccd_enabled: true,
+            //         ..Default::default()
+            //     }
+            //     .into(),
+            //     mass_properties: locked_dofs.into(),
+            //     ..Default::default()
+            // };
+            // let collider = ColliderBundle {
+            //     flags: ColliderFlags{
+            //         collision_groups: InteractionGroups{
+            //             filter: 2,
+            //             memberships: 2,
+            //         },
+            //         ..Default::default()
+                        
+                    
+            //     }.into(),
+            //     shape: ColliderShape::ball(0.5).into(),
+            //     material: ColliderMaterial {
+            //         restitution: 0.,
+            //         ..Default::default()
+            //     }
+            //     .into(),
+            //     ..Default::default()
+            // };
 
             let entity_id = commands
                 .spawn()
@@ -72,10 +81,10 @@ pub fn spawn(
                     hp: Hp(1000),
                     ..Default::default()
                 })
-                .insert_bundle(rigid_body)
-                .insert_bundle(collider)
+                .insert(RigidBody::Dynamic)
+                .insert(Collider::ball(0.5))
                 //.insert(ColliderPositionSync::Discrete)
-                .insert(ColliderDebugRender::with_id(0))
+                //.insert(ColliderDebugRender::with_id(0))
                 .insert(Control {
                     //forward: true,
                     ..Default::default()
@@ -86,52 +95,63 @@ pub fn spawn(
                 .id();
 
 
-            let locked_dofs = RigidBodyMassPropsFlags::ROTATION_LOCKED_X
-                | RigidBodyMassPropsFlags::ROTATION_LOCKED_Z
-                | RigidBodyMassPropsFlags::ROTATION_LOCKED_Y;
+            // let locked_dofs = RigidBodyMassPropsFlags::ROTATION_LOCKED_X
+            //     | RigidBodyMassPropsFlags::ROTATION_LOCKED_Z
+            //     | RigidBodyMassPropsFlags::ROTATION_LOCKED_Y;
 
-            let rigid_body = RigidBodyBundle {
-                //body_type: RigidBodyTypeComponent(RigidBodyType::KinematicVelocityBased),
-                position: Vec3::new(id as f32 * 10.0, 170.0, 0.0).into(),
-                velocity: RigidBodyVelocity {
-                    linvel: Vec3::new(0.0, 0.0, 0.0).into(),
-                    angvel: Vec3::new(0.0, 0.0, 0.0).into(),
-                }
-                .into(),
-                forces: RigidBodyForces {
-                    gravity_scale: 2.0,
-                    ..Default::default()
-                }
-                .into(),
-                activation: RigidBodyActivation::cannot_sleep().into(),
-                ccd: RigidBodyCcd {
-                    ccd_enabled: true,
-                    ..Default::default()
-                }
-                .into(),
-                mass_properties: locked_dofs.into(),
-                ..Default::default()
-            };
-            let collider = ColliderBundle {
-                shape: ColliderShape::ball(0.5).into(),
-                material: ColliderMaterial {
-                    restitution: 0.,
-                    ..Default::default()
-                }
-                .into(),
-                ..Default::default()
-            };
-            /*
-            commands
-                .spawn()
-                .insert_bundle(rigid_body)
-                .insert_bundle(collider)
-                .insert(ColliderPositionSync::Discrete)
-                .insert(ColliderDebugRender::with_id(0))
-                .insert(Id(id))
-                .insert(Reconcile);
-*/
+            // let rigid_body = RigidBodyBundle {
+            //     //dominance: RigidBodyDominance(1).into(),
+            //     //body_type: RigidBodyTypeComponent(RigidBodyType::KinematicVelocityBased),
+            //     position: Vec3::new(id as f32 * 10.0, 170.0, 0.0).into(),
+            //     velocity: RigidBodyVelocity {
+            //         linvel: Vec3::new(0.0, 0.0, 0.0).into(),
+            //         angvel: Vec3::new(0.0, 0.0, 0.0).into(),
+            //     }
+            //     .into(),
+            //     forces: RigidBodyForces {
+            //         gravity_scale: 2.0,
+            //         ..Default::default()
+            //     }
+            //     .into(),
+            //     activation: RigidBodyActivation::cannot_sleep().into(),
+            //     ccd: RigidBodyCcd {
+            //         ccd_enabled: true,
+            //         ..Default::default()
+            //     }
+            //     .into(),
+            //     mass_properties: locked_dofs.into(),
+            //     ..Default::default()
+            // };
+            // let collider = ColliderBundle {
+            //     flags: ColliderFlags{
+            //         collision_groups: InteractionGroups{
+            //             filter: 1,
+            //             memberships: 1,
+            //         },
+            //         ..Default::default()
+                        
+                    
+            //     }.into(),
+            //     shape: ColliderShape::ball(0.5).into(),
+            //     material: ColliderMaterial {
+            //         restitution: 0.,
+            //         ..Default::default()
+            //     }
+            //     .into(),
+            //     ..Default::default()
+            // };
+            
+            // let backroll_id = commands
+            //     .spawn()
+            //     .insert_bundle(rigid_body)
+            //     .insert_bundle(collider)
+            //     .insert(ColliderPositionSync::Discrete)
+            //     .insert(ColliderDebugRender::with_id(0))
+            //     .insert(Id(id))
+            //     .insert(Reconcile).id();
+
             extend_writer.send(ExtendCharacter(entity_id, id, team));
+            //extend_writer.send(ExtendCharacter(backroll_id, id, team));
         }
     }
 }

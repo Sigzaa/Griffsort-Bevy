@@ -17,7 +17,6 @@ impl Plugin for Control {
         app 
             .insert_resource(GrabbedCursor(false))
             .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
-            .add_plugin(RapierRenderPlugin)
             .add_startup_system(say_hi)
             .add_event::<BindControls>()
             .add_system(window::window_control)

@@ -83,37 +83,37 @@ pub fn shoot_system(
         if timer.0 <= 0. {
             if ctrl.lmb {
                 timer.0 = 0.10;
-                let rigid_body = RigidBodyBundle {
-                    //body_type: RigidBodyTypeComponent(RigidBodyType::KinematicVelocityBased),
-                    position: transform.translation.into(),
-                    velocity: RigidBodyVelocity {
-                        linvel: Vec3::new(0.0, 0.0, -10.0).into(),
-                        angvel: Vec3::new(0.0, 0.0, 0.0).into(),
-                    }
-                    .into(),
-                    forces: RigidBodyForces {
-                        gravity_scale: 1.2,
-                        ..Default::default()
-                    }
-                    .into(),
-                    activation: RigidBodyActivation::cannot_sleep().into(),
-                    ccd: RigidBodyCcd {
-                        ccd_enabled: true,
-                        ..Default::default()
-                    }
-                    .into(),
-                    //mass_properties: locked_dofs.into(),
-                    ..Default::default()
-                };
-                let collider = ColliderBundle {
-                    shape: ColliderShape::ball(0.04).into(),
-                    material: ColliderMaterial {
-                        restitution: 0.8,
-                        ..Default::default()
-                    }
-                    .into(),
-                    ..Default::default()
-                };
+                // let rigid_body = RigidBodyBundle {
+                //     //body_type: RigidBodyTypeComponent(RigidBodyType::KinematicVelocityBased),
+                //     position: transform.translation.into(),
+                //     velocity: RigidBodyVelocity {
+                //         linvel: Vec3::new(0.0, 0.0, -10.0).into(),
+                //         angvel: Vec3::new(0.0, 0.0, 0.0).into(),
+                //     }
+                //     .into(),
+                //     forces: RigidBodyForces {
+                //         gravity_scale: 1.2,
+                //         ..Default::default()
+                //     }
+                //     .into(),
+                //     activation: RigidBodyActivation::cannot_sleep().into(),
+                //     ccd: RigidBodyCcd {
+                //         ccd_enabled: true,
+                //         ..Default::default()
+                //     }
+                //     .into(),
+                //     //mass_properties: locked_dofs.into(),
+                //     ..Default::default()
+                // };
+                // let collider = ColliderBundle {
+                //     shape: ColliderShape::ball(0.04).into(),
+                //     material: ColliderMaterial {
+                //         restitution: 0.8,
+                //         ..Default::default()
+                //     }
+                //     .into(),
+                //     ..Default::default()
+                // };
                 commands
                     .spawn()
                     .insert_bundle(PbrBundle {
@@ -133,9 +133,9 @@ pub fn shoot_system(
                     .insert(Bullet)
                     .insert(BulletVelocity(25))
                     .insert(BulletLifeTime(32000))
-                    .insert_bundle(rigid_body)
-                    .insert_bundle(collider)
-                    .insert(ColliderPositionSync::Discrete)
+                    // .insert_bundle(rigid_body)
+                    // .insert_bundle(collider)
+                    // .insert(ColliderPositionSync::Discrete)
                     //.insert(CollisionShape::Cuboid { half_extends: Vec3::new(0.1,0.1,0.1) , border_radius: None})
                     //.insert(RigidBody::Static)
                     .insert(Dmg(15));

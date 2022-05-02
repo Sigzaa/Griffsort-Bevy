@@ -30,6 +30,9 @@ pub fn extend(
             //.insert(Veloctiy{
             //    translation: Vec3::new(0.,0.,0.),
             //})
+            .insert(VelocityBuffer{
+                linvel: Vec3::ZERO
+            })
             .id();
 
         let head = commands
