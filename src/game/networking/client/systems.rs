@@ -66,7 +66,7 @@ pub fn predict_sys(
         ),
         With<Core>,
     >,
-    mut tick_counter: ResMut<TickCounter>,
+    mut tick_counter: ResMut<Tick>,
     mut is_started: ResMut<IsStarted>, // Will be replaced with reconsiliation system
     
 ) {
@@ -127,7 +127,7 @@ pub fn camera_movement(
         }
     }
 }
-pub fn update_tick(mut s_tick: ResMut<TickCounter>) {
+pub fn update_tick(mut s_tick: ResMut<Tick>) {
     s_tick.0 += 1;
     //println!("tick end");
     //println!();
@@ -145,7 +145,7 @@ pub fn fill_his_sys(
         ),
         With<Selected>,
     >,
-    mut tick_counter: ResMut<TickCounter>,
+    mut tick_counter: ResMut<Tick>,
 ){
     if q_selected.is_empty(){
         return;
@@ -176,7 +176,7 @@ pub fn should_tick(time: Res<Time>, mut timer: ResMut<TPS>, mut iter: ResMut<ite
     return ShouldRun::YesAndCheckAgain;
 }
 
-pub fn tick_more_then_zero(tick_counter: Res<TickCounter>, mut inp_buf: ResMut<InpBuf>) -> ShouldRun {
+pub fn tick_more_then_zero(tick_counter: Res<Tick>, mut inp_buf: ResMut<InpBuf>) -> ShouldRun {
     if tick_counter.0 > 0 && inp_buf.tick > 0 {
         return ShouldRun::Yes;
     }
@@ -199,7 +199,7 @@ pub fn prepare_rollback(mut iter: ResMut<iter_count>, mut is_rollback: ResMut<Is
 }
 pub fn check_for_desync_sys(
     inp_his: ResMut<InputHistory>,
-    tick_counter: Res<TickCounter>,
+    tick_counter: Res<Tick>,
     mut inp_buf: ResMut<InpBuf>,
     mut iter: ResMut<iter_count>,
 ) {

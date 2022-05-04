@@ -3,7 +3,7 @@
 // Constants -->
 pub const SENSITIVITY: f32 = 0.002;
 pub const RESPAWNGAP: f32 = 9.;
-pub const TICKRATE: f64 = 1.;
+pub const TICKRATE: f64 = 4.;
 pub const SPEED: f32 = 30. / TICKRATE as f32;
 // <--
 
