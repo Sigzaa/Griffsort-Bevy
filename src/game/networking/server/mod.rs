@@ -1,5 +1,5 @@
-use crate::game::components::{filters::*, player_data::*, *};
-use bevy::{core::FixedTimestep, ecs::schedule::ShouldRun, input::mouse::MouseMotion, prelude::*};
+use crate::game::components::{ *};
+use bevy::{core::FixedTimestep, prelude::*};
 use std::{env, str, net::{ UdpSocket }};
 use components::*;
 pub mod components;
@@ -8,7 +8,6 @@ mod tick;
 use tick::*;
 use super::shared::a_list::AList;
 use bevy_simple_networking::{ ServerPlugin };
-use bevy_rapier3d::{dynamics::*, prelude::*};
 use super::shared::additional::*;
 
 use bevy::{ app::ScheduleRunnerSettings };
@@ -16,32 +15,6 @@ use priority_queue::PriorityQueue;
 
 use std::{ time::Duration};
 
-fn run_if_started(
-    mut q_core: Query<
-        (
-            &Id,
-            &mut Control,
-            &mut Transform,
-            &mut HeadRotation,
-            &mut Velocity,
-        ),
-        With<Selected>,
-    >,
-    mut is_started: ResMut<IsStarted>,
-) -> ShouldRun {
-    for (id, mut ctrl, mut transform, mut head_rotation, mut rb_velocity) in
-        q_core.iter_mut()
-    {
-        if !is_started.0 && ctrl.velocity == Vec3::ZERO{
-            return ShouldRun::Yes;
-        } else {
-            is_started.0 = true;
-            return ShouldRun::Yes;
-        }
-        
-    }
-    ShouldRun::Yes
-}
 
 #[derive(Default)]
 pub struct IsStarted(pub bool);

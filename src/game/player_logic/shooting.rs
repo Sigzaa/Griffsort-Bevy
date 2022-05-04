@@ -54,6 +54,7 @@ fn detect_collisions(
     }
 }
 */
+#[allow(dead_code)]
 fn continue_shoot_system(
     mut commands: Commands,
     time: Res<Time>,
@@ -69,6 +70,7 @@ fn continue_shoot_system(
         }
     }
 }
+#[allow(dead_code)]
 pub fn shoot_system(
     time: Res<Time>,
     mut commands: Commands,

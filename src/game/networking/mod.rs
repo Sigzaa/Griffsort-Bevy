@@ -1,4 +1,4 @@
-use bevy::{math::*, prelude::*};
+use bevy::{ prelude::*};
 pub mod shared;
 use bevy_rapier3d::{prelude::*};
 

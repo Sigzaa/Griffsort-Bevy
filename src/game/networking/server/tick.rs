@@ -1,6 +1,6 @@
 use bevy_simple_networking::Transport;
 use super::components::*;
-use crate::game::components::{filters::*, player_data::*, *};
+use crate::game::components::{filters::*, player_data::*};
 use bevy_rapier3d::prelude::*;
 use crate::game::networking::shared::additional::*;
 use bevy::prelude::*;
@@ -63,13 +63,11 @@ pub fn simulate_sys(
         ),
         With<Core>,
     >,
-    mut s_tick: ResMut<TickCounter>,
-    mut timer: ResMut<Timer1>,
-    time: Res<Time>,
+    s_tick: ResMut<TickCounter>,
     mut is_started: ResMut<IsStarted>, // Will be replaced with reconsiliation system
 
 ) {
-    for (_id, mut ctrl, mut transform, mut head_rotation, mut rb_velocity) in
+    for (_id, ctrl, mut transform, mut head_rotation, mut rb_velocity) in
         q_core.iter_mut()
     {
         // Simulating -->
@@ -115,10 +113,10 @@ pub fn update_tick(mut s_tick: ResMut<TickCounter>){
 pub fn send_sys(
     mut q_core: Query<(&Id, &mut Control, &mut Transform, &mut HeadRotation), With<Core>>,
     mut transport: ResMut<Transport>,
-    mut con: ResMut<ConnectedList>,
-    mut s_tick: ResMut<TickCounter>,
+    con: ResMut<ConnectedList>,
+    s_tick: ResMut<TickCounter>,
 ){
-    for (id, mut ctrl, mut transform, mut head_rotation) in
+    for (id, _ctrl, transform, _head_rotation) in
         q_core.iter_mut()
     {
         let v = transform.translation;

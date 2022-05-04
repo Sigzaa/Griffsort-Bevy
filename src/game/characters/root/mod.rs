@@ -8,15 +8,12 @@ impl Plugin for Root {
 
         app
             
-            .add_startup_system(say_hi)
             .add_system(spawn)
             //.add_system(move || drop(dm.movement()))
             ;
     }
 }
-fn say_hi(){
-    println!("hi from Root");
-}
+
 
 pub fn spawn(
     mut spawn_reader: EventReader<SpawnCharacter>,

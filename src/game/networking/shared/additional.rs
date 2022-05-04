@@ -31,6 +31,7 @@ impl Eq for MsgPack {}
 
 #[derive(Component, Clone, Copy, Debug)]
 
+#[allow(non_camel_case_types)]
 pub struct msg_structure {
     pub ctrl: Control,
     pub rotation: Quat,
@@ -86,9 +87,8 @@ fn string_to_ctrl(v: Vec<f32>) -> Control {
         ..Default::default()
     }
 }
-pub fn pack_msg(msg: msg_structure) -> bool {
-    true
-}
+
+#[allow(dead_code)]
 pub fn unpack_msg(msg: &[u8]) -> msg_structure{
 
     let v: Vec<f32> = split(msg);
@@ -102,6 +102,7 @@ pub fn unpack_msg(msg: &[u8]) -> msg_structure{
 
     }
 }
+#[allow(non_snake_case)]
 pub fn msg_to_MsgPack(msg: &[u8]) -> MsgPack{
     
     let v = split(msg);

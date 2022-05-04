@@ -17,7 +17,6 @@ pub fn spawn_teams(
             },
             ..Default::default()
         });
-    println!("World file");
     spawner.send(SpawnCharacter("Soul", 0, 1));
     spawner.send(SpawnCharacter("Soul", 1, 1));
     spawner.send(SpawnCharacter("Root", 2, 1));

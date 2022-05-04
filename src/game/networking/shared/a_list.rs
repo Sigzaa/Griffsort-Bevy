@@ -62,9 +62,10 @@ impl AList {
         }
         None
     }
+    #[allow(dead_code, non_snake_case)]
     fn find_not_empty(&self) -> Option<usize> {
         for (i, x) in self.arr.iter().enumerate() {
-            if matches!(x, SocketAddr) {
+            if matches!(x, _SocketAddr) {
                 return Some(i);
             }
         }
@@ -78,9 +79,9 @@ impl AList {
         }
 
     }
-    fn find(&self, addr: SocketAddr) -> Option<usize>{
+    fn find(&self, _addr: SocketAddr) -> Option<usize>{
         for (i, x) in self.arr.iter().enumerate() {
-            if matches!(x, addr) {
+            if matches!(x, _addr) {
                 return Some(i);
             }
         }

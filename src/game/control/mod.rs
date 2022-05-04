@@ -16,7 +16,6 @@ impl Plugin for Control {
         app 
             .insert_resource(GrabbedCursor(false))
             .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
-            .add_startup_system(say_hi)
             .add_event::<BindControls>()
             .add_system(window::window_control)
             .add_system(window::cursor_grab_system)
@@ -29,8 +28,4 @@ impl Plugin for Control {
             .add_plugin(console::Console)
             ;
     }
-}
-
-fn say_hi(){
-    println!("Control Plugin is connected");
 }

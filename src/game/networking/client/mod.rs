@@ -2,8 +2,7 @@
 mod components;
 mod connection_handler;
 mod tick;
-use crate::game::components::{filters::*, player_data::*, *};
-use bevy::{core::FixedTimestep, ecs::schedule::ShouldRun, input::mouse::MouseMotion, prelude::*};
+use bevy::{prelude::*};
 
 use bevy_simple_networking::ClientPlugin;
 
@@ -34,11 +33,6 @@ impl Plugin for Client {
         socket
             .set_nonblocking(true)
             .expect("could not set socket to be nonblocking");
-
-        let mut netstage = SystemStage::parallel();
-        //netstage.add_system(hi);
-
-        // ... add systems to it ...
 
         app.add_plugin(ClientPlugin)
             .insert_resource(remote_addr)

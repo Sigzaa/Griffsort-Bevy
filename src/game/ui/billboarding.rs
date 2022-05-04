@@ -9,12 +9,12 @@ pub fn name_and_hp_tags_update_system(
     >,
     windows: Res<Windows>,
 ) {
-    let mut counter = 0;
-    let mut limiter = 0;
-    for (camera, camera_transform) in q_camera.iter() {
-        for (_player, player_transform, hp, team) in q_player.iter_mut() {
-            for (mut style, calculated, mut text) in text.iter_mut() {
-                if let Some(_team) = team {
+//     let mut counter = 0;
+//     let mut limiter = 0;
+//     for (camera, camera_transform) in q_camera.iter() {
+//         for (_player, player_transform, hp, team) in q_player.iter_mut() {
+//             for (mut style, calculated, mut text) in text.iter_mut() {
+//                 if let Some(_team) = team {
                     // if counter == limiter {
                     //     match camera.world_to_screen(
                     //         &windows,
@@ -38,10 +38,10 @@ pub fn name_and_hp_tags_update_system(
                     // } else {
                     //     counter += 1;
                     // }
-                } else {
-                    style.position.bottom = Val::Px(-1000.0);
-                }
-            }
-        }
-    }
+        //         } else {
+        //             style.position.bottom = Val::Px(-1000.0);
+        //         }
+        //     }
+        // }
+    // }
 }

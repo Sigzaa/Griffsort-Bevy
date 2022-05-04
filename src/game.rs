@@ -14,7 +14,6 @@ pub struct Game;
 impl Plugin for Game {
     fn build(&self, app: &mut App) {
         app
-            .add_startup_system(say_hi)
             //.add_startup_system(rapier::rapier_entry)
             .add_plugin(ui::Ui)
             .add_plugin(Control)
@@ -25,8 +24,5 @@ impl Plugin for Game {
             //.add_plugin(characters::soul::Soul)
             ;
     }
-}
-fn say_hi(){
-    println!("Moba is online");
 }
 

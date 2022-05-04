@@ -19,12 +19,14 @@ struct MySnap;
 #[derive(Default)]
 pub struct TPS(pub Timer);
 
+#[allow(non_camel_case_types)]
 #[derive(Default)]
 pub struct iter_count(pub i32);
 
 #[derive(Default)]
 pub struct IsRollback(pub bool);
 
+#[allow(non_camel_case_types)]
 #[derive(Default)]
 pub struct roll_ticker(pub i32);
 
