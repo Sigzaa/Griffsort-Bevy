@@ -2,7 +2,7 @@ use bevy_simple_networking::{NetworkEvent, Transport};
 use super::components::*;
 use crate::game::components::{filters::*, player_data::*};
 use bevy::{math::*, prelude::*};
-use crate::game::networking::additional::*;
+use crate::game::networking::shared::additional::*;
     
 pub fn handler(
     mut events: EventReader<NetworkEvent>,

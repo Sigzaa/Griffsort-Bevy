@@ -2,6 +2,36 @@ use bevy::prelude::*;
 use crate::game::components::player_data::*;
 use priority_queue::PriorityQueue;
 
+#[derive(Default)]
+struct MySnap;
+
+// impl SnapType for MySnap {
+//     fn add_types(registry: &mut TypeRegistry) {
+//         // Register the types you want to be saved and loaded
+//         registry.write().register::<Transform>();
+//         registry.write().register::<Player>();
+
+//         // Resources are also supported
+//         registry.write().register::<Steps>();
+//     }
+// }
+
+#[derive(Default)]
+pub struct TPS(pub Timer);
+
+#[derive(Default)]
+pub struct iter_count(pub i32);
+
+#[derive(Default)]
+pub struct IsRollback(pub bool);
+
+#[derive(Default)]
+pub struct roll_ticker(pub i32);
+
+#[derive(Default)]
+pub struct IsStarted(pub bool);
+
+
 
 #[derive(Default)]
 pub struct ServerAddr(pub Vec<std::net::SocketAddr>); // Replace Vec by something better.
@@ -10,7 +40,7 @@ pub struct ServerAddr(pub Vec<std::net::SocketAddr>); // Replace Vec by somethin
 pub struct MyId(pub i32);
 
 #[derive(Default)]
-pub struct TickCounter(pub i32);
+pub struct Tick(pub i32);
 
 #[derive(Default )]
 pub struct InputHistory(pub Vec<HisPack>);
@@ -32,6 +62,10 @@ pub struct MsgPack {
     pub tick: i32,
     pub entity: Entity,
 }
+
+
+
+
 
 
 

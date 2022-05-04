@@ -28,7 +28,7 @@ pub struct MyAssetPack(pub Handle<Gltf>);
 
 pub fn load_gltf(mut commands: Commands, ass: Res<AssetServer>) {
     let handle: Handle<bevy::prelude::Scene> = ass.load("../assets/models/Test_map.gltf#Scene0");
-    commands.spawn_scene(handle);
+    //commands.spawn_scene(handle);
     commands.insert_resource(IsLoaded(false));
     // let collider = ColliderBundle {
     //     shape: ColliderShape::cuboid(100.0, 0.1, 100.0).into(),
@@ -57,8 +57,10 @@ pub fn spawn_gltf_objects(
     if !mesh.is_none() && !is_loaded.0 {
         is_loaded.0 = true;
         //println!("mesh: {:?}", mesh);
+        let scale = 251.44155883789062;
         commands.spawn()
-        .insert(Collider::bevy_mesh(mesh.unwrap()).unwrap());
+        .insert(Collider::bevy_mesh(mesh.unwrap()).unwrap())
+        .insert(Transform::from_scale(Vec3::new(scale,scale,scale)));
 
 
             

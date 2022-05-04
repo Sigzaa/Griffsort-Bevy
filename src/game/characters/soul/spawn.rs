@@ -67,7 +67,7 @@ pub fn spawn(
                         base_color: Color::rgba(0.7, 0.2, 0.3, 0.5),
                         ..Default::default()
                     }),
-                    transform: Transform::from_xyz(id as f32 * 2.0, 240.5, 15.0),
+                    transform: Transform::from_xyz(id as f32 * 2.0, 40.5, 15.0),
                     ..Default::default()
                 })
                 .insert(Spawn {
@@ -82,13 +82,20 @@ pub fn spawn(
                     ..Default::default()
                 })
                 .insert(RigidBody::Dynamic)
+                .insert(Velocity {
+                    linvel: Vec3::ZERO,
+                    angvel: Vec3::ZERO,
+                })
+                .insert(LockedAxes::ROTATION_LOCKED)
                 .insert(Collider::ball(0.5))
+                //.insert(Ccd::enabled())
                 //.insert(ColliderPositionSync::Discrete)
                 //.insert(ColliderDebugRender::with_id(0))
                 .insert(Control {
                     //forward: true,
                     ..Default::default()
                 })
+
                 .insert(SoulFilter) // Change to Enum
                 .insert(Core)
                 //.insert(CollisionShape::Cuboid { half_extends: Vec3::new(0.5,0.5,0.5) , border_radius: None})

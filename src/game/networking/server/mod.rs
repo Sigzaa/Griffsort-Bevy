@@ -6,10 +6,10 @@ pub mod components;
 mod connection_handler;
 mod tick;
 use tick::*;
-use super::a_list::AList;
+use super::shared::a_list::AList;
 use bevy_simple_networking::{ ServerPlugin };
 use bevy_rapier3d::{dynamics::*, prelude::*};
-use crate::game::networking::additional::*;
+use super::shared::additional::*;
 
 use bevy::{ app::ScheduleRunnerSettings };
 use priority_queue::PriorityQueue;

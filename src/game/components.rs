@@ -3,20 +3,16 @@
 // Constants -->
 pub const SENSITIVITY: f32 = 0.002;
 pub const RESPAWNGAP: f32 = 9.;
-pub const TICKRATE: f64 = 60.;
-pub const SPEED: f32 = TICKRATE as f32 * 0.05;
+pub const TICKRATE: f64 = 1.;
+pub const SPEED: f32 = 30. / TICKRATE as f32;
 // <--
-pub static MODE: &'static str = "client";
-pub static mut ADDRESS: &'static str = "171.0.1.1:4567";
 
 // Events structs -->
 pub struct BindControls(pub i32);
 pub struct SpawnCharacter(pub &'static str, pub i32, pub i32); // Character name/code, player_id, team.
 pub struct ExtendCharacter(pub bevy::prelude::Entity, pub i32, pub i32); // Entity of existing, player_id, team.
 pub struct _DespawnCharacter(pub i16 /* id */);
-// Movement events -->
-pub struct Forward(pub bool);
-// <--
+
 
 use bevy::prelude::*;
 
@@ -25,10 +21,7 @@ use bevy::prelude::*;
 pub struct MyAddr(pub i32);
 
 //pub struct ConnectedList(pub Vec<std::net::SocketAddr>);
-pub enum Addr {
-    Server,
-    My,
-}
+
 pub struct Config {
     pub mode: String,
     pub address: String,
@@ -101,7 +94,7 @@ pub mod player_data {
     }
 
     #[derive(Component)]
-    pub struct Vel_n_Rot {
+    pub struct VelNRot {
         pub velocity: Vec3,
         pub rotation: Vec4,
     }
@@ -171,18 +164,6 @@ pub mod player_data {
                 velocity: Vec3::new(0., 0., 0.),
                 rotation: Vec4::new(0., 0., 0., 0.),
             }
-        }
-    }
-    impl Control {
-        pub fn or(&mut self, ctrl: Control) {
-            // painless remove it
-            self.q = ctrl.q | self.q;
-            self.jump = ctrl.jump | self.jump;
-            self.forward = ctrl.forward | self.forward;
-            self.back = ctrl.back | self.back;
-            self.shift = ctrl.q | self.q;
-            self.q = ctrl.q | self.q;
-            self.q = ctrl.q | self.q;
         }
     }
     #[derive(Component, Debug)]

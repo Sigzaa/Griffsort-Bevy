@@ -1,18 +1,15 @@
 use bevy_simple_networking::NetworkEvent;
 use super::components::*;
-use crate::game::components::{filters::*, player_data::*, *};
-use crate::game::networking::additional::*;
+use crate::game::components::{ *};
+use crate::game::networking::shared::additional::*;
 use bevy::{math::*, prelude::*};
 use std::str;
 
 pub fn handler(
     mut events: EventReader<NetworkEvent>,
     mut serv_addr: ResMut<ServerAddr>,
-    mut q_core: Query<(&Id, &mut InpBuf), With<Core>>,
     mut binded_id: ResMut<BindedId>,
     mut my_id: ResMut<MyId>,
-    inp_his: ResMut<InputHistory>,
-    tick_counter: Res<TickCounter>,
     mut inp_buf: ResMut<InpBuf>,
 ) {
     for event in events.iter() {

@@ -2,23 +2,14 @@ use bevy_simple_networking::Transport;
 use super::components::*;
 use crate::game::components::{filters::*, player_data::*, *};
 use bevy_rapier3d::prelude::*;
-use bevy_rapier3d::dynamics::*;
-use crate::game::networking::additional::*;
+use crate::game::networking::shared::additional::*;
 use bevy::prelude::*;
 
 pub fn pop_buffer(
-    mut transport: ResMut<Transport>,
-    mut q_core: Query<(&mut Control, &Id, &mut Transform, &mut HeadRotation), With<Core>>,
-    con: ResMut<ConnectedList>,
+    mut q_core: Query<(&mut Control, &Id, &mut Transform), With<Core>>,
     mut buf: ResMut<Buffer>,
-    mut s_tick: ResMut<TickCounter>,
+    s_tick: ResMut<TickCounter>,
 ) {
-    //println!("tick: {}", s_tick.0);
-    //println!("ticks in buffer: ");
-    for (_pack, tick) in buf.0.clone() {
-        //println!("{}", tick);
-    }
-    //println!("tick end");
     loop {
         // Expecting panic while unwraping.
         if buf.0.is_empty() {
@@ -34,10 +25,10 @@ pub fn pop_buffer(
         }
         // Shading with pop
         
-        let (mut pack, tick) = buf.0.pop().unwrap();
+        let (pack, tick) = buf.0.pop().unwrap();
 
         if tick == -s_tick.0{
-            for (mut ctrl, id, mut transform, mut head_rotation) in q_core.iter_mut() {
+            for (mut ctrl, id, mut transform) in q_core.iter_mut() {
                 if id.0 == pack.id {
                     // Kill me :
                     ctrl.forward = pack.ctrl.forward;
@@ -53,10 +44,7 @@ pub fn pop_buffer(
                 }
             }
         }
-        
     }
-    
-    //s_tick.0 += 1;
 }
 
 #[derive(Default)]

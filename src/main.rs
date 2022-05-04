@@ -2,20 +2,11 @@ use game::components::Config;
 use bevy::window::PresentMode;
 use bevy::prelude::*;
 use game::Game;
-use std::env;
 use std::fs;
 mod game;
 
 //use crate::bevy_console::*;
 fn main() {
-
-    let args: Vec<String> = env::args().collect();
-    let sync = 
-        if &args[1] != "client" {
-            true
-        } else {
-            false
-        };
 
     App::new()
     //
@@ -25,7 +16,7 @@ fn main() {
         width: 720.,
         height: 500.,
         present_mode: PresentMode::Immediate,
-        //mode: bevy::window::WindowMode::Fullscreen,
+        //mode: bevy::window::WindowMode::BorderlessFullscreen,
         ..Default::default()
     })
     //.add_plugin(ConsolePlugin)

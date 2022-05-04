@@ -2388,6 +2388,7 @@ dependencies = [
  "bytes",
  "iyes_loopless",
  "priority-queue",
+ "rapier3d",
 ]
 
 [[package]]

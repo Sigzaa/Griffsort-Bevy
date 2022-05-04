@@ -8,8 +8,6 @@ pub fn collect_inputs_sys(
     _motion_evr: EventReader<MouseMotion>,
     _q_camera: Query<&mut Transform, (With<ThreeDCam>, Without<Selected>)>,
     grabbed_flag: Res<GrabbedCursor>,
-    mut motion_evr: EventReader<MouseMotion>,
-    time: Res<Time>,
 ) {
     //println!("collinputs");
     if !grabbed_flag.0 {
@@ -132,9 +130,11 @@ pub fn velocity_vector_sys(
         if ctrl.shift {
             coef *= 3.4;
         }
-
+       
         ctrl.delta_x = 0.;
         ctrl.delta_y = 0.;
-        ctrl.velocity = coef * direction * SPEED;
+        ctrl.velocity = coef * direction;
+        //println!("speed: {}, vel: {}", SPEED, ctrl.velocity);
     }
+    //println!();
 }
