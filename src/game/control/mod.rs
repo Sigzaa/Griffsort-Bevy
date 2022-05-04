@@ -3,7 +3,6 @@ use crate::game::components::*;
 use bevy_rapier3d::prelude::*;
 
 use world::*;
-use load_map::*;
 
 pub mod world;
 pub mod players;

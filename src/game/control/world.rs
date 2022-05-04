@@ -59,9 +59,6 @@ pub fn spawn_teams(
 
 pub fn setup_world(
     mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-    asset_server: Res<AssetServer>,
 ) {
     commands.spawn_bundle(UiCameraBundle::default());
     /*

@@ -13,7 +13,7 @@ impl Plugin for ConsolePlugin {
         app.add_plugin(EguiPlugin);
         // if there's other egui code we need to make sure they don't run at the same time
         app.add_system(console_system.exclusive_system());
-        app.add_system(receive_console_line.system());
+        app.add_system(receive_console_line);
     }
 }
 

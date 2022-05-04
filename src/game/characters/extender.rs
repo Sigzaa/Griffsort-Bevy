@@ -2,7 +2,6 @@
 // Any changes may brake entire game. Be careful.
 use crate::game::components::{filters::*, player_data::*, *};
 use bevy::prelude::*;
-use bevy_rapier3d::prelude::*;
 
 #[derive(Component)]
 pub struct Extended;

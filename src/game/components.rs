@@ -22,10 +22,6 @@ pub struct MyAddr(pub i32);
 
 //pub struct ConnectedList(pub Vec<std::net::SocketAddr>);
 
-pub struct Config {
-    pub mode: String,
-    pub address: String,
-}
 pub struct BindedId(pub i32);
 #[derive(Default)]
 pub struct GrabbedCursor(pub bool);
