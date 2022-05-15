@@ -4,7 +4,7 @@ use bevy::{input::mouse::MouseMotion, prelude::*};
 pub fn collect_inputs_sys(
     input: Res<Input<KeyCode>>,
     buttons: Res<Input<MouseButton>>,
-    mut q_selected: Query<(&mut Control, &mut Transform, &mut HeadRotation), With<Selected>>,
+    mut q_selected: Query<(&mut Control, &mut Transform, &mut Trans), With<Selected>>,
     _motion_evr: EventReader<MouseMotion>,
     _q_camera: Query<&mut Transform, (With<ThreeDCam>, Without<Selected>)>,
     grabbed_flag: Res<GrabbedCursor>,
@@ -77,7 +77,7 @@ pub fn collect_inputs_sys(
 use crate::game::components::SENSITIVITY;
 
 pub fn smooth_camera(
-    mut q_selected: Query<(&mut Control, &mut HeadRotation, &mut Transform), With<Selected>>,
+    mut q_selected: Query<(&mut Control, &mut Trans, &mut Transform), With<Selected>>,
     mut motion_evr: EventReader<MouseMotion>,
     mut q_camera: Query<&mut Transform, (With<ThreeDCam>, Without<Selected>)>,
 ) {
@@ -89,15 +89,15 @@ pub fn smooth_camera(
                 
                 transform.rotation *= Quat::from_rotation_y(-ev.delta.x * SENSITIVITY);
                 camera.rotation *= Quat::from_rotation_x(-ev.delta.y * SENSITIVITY);
-                head_rotation.0 = camera.rotation;
+                head_rotation.head_rotation = camera.rotation;
             }
         }
     }
 }
 pub fn velocity_vector_sys(
-    mut query: Query<(&mut Control, &Transform, &mut HeadRotation), With<Core>>,
+    mut query: Query<(&mut Control, &Transform, &mut Trans), With<Core>>,
 ) {
-    for (mut ctrl, transform, _head_rotation) in query.iter_mut() {
+    for (mut ctrl, transform, mut trans) in query.iter_mut() {
         let mut direction = Vec3::ZERO;
 
         let vec = transform.local_x();
@@ -133,7 +133,7 @@ pub fn velocity_vector_sys(
        
         ctrl.delta_x = 0.;
         ctrl.delta_y = 0.;
-        ctrl.velocity = coef * direction;
+        trans.velocity = coef * direction;
         //println!("speed: {}, vel: {}", SPEED, ctrl.velocity);
     }
     //println!();

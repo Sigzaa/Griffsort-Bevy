@@ -1,13 +1,15 @@
 use bevy_simple_networking::{NetworkEvent, Transport};
 use super::components::*;
 use bevy::{ prelude::*};
-use crate::game::networking::shared::additional::*;
-    
+use crate::game::networking::shared::resources::*;
+use std::str;
+
 pub fn handler(
     mut events: EventReader<NetworkEvent>,
     mut transport: ResMut<Transport>,
     mut con: ResMut<ConnectedList>,
     mut buf: ResMut<Buffer>,
+    s_tick: Res<TickCounter>
 ) {
     
     for event in events.iter() {
@@ -30,9 +32,10 @@ pub fn handler(
             }
             NetworkEvent::CliEvent(_handle, msg) => {
                 // Listening for msg from clients to push it in the buffer.
-                let msg_pack = msg_to_MsgPack(msg);
+                let msg_ser = str::from_utf8(&msg).unwrap();
+                let msg_pack: MsgPack = serde_json::from_str(&msg_ser).unwrap();
                 // pushing input pack to the buffer.
-                //println!("server tick: {:?}, client tick: {}", s_tick.0 , msg_pack.tick);
+                
                 buf.0.push(msg_pack.clone(), - msg_pack.tick); /* Magic trick to opposite priority. Maybe make it better for optimisation */
                 
             }

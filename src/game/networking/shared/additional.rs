@@ -1,57 +1,9 @@
 use crate::game::components::player_data::Control;
 use bevy::prelude::*;
-use priority_queue::PriorityQueue;
 
-#[derive(Component)]
-pub struct Buffer(pub PriorityQueue<MsgPack, i32>);
 
-#[derive(Component, Clone, Copy, Debug)]
-pub struct MsgPack {
-    pub ctrl: Control,
-    pub id: i32,
-    pub rotation: Vec4,
-    pub tick: i32,
-}
 
-use std::hash::{Hash, Hasher};
 
-impl Hash for MsgPack {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.tick.hash(state);
-        //self.phone.hash(state);
-    }
-}
-
-impl PartialEq for MsgPack {
-    fn eq(&self, other: &Self) -> bool {
-        self.tick == other.tick
-    }
-}
-impl Eq for MsgPack {}
-
-#[derive(Component, Clone, Copy, Debug)]
-
-#[allow(non_camel_case_types)]
-pub struct msg_structure {
-    pub ctrl: Control,
-    pub rotation: Quat,
-    pub head_rotation: Quat,
-    pub id: i32,
-    pub tick: i32,
-}
-impl msg_structure {
-    pub fn pack(&self) -> String {
-        let (_x, y, _z, w) = quat_unpack(self.rotation); // Looks ugly and difficoultly.
-        let (x1, _y1, _z1, w1) = quat_unpack(self.head_rotation); // Also this.
-
-        let ctrl_msg = ctrl_to_string(self.ctrl);
-
-        format!(
-            "{} {} {} {} {} {} {}",
-            self.id, self.tick, y, w, x1, w1, ctrl_msg,
-        )
-    }
-}
 fn ctrl_to_string(ctrl: Control) -> String {
     // Looks schlecht (bad) 0_o.
     // mey be better is iterate in the struct.
@@ -88,33 +40,6 @@ fn string_to_ctrl(v: Vec<f32>) -> Control {
     }
 }
 
-#[allow(dead_code)]
-pub fn unpack_msg(msg: &[u8]) -> msg_structure{
-
-    let v: Vec<f32> = split(msg);
-    
-    msg_structure{
-        ctrl: string_to_ctrl(v.clone()),
-        id: v[0] as i32,
-        tick: v[1] as i32,
-        head_rotation: quat_pack(0.,0.,0.,0.),
-        rotation: quat_pack(0.,0.,0.,0.),
-
-    }
-}
-#[allow(non_snake_case)]
-pub fn msg_to_MsgPack(msg: &[u8]) -> MsgPack{
-    
-    let v = split(msg);
-
-    MsgPack{
-        ctrl: string_to_ctrl(v.clone()),
-        id: v[0] as i32,
-        tick: v[1] as i32,
-        rotation: Vec4::new(v[4], v[2], v[5], v[3])
-
-    }
-}
 
 pub fn split(msg: &[u8]) -> Vec<f32>{
     String::from_utf8_lossy(msg)

@@ -665,9 +665,8 @@ dependencies = [
 
 [[package]]
 name = "bevy_rapier3d"
-version = "0.13.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "28b4b8b9331b8dd730ea00acd211f927ea44ae85d40587f255d4095e0532cef8"
+version = "0.13.2"
+source = "git+https://github.com/dimforge/bevy_rapier#3f04e8d6b9c4bacf54ce09a6cd358979329e4980"
 dependencies = [
  "bevy",
  "bitflags",
@@ -2389,6 +2388,8 @@ dependencies = [
  "iyes_loopless",
  "priority-queue",
  "rapier3d",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
@@ -3227,9 +3228,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.80"
+version = "1.0.81"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f972498cf015f7c0746cac89ebe1d6ef10c293b94175a243a2d9442c163d9944"
+checksum = "9b7ce2b32a1aed03c558dc61a5cd328f15aff2dbc17daad8fb8af04d2100e15c"
 dependencies = [
  "itoa",
  "ryu",

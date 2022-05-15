@@ -56,14 +56,7 @@ pub struct HisPack {
     pub translation: Vec3,
     pub st_tr: Vec3,
 }
-#[derive(Component, Clone, Copy, Debug)]
-pub struct MsgPack {
-    pub ctrl: Control,
-    pub id: i32,
-    pub rotation: Vec4,
-    pub tick: i32,
-    pub entity: Entity,
-}
+
 
 
 

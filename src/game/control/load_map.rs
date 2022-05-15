@@ -3,6 +3,7 @@ use bevy::{
 };
 
 use bevy_rapier3d::prelude::*;
+use bevy_rapier3d::geometry::ComputedColliderShape;
 
 #[derive(Component)]
 pub struct MapBody;
@@ -43,7 +44,8 @@ pub fn spawn_gltf_objects(
         is_loaded.0 = true;
         let scale = 251.44155883789062;
         commands.spawn()
-        .insert(Collider::bevy_mesh(mesh.unwrap()).unwrap())
+        .insert(Collider::from_bevy_mesh(mesh.unwrap(), &ComputedColliderShape::TriMesh).unwrap())
+        .insert(Ccd::enabled())
         .insert(Transform::from_scale(Vec3::new(scale,scale,scale)));   
     }
 }

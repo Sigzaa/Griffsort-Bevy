@@ -3,8 +3,8 @@
 // Constants -->
 pub const SENSITIVITY: f32 = 0.002;
 pub const RESPAWNGAP: f32 = 9.;
-pub const TICKRATE: f64 = 4.;
-pub const SPEED: f32 = 10. / TICKRATE as f32;
+pub const TICKRATE: f64 = 66.;
+pub const SPEED: f32 = 300. / TICKRATE as f32;
 // <--
 
 // Events structs -->
@@ -13,8 +13,8 @@ pub struct SpawnCharacter(pub &'static str, pub i32, pub i32); // Character name
 pub struct ExtendCharacter(pub bevy::prelude::Entity, pub i32, pub i32); // Entity of existing, player_id, team.
 pub struct _DespawnCharacter(pub i16 /* id */);
 
-
 use bevy::prelude::*;
+use bevy_snap::*;
 
 // Resources -->
 #[derive(Default)]
@@ -83,16 +83,20 @@ pub mod filters {
 // Information about players in Bevy entities -->
 pub mod player_data {
     use bevy::prelude::*;
+    use serde::{Serialize, Deserialize};
 
     #[derive(Component)]
-    pub struct VelocityBuffer {
-        pub linvel: Vec3,
-    }
-
-    #[derive(Component)]
-    pub struct VelNRot {
+    pub struct Trans {
         pub velocity: Vec3,
-        pub rotation: Vec4,
+        pub head_rotation: Quat,
+    }
+    impl Default for Trans {
+        fn default() -> Self {
+            Self {
+                velocity: Vec3::ZERO,
+                head_rotation: Quat::IDENTITY,
+            }
+        }
     }
 
     #[derive(Bundle, Component)]
@@ -122,11 +126,11 @@ pub mod player_data {
             }
         }
     }
-    #[derive(Component, Debug, Copy, Clone)]
+    #[derive(Component,Serialize, Deserialize, Debug, Copy, Clone)]
     pub struct Control {
         // Events
-        pub delta_x: f32,
         pub delta_y: f32,
+        pub delta_x: f32,
         pub jump: bool,
         pub left: bool,
         pub right: bool,
@@ -138,14 +142,10 @@ pub mod player_data {
         pub shift: bool,
         pub lmb: bool,
         pub rmb: bool,
-        pub velocity: Vec3,
-        pub rotation: Vec4,
     }
     impl Default for Control {
         fn default() -> Self {
             Self {
-                delta_x: 0.,
-                delta_y: 0.,
                 jump: false,
                 left: false,
                 right: false,
@@ -157,15 +157,13 @@ pub mod player_data {
                 shift: false,
                 lmb: false,
                 rmb: false,
-                velocity: Vec3::new(0., 0., 0.),
-                rotation: Vec4::new(0., 0., 0., 0.),
+                delta_y: 0.,
+                delta_x: 0.,
             }
         }
     }
     #[derive(Component, Debug)]
     pub struct Id(pub i32);
-    #[derive(Component)]
-    pub struct HeadRotation(pub Quat); // Uses for defining head rotation.
     #[derive(Component)]
     pub struct CharName(pub &'static str);
     #[derive(Component)]

@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 bevy = { version = "0.7.0", features = [ "trace"]}
-bevy_rapier3d = { version = "*", features = [ "enhanced-determinism", "debug-render" ] }
+bevy_rapier3d = { git = "https://github.com/dimforge/bevy_rapier", features = [ "enhanced-determinism" ] }
 bevy_egui = "0.13"
 bevy_simple_networking = { git = "https://github.com/ggaast/bevy_simple_networking.git" , branch = "main"}
 bytes = "1"
@@ -15,6 +15,8 @@ iyes_loopless = "0.3.0"
 bevy_system_graph = "0.1.1"
 bevy_snap = { git = "https://github.com/johanhelsing/bevy_snap", version = "0.2.0"}
 rapier3d = "0.12.0"
+serde = "1.0.137"
+serde_json = "1.0.81"
 
 priority-queue = "1.2.1"
 
@@ -24,3 +26,6 @@ opt-level = 1
 # Enable high optimizations for dependencies (incl. Bevy), but not for our code:
 [profile.dev.package."*"]
 opt-level = 3
+
+[features]
+trace_tracy = []

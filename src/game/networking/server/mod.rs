@@ -8,7 +8,7 @@ mod tick;
 use tick::*;
 use super::shared::a_list::AList;
 use bevy_simple_networking::{ ServerPlugin };
-use super::shared::additional::*;
+use crate::game::networking::shared::resources::*;
 
 use bevy::{ app::ScheduleRunnerSettings };
 use priority_queue::PriorityQueue;
@@ -61,7 +61,7 @@ impl Plugin for Server {
                     .with_system(simulate_sys.label("sim").after("vector"))
                     .with_system(update_tick.label("tick").after("sim"))
                     //.with_system(step_world_system::<NoUserData>.label("world_step").after("tick"))
-                    .with_system(send_sys.after("world_step"))
+                    .with_system(send_sys.after("tick"))
             )
             //.add_system(send_message)
             .run();

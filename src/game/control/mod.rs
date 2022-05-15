@@ -15,7 +15,6 @@ impl Plugin for Control {
     fn build(&self, app: &mut App) {
         app 
             .insert_resource(GrabbedCursor(false))
-            .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
             .add_event::<BindControls>()
             .add_system(window::window_control)
             .add_system(window::cursor_grab_system)

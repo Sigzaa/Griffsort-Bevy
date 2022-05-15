@@ -1,7 +1,9 @@
 // This module represents master for all <Core> entities.
 // Any changes may brake entire game. Be careful.
 use crate::game::components::{filters::*, player_data::*, *};
-use bevy::prelude::*;
+use bevy::{prelude::*};
+use bevy_snap::*;
+use crate::game::networking::shared::resources::*;
 
 #[derive(Component)]
 pub struct Extended;
@@ -13,6 +15,7 @@ pub fn extend(
     mut commands: Commands,
     mut q_camera: Query<Entity, With<ThreeDCam>>,
     q_core: Query<(Entity, &Id, &Team), (With<Core>, Without<Extended>)>,
+    mut snapshot_id_provider: ResMut<SnapshotIdProvider<SnapShot>>
 ) {
     for (ent, id, team) in q_core.iter() {
         let id = id.0;
@@ -22,16 +25,11 @@ pub fn extend(
         let core = commands
             .entity(ent)
             .insert(Timer1(0.))
+            .insert(snapshot_id_provider.next())
             //.insert(RigidBody::Dynamic)
             //.insert(RotationConstraints::lock())
             .insert(Extended)
-            .insert(HeadRotation(Quat::from_rotation_y(0.)))
-            //.insert(Veloctiy{
-            //    translation: Vec3::new(0.,0.,0.),
-            //})
-            .insert(VelocityBuffer{
-                linvel: Vec3::ZERO
-            })
+            .insert(Trans::default())
             .id();
 
         let head = commands

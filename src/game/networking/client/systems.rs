@@ -1,31 +1,34 @@
 use super::components::*;
 use crate::game::components::{filters::*, player_data::*};
-use crate::game::networking::shared::additional::*;
+use crate::game::networking::shared::resources::*;
 use bevy::ecs::schedule::{ShouldRun, ShouldRun::*};
 use bevy::{ prelude::*};
 use bevy_rapier3d::prelude::*;
 use bevy_simple_networking::Transport;
+use serde::{Serialize, Deserialize};
+
 
 pub fn send_message(
     time: Res<Time>,
     mut transport: ResMut<Transport>,
-    mut q_selected: Query<(&Id, &mut Control, &mut Transform, &mut HeadRotation), With<Selected>>,
+    mut q_selected: Query<(&Id, &mut Control, &mut Transform, &mut Trans), With<Selected>>,
     serv_addr: ResMut<ServerAddr>,
     my_id: ResMut<MyId>,
     mut inp_his: ResMut<InputHistory>,
     tick_counter: ResMut<Tick>,
 ) {
-    for (_id, ctrl, transform, head_rotation) in q_selected.iter_mut() {
+    for (_id, ctrl, transform, trans) in q_selected.iter_mut() {
         //
         //println!("send");
-        let msg = msg_structure {
+        let msg_des = MsgPack{
             ctrl: ctrl.clone(),
             rotation: transform.rotation,
-            head_rotation: head_rotation.0,
+            head_rotation: trans.head_rotation,
             id: my_id.0,
             tick: tick_counter.0,
-        }
-        .pack();
+        };
+        let msg_ser = serde_json::to_string(&msg_des).unwrap();
+
 
         // msg_pack : msg_struct -> string to send.
         // msg_unpack : received string -> msg_struct.
@@ -48,31 +51,31 @@ pub fn send_message(
         if serv_addr.0.len() >= 1 {
             // Check for avaliable server in another place
             // Sending via UDP.
-            transport.send("main", serv_addr.0[0], &msg);
+            transport.send("main", serv_addr.0[0], &msg_ser);
         }
     }
 }
 
 pub fn predict_sys(
-    mut q_core: Query<(&mut Control, &mut Velocity), With<Core>>,
+    mut q_core: Query<(&mut Control, &mut Velocity, &mut Trans), With<Core>>,
     mut is_started: ResMut<IsStarted>, // Will be replaced with reconsiliation system
 ) {
     //println!("tick {}:", tick_counter.0);
     //println!("predict");
     // println!();
-    for (ctrl, mut rb_velocity) in q_core.iter_mut() {
+    for (ctrl, mut rb_velocity, trans) in q_core.iter_mut() {
         // Simulating -->
         let mut rb_vel = Vec3::ZERO;
 
         // Uses to sync initial conditions
         // Remove this after creating reconciliation system -->
-        if !is_started.0 && ctrl.velocity == Vec3::ZERO {
+        if !is_started.0 && trans.velocity == Vec3::ZERO {
         } else {
             is_started.0 = true;
             rb_vel = Vec3::new(0., rb_velocity.linvel[1], 0.);
         } //<--
           //println!("{}{}", ctrl.velocity, rb_vel);
-        rb_velocity.linvel = (ctrl.velocity + rb_vel).into();
+        rb_velocity.linvel = (trans.velocity + rb_vel).into();
         //println!("pos: {}", rb_position.position.translation);
 
         //println!("rot: {} {}", transform.rotation, ctrl.forward);

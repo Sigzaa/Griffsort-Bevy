@@ -1,22 +1,16 @@
-
 mod components;
 mod connection_handler;
+mod systems;
 mod tick;
-use bevy::{prelude::*};
 
+use crate::game::player_logic::client_controls::*;
+use bevy::prelude::*;
 use bevy_simple_networking::ClientPlugin;
-
+use components::*;
 use std::{
     env,
     net::{SocketAddr, UdpSocket},
 };
-
-use components::*;
-
-mod systems;
-//use super::super::shared::sim_step::*;
-use crate::game::player_logic::client_controls::*;
-
 
 pub struct Client;
 impl Plugin for Client {
@@ -55,5 +49,3 @@ impl Plugin for Client {
             .run();
     }
 }
-
-

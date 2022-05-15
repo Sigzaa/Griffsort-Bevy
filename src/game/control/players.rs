@@ -16,13 +16,11 @@ pub fn control_bind( // Binds camera and <Selected>  according to BindedId resou
         if id.0 == binded_id.0{
             return;
         }
-        println!("removing cam");
         commands.entity(sel_ent).remove::<Selected>();
         commands.entity(sel_ent).remove_children(&[cam_ent]);
     }
     for (id, ent)in q_core.iter(){
         if id.0 == binded_id.0{
-            println!("pushing cam");
             commands.entity(ent).push_children(&[cam_ent]);
             commands.entity(ent).insert(Selected);
         }

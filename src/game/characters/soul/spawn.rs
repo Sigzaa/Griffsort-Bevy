@@ -95,7 +95,7 @@ pub fn spawn(
                     //forward: true,
                     ..Default::default()
                 })
-
+                
                 .insert(SoulFilter) // Change to Enum
                 .insert(Core)
                 //.insert(CollisionShape::Cuboid { half_extends: Vec3::new(0.5,0.5,0.5) , border_radius: None})
