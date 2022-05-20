@@ -59,11 +59,6 @@ pub struct HisPack {
 
 
 
-
-
-
-
-
 #[derive(Component)]
 pub struct InpBuffer(pub PriorityQueue<InpBuf, i32>);
 

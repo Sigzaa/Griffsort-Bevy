@@ -1,10 +1,13 @@
+pub mod components;
+mod connection_handler;
+mod tick;
+pub mod systems;
+
 use crate::game::components::{ *};
 use bevy::{core::FixedTimestep, prelude::*};
 use std::{env, str, net::{ UdpSocket }};
 use components::*;
-pub mod components;
-mod connection_handler;
-mod tick;
+
 use tick::*;
 use super::shared::a_list::AList;
 use bevy_simple_networking::{ ServerPlugin };
@@ -45,25 +48,17 @@ impl Plugin for Server {
             .insert_resource(Buffer(PriorityQueue::new()))
             .insert_resource(ConnectedList(AList::default()))
             .insert_resource(Timer1(0.))
-            .insert_resource(tick::IsStarted(false))
+            .insert_resource(components::IsStarted(false))
+            .insert_resource(TickCounter(-50))
             //.add_plugins(MinimalPlugins)
             //.add_plugin(LogPlugin)
-            .add_plugin(ServerPlugin)
-            .insert_resource(TickCounter(-50))
+            
+            
             .add_system(connection_handler::handler.label("msg_collect"))
-            .add_system_set(
-                SystemSet::new()
-                    .with_run_criteria(FixedTimestep::steps_per_second(TICKRATE))
-                    //.with_system(crate::game::player_logic::shooting::shoot_system.label("addition").after("msg_collect"))
-                    .with_system(pop_buffer.label("buffer").after("msg_collect"))
-                    .with_system(crate::game::player_logic::client_controls::velocity_vector_sys.label("vector").after("buffer"))
-                    
-                    .with_system(simulate_sys.label("sim").after("vector"))
-                    .with_system(update_tick.label("tick").after("sim"))
-                    //.with_system(step_world_system::<NoUserData>.label("world_step").after("tick"))
-                    .with_system(send_sys.after("tick"))
-            )
+           
             //.add_system(send_message)
+            .add_plugin(ServerPlugin)
+            .add_plugin(tick::Tick)
             .run();
     }
 }

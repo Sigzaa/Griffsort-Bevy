@@ -1,135 +1,70 @@
-use bevy_simple_networking::Transport;
-use super::components::*;
-use crate::game::components::{filters::*, player_data::*};
-use bevy_rapier3d::prelude::*;
-use crate::game::networking::shared::additional::*;
-use crate::game::networking::shared::resources::*;
 use bevy::prelude::*;
+use bevy_rapier3d::prelude::*;
 
-pub fn pop_buffer(
-    mut q_core: Query<(&mut Control, &Id, &mut Transform, &mut Trans), With<Core>>,
-    mut buf: ResMut<Buffer>,
-    s_tick: ResMut<TickCounter>,
-) {
-    loop {
-        // Expecting panic while unwraping.
-        if buf.0.is_empty() {
-            break;
-        }
-        // Skipping frame if client`s tick more then server`s.
-        // Inversing " < " to " > " because tick counter is inversed. Look at Priority Queue filling in connection_handler.
-        let (mut _pack, tick) = buf.0.peek().unwrap();
+use super::super::shared::systems::*;
+use super::systems::*;
+use crate::game::components::*;
+use crate::game::player_logic::client_controls::*;
+use bevy::{core::FixedTimestep, prelude::*};
+use bevy_rapier3d::plugin::{systems::*, *};
 
+// .add_system_set(
+//     SystemSet::new()
+//         .with_run_criteria(FixedTimestep::steps_per_second(TICKRATE))
+//         //.with_system(crate::game::player_logic::shooting::shoot_system.label("addition").after("msg_collect"))
+//         .with_system(pop_buffer.label("buffer").after("msg_collect"))
+//         .with_system(crate::game::player_logic::client_controls::velocity_vector_sys.label("vector").after("buffer"))
+//         .with_system(simulate_sys.label("sim").after("vector"))
+//         .with_system(update_tick.label("tick").after("sim"))
+//         //.with_system(step_world_system::<NoUserData>.label("world_step").after("tick"))
+//         .with_system(send_sys.after("tick"))
+// )
 
-        if -tick > s_tick.0 {
-            break;
-        }
-        // Shading with pop
-        
-        let (pack, tick) = buf.0.pop().unwrap();
+pub struct Tick;
+impl Plugin for Tick {
+    fn build(&self, app: &mut App) {
+        app.add_stage_after(
+            CoreStage::PreUpdate,
+            "tick",
+            SystemStage::single_threaded()
+                .with_run_criteria(FixedTimestep::steps_per_second(TICKRATE)),
+        )
+        .add_system_to_stage("tick", pop_buffer) // -
+        .add_system_to_stage("tick", velocity_vector_sys.after(pop_buffer)) // +
+        .add_system_to_stage("tick", simulate_sys.after(velocity_vector_sys)) // +
+        .add_system_to_stage("tick", update_tick.label("update_tick").after(simulate_sys)) // +
 
-        if tick == -s_tick.0{
-            for (mut ctrl, id, mut transform, mut trans) in q_core.iter_mut() {
-                if id.0 == pack.id {
-                    // Kill me :
-                    ctrl.forward = pack.ctrl.forward;
-                    ctrl.left = pack.ctrl.left;
-                    ctrl.back = pack.ctrl.back;
-                    ctrl.right = pack.ctrl.right;
-                    ctrl.jump = pack.ctrl.jump;
-                    ctrl.shift = pack.ctrl.shift;
-                    ctrl.lmb = pack.ctrl.lmb;
-                    trans.head_rotation = pack.head_rotation;
-                    transform.rotation = pack.rotation;
-                    //println!("tick: {}, rot: {}",tick, super::super::quat_pack(0., ctrl.rotation[1], 0., ctrl.rotation[3]));
-                    
-                }
-            }
-        }
-    }
-}
-
-#[derive(Default)]
-pub struct IsStarted(pub bool);
-
-pub fn simulate_sys(
-    mut q_core: Query<
-        (
-            &Id,
-            &mut Control,
-            &mut Transform,
-            &mut Trans,
-
-
-            &mut Velocity,
-        ),
-        With<Core>,
-    >,
-    s_tick: ResMut<TickCounter>,
-    mut is_started: ResMut<IsStarted>, // Will be replaced with reconsiliation system
-
-) {
-    for (_id, ctrl, mut transform, mut trans, mut rb_velocity) in
-        q_core.iter_mut()
-    {
-        // Simulating -->
-
-        //println!("time: {}", st_time - timer.0);
-
-        //println!("tick {}:", s_tick.0);
-        //println!("rot: {} {}", transform.rotation, ctrl.forward);
-
-        
-        //println!("pos: {:?} + {}", rb_position.position.translation, ctrl.velocity);
-        //println!("vec: {}", ctrl.velocity);
-
-        // transform.translation = rb_position.position.translation.into();
-        let mut rb_vel = Vec3::ZERO;
-        if !is_started.0 && trans.velocity == Vec3::ZERO {
-            
-        } else {
-            is_started.0 = true;
-            rb_vel = Vec3::new(0.,rb_velocity.linvel[1],0.);
-        }
-
-        rb_velocity.linvel = (trans.velocity + rb_vel).into();
-
-        if  s_tick.0 > 70{
-            //std::process::exit(0);
-        }
-        //rb_velocity.linvel = rb_vel.into();
-    }
-}
-
-pub fn update_tick(mut s_tick: ResMut<TickCounter>){
-    s_tick.0 += 1;
-    
-    
-    //println!();
-}
-
-pub fn send_sys(
-    mut q_core: Query<(&Id, &mut Control, &mut Transform, &mut Trans), With<Core>>,
-    mut transport: ResMut<Transport>,
-    con: ResMut<ConnectedList>,
-    s_tick: ResMut<TickCounter>,
-){
-    for (id, _ctrl, transform, _head_rotation) in
-        q_core.iter_mut()
-    {
-        let v = transform.translation;
-        let msg = format!("{} {} {} {} {}", id.0,  s_tick.0, v[0],v[1],v[2]);
-
-        for index in 0..con.0.len() { // Worse send_all_clients()
-            match con.0.is_empty(index) {
-                false => {
-                    transport.send("main", con.0.get_addr(index).unwrap(), &msg)
-                }
-                true => {}
-            }
-        }
-
-
-
+        .add_system_set_to_stage(
+            "tick",
+            SystemSet::new()
+                .label("step")
+                .after("update_tick")
+                .with_system(systems::init_async_colliders)
+                .with_system(systems::apply_scale.after(systems::init_async_colliders))
+                .with_system(systems::apply_collider_user_changes.after(systems::apply_scale))
+                .with_system(
+                    systems::apply_rigid_body_user_changes
+                        .after(systems::apply_collider_user_changes),
+                )
+                .with_system(
+                    systems::apply_joint_user_changes.after(systems::apply_rigid_body_user_changes),
+                )
+                .with_system(systems::init_rigid_bodies.after(systems::apply_joint_user_changes))
+                .with_system(
+                    systems::init_colliders
+                        .after(systems::init_rigid_bodies)
+                        .after(systems::init_async_colliders),
+                )
+                .with_system(systems::init_joints.after(systems::init_colliders))
+                .with_system(systems::sync_removals.after(systems::init_joints))
+                
+                .with_system(systems::step_simulation::<()>.after(systems::sync_removals))
+                .with_system(
+                    systems::update_colliding_entities.after(systems::step_simulation::<()>),
+                )
+                .with_system(systems::writeback_rigid_bodies.after(update_colliding_entities)),
+        )
+        .add_system_to_stage("tick", send_sys.after("step")) // -
+        .run();
     }
 }

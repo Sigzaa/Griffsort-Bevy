@@ -53,33 +53,33 @@ pub struct Networking;
 impl Plugin for Networking {
     fn build(&self, mut app: &mut App) {
 
-        SpecialStagingPlugin::new(
-            Schedule::default()
-                .with_stage(
-                    PhysicsStages::SyncBackend,
-                    SystemStage::parallel()
-                    .with_system_set(
-                        RapierPhysicsPlugin::<NoUserData>::get_systems(PhysicsStages::SyncBackend),
-                    ),
-                )
-                .with_stage_after(
-                    PhysicsStages::SyncBackend,
-                    PhysicsStages::StepSimulation,
-                    SystemStage::parallel()
-                        .with_system_set(RapierPhysicsPlugin::<NoUserData>::get_systems(
-                            PhysicsStages::StepSimulation,
-                        )),
-                )
-                .with_stage_after(
-                    PhysicsStages::StepSimulation,
-                    PhysicsStages::Writeback,
-                    SystemStage::parallel()
-                    .with_system_set(
-                        RapierPhysicsPlugin::<NoUserData>::get_systems(PhysicsStages::Writeback),
-                    ),
-                ),
-        )
-        .build(&mut app);
+        // SpecialStagingPlugin::new(
+        //     Schedule::default()
+        //         .with_stage(
+        //             PhysicsStages::SyncBackend,
+        //             SystemStage::parallel()
+        //             .with_system_set(
+        //                 RapierPhysicsPlugin::<NoUserData>::get_systems(PhysicsStages::SyncBackend),
+        //             ),
+        //         )
+        //         .with_stage_after(
+        //             PhysicsStages::SyncBackend,
+        //             PhysicsStages::StepSimulation,
+        //             SystemStage::parallel()
+        //                 // .with_system_set(RapierPhysicsPlugin::<NoUserData>::get_systems(
+        //                 //     PhysicsStages::StepSimulation,
+        //                 // )),
+        //         )
+        //         .with_stage_after(
+        //             PhysicsStages::StepSimulation,
+        //             PhysicsStages::Writeback,
+        //             SystemStage::parallel()
+        //             // .with_system_set(
+        //             //     RapierPhysicsPlugin::<NoUserData>::get_systems(PhysicsStages::Writeback),
+        //             // ),
+        //         ),
+        // )
+        //.build(&mut app);
     
         // Be sure to setup all four stages
         // app.add_stage_before(
@@ -89,6 +89,7 @@ impl Plugin for Networking {
         //         PhysicsStages::DetectDespawn,
         //     )),
         // );
+
 
     
         app.add_plugin(RapierPhysicsPlugin::<NoUserData>::default().with_default_system_setup(false));

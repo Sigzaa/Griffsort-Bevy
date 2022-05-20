@@ -29,3 +29,6 @@ opt-level = 3
 
 [features]
 trace_tracy = []
+
+[profile.dev.package.bevy_rapier3d]
+opt-level = 3

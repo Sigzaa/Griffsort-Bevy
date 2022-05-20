@@ -44,7 +44,7 @@ impl Plugin for Client {
             .insert_resource(IsStarted(false))
             .insert_resource(TPS(Timer::from_seconds(2.0, false)))
             .add_system(connection_handler::handler)
-            .add_system(smooth_camera.after("step"))
+            .add_system(smooth_camera)
             .add_plugin(tick::Tick)
             .run();
     }

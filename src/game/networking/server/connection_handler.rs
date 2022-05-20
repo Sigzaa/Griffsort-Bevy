@@ -35,7 +35,6 @@ pub fn handler(
                 let msg_ser = str::from_utf8(&msg).unwrap();
                 let msg_pack: MsgPack = serde_json::from_str(&msg_ser).unwrap();
                 // pushing input pack to the buffer.
-                
                 buf.0.push(msg_pack.clone(), - msg_pack.tick); /* Magic trick to opposite priority. Maybe make it better for optimisation */
                 
             }

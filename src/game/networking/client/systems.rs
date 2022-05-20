@@ -19,6 +19,7 @@ pub fn send_message(
 ) {
     for (_id, ctrl, transform, trans) in q_selected.iter_mut() {
         //
+
         //println!("send");
         let msg_des = MsgPack{
             ctrl: ctrl.clone(),
@@ -57,37 +58,43 @@ pub fn send_message(
 }
 
 pub fn predict_sys(
-    mut q_core: Query<(&mut Control, &mut Velocity, &mut Trans), With<Core>>,
+    mut q_core: Query<(&mut Control, &mut Velocity, &mut Trans, &mut Transform), With<Selected>>,
     mut is_started: ResMut<IsStarted>, // Will be replaced with reconsiliation system
+    mut grav_scale: Query<&mut GravityScale>
 ) {
     //println!("tick {}:", tick_counter.0);
     //println!("predict");
     // println!();
-    for (ctrl, mut rb_velocity, trans) in q_core.iter_mut() {
+    for (ctrl, mut rb_velocity, trans, mut transform) in q_core.iter_mut() {
         // Simulating -->
         let mut rb_vel = Vec3::ZERO;
 
         // Uses to sync initial conditions
         // Remove this after creating reconciliation system -->
+ 
         if !is_started.0 && trans.velocity == Vec3::ZERO {
         } else {
+            for mut grav_scale in grav_scale.iter_mut() {
+                grav_scale.0 = 1.0;
+            }
             is_started.0 = true;
-            rb_vel = Vec3::new(0., rb_velocity.linvel[1], 0.);
-        } //<--
-          //println!("{}{}", ctrl.velocity, rb_vel);
-        rb_velocity.linvel = (trans.velocity + rb_vel).into();
-        //println!("pos: {}", rb_position.position.translation);
+            rb_vel = Vec3::new(0.,rb_velocity.linvel[1],0.);
+            rb_velocity.linvel = (trans.velocity + rb_vel).into();
+        }
+
+        //println!("pos: {}", transform.translation);
 
         //println!("rot: {} {}", transform.rotation, ctrl.forward);
         //println!("pos: {:?} + {}", rb_position.position.translation, ctrl.velocity);
     }
 }
 
-pub fn update_tick(mut s_tick: ResMut<Tick>) {
-    s_tick.0 += 1;
+pub fn update_tick(mut tick: ResMut<Tick>) {
+    tick.0 += 1;
     //println!("tick end");
+    //
+    //println!("tick end: {}", tick.0);
     //println!();
-    //println!("server tick end: {}", s_tick.0);
 }
 
 
@@ -128,7 +135,7 @@ pub fn check_for_desync_sys(
     let server_pos = inp_buf.pos;
     if client_pos != server_pos {
         // Time travelling ->
-        //println!("desync on {}: server: {} client on {}: {}, w: {}", tick ,server_pos, client_tick, client_pos, client_forward );
+        println!("desync on {}: server: {} client on {}: {}", tick ,server_pos, client_tick, client_pos );
         iter.0 = tick_counter.0 - client_tick as i32;
     }
 }

@@ -71,7 +71,7 @@ pub fn spawn(
                     ..Default::default()
                 })
                 .insert(Spawn {
-                    respawn_coords: Vec3::new(id as f32 * 2.0, 0.5, 15.0),
+                    respawn_coords: Vec3::new(id as f32 * 2.0, 40.5, 15.0),
                 })
                 .insert_bundle(States {
                     character_name: CharName("Soul"),
@@ -88,6 +88,7 @@ pub fn spawn(
                 })
                 .insert(LockedAxes::ROTATION_LOCKED)
                 .insert(Collider::ball(0.5))
+                .insert(GravityScale(0.))
                 //.insert(Ccd::enabled())
                 //.insert(ColliderPositionSync::Discrete)
                 //.insert(ColliderDebugRender::with_id(0))

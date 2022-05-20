@@ -40,3 +40,9 @@ pub struct MsgPack {
     pub rotation: Quat,
     pub head_rotation: Quat,
 }
+
+pub enum Msg{
+    Input, // MsgPack
+    Output, // Position, states
+    Chat
+}
