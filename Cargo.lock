@@ -1248,6 +1248,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2df960f5d869b2dd8532793fde43eb5427cceb126c929747a26823ab0eeb536"
 
 [[package]]
+name = "core"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "core-foundation"
 version = "0.6.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1868,6 +1877,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "go"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "bevy_egui",
+ "bevy_rapier3d",
+ "bevy_simple_networking",
+ "bytes",
+ "core",
+ "iyes_loopless",
+ "networking",
+ "priority-queue",
+ "rapier3d",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "gpu-alloc"
 version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2375,24 +2402,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "moba"
-version = "0.1.0"
-dependencies = [
- "bevy",
- "bevy_egui",
- "bevy_rapier3d",
- "bevy_simple_networking",
- "bevy_snap",
- "bevy_system_graph",
- "bytes",
- "iyes_loopless",
- "priority-queue",
- "rapier3d",
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "naga"
 version = "0.8.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2529,6 +2538,24 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6e5a6ae77c8ee183dcbbba6150e2e6b9f3f4196a7666c02a715a95692ec1fa97"
 dependencies = [
  "jni-sys",
+]
+
+[[package]]
+name = "networking"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "bevy_egui",
+ "bevy_rapier3d",
+ "bevy_simple_networking",
+ "bevy_snap",
+ "bevy_system_graph",
+ "bytes",
+ "iyes_loopless",
+ "priority-queue",
+ "rapier3d",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
