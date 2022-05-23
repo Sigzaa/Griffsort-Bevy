@@ -11,7 +11,7 @@ pub fn collect_inputs(
     if !grabbed_flag.0 {
         return;
     }
-    for mut ctrl in q_selected.iter_mut() {
+    for mut ginp in q_selected.iter_mut() {
         ctrl.delta_x = 0.;
         ctrl.delta_y = 0.;
         if buttons.pressed(MouseButton::Left) {
@@ -70,68 +70,4 @@ pub fn collect_inputs(
             ctrl.e = false;
         }
     }
-}
-
-
-pub fn smooth_camera(
-    mut q_selected: Query<(&mut DevInputs, &mut Trans, &mut Transform), With<Selected>>,
-    mut motion_evr: EventReader<MouseMotion>,
-    mut q_camera: Query<&mut Transform, (With<ThreeDCam>, Without<Selected>)>,
-) {
-    for (mut ctrl, mut head_rotation, mut transform) in q_selected.iter_mut() {
-        for mut camera in q_camera.iter_mut() {
-            for ev in motion_evr.iter() {
-                ctrl.delta_x += -ev.delta.x;
-                ctrl.delta_y += -ev.delta.y;
-                
-                transform.rotation *= Quat::from_rotation_y(-ev.delta.x * SENSITIVITY);
-                camera.rotation *= Quat::from_rotation_x(-ev.delta.y * SENSITIVITY);
-                head_rotation.head_rotation = camera.rotation;
-            }
-        }
-    }
-}
-pub fn velocity_vector_sys(
-    mut query: Query<(&mut Control, &Transform, &mut Trans), With<Core>>,
-) {
-    for (mut ctrl, transform, mut trans) in query.iter_mut() {
-        let mut direction = Vec3::ZERO;
-
-        let vec = transform.local_x();
-        let z = vec[0];
-        let x = vec[2];
-
-        if ctrl.back {
-            direction.z += z;
-            direction.x -= x;
-        }
-        if ctrl.jump {
-            direction.y += 0.04;
-        }
-        if ctrl.e {
-            direction.y -= 0.08;
-        }
-        if ctrl.forward {
-            direction.z -= z;
-            direction.x += x;
-        }
-        if ctrl.left {
-            direction.z -= x;
-            direction.x -= z;
-        }
-        if ctrl.right {
-            direction.z += x;
-            direction.x += z;
-        }
-        let mut coef = SPEED;
-        if ctrl.shift {
-            coef *= 3.4;
-        }
-       
-        ctrl.delta_x = 0.;
-        ctrl.delta_y = 0.;
-        trans.velocity = coef * direction;
-        //println!("speed: {}, vel: {}", SPEED, ctrl.velocity);
-    }
-    //println!();
 }
