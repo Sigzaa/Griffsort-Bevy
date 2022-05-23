@@ -62,3 +62,6 @@ struct FrameCount(u32);
 pub const NetStage: &str = "net"; 
 
 pub const TICKRATE: i32 = 66;
+
+#[derive(Default)]
+pub struct TickCount(pub i32);
