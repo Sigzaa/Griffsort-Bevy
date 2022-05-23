@@ -12,62 +12,60 @@ pub fn collect_inputs(
         return;
     }
     for mut ginp in q_selected.iter_mut() {
-        ctrl.delta_x = 0.;
-        ctrl.delta_y = 0.;
         if buttons.pressed(MouseButton::Left) {
-            ctrl.lmb = true;
+            ginp.fire = 1;
         }
         if input.just_pressed(KeyCode::S) {
-            ctrl.back = true;
+            ginp.back = 1;
         }
         if input.just_pressed(KeyCode::W) {
-            ctrl.forward = true;
+            ginp.forward = 1;
         }
         if input.just_pressed(KeyCode::A) {
-            ctrl.left = true;
+            ginp.left = 1;
         }
         if input.just_pressed(KeyCode::D) {
-            ctrl.right = true;
+            ginp.right = 1;
         }
         if input.just_pressed(KeyCode::Q) {
-            ctrl.q = true;
+            ginp.a_1 = 1;
         }
         if input.just_pressed(KeyCode::E) {
-            ctrl.e = true;
+            ginp.a_2 = 1;
         }
         if input.just_pressed(KeyCode::LShift) {
-            ctrl.shift = true;
+            ginp.sprint = 1;
         }
         if input.just_pressed(KeyCode::Space) {
-            ctrl.jump = true;
+            ginp.jump = 1;
         }
 
         if buttons.just_released(MouseButton::Left) {
-            ctrl.lmb = false;
+            ginp.fire = 0;
         }
         if input.just_released(KeyCode::S) {
-            ctrl.back = false;
+            ginp.back = 0;
         }
         if input.just_released(KeyCode::W) {
-            ctrl.forward = false;
+            ginp.forward = 0;
         }
         if input.just_released(KeyCode::A) {
-            ctrl.left = false;
+            ginp.left = 0;
         }
         if input.just_released(KeyCode::D) {
-            ctrl.right = false;
+            ginp.right = 0;
         }
         if input.just_released(KeyCode::LShift) {
-            ctrl.shift = false;
+            ginp.sprint = 0;
         }
         if input.just_released(KeyCode::Space) {
-            ctrl.jump = false;
+            ginp.jump = 0;
         }
         if input.just_released(KeyCode::Q) {
-            ctrl.q = false;
+            ginp.a_1 = 0;
         }
         if input.just_released(KeyCode::E) {
-            ctrl.e = false;
+            ginp.a_2 = 0;
         }
     }
 }

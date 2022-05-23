@@ -1,6 +1,5 @@
 use bevy::{ prelude::*};
-use super::systems::*;
-
+use crate::shared::systems::*;
 
 pub struct Logic;
 impl Plugin for Logic {

@@ -1,0 +1,70 @@
+{
+    "hidefiles.configurationType": "local",
+    "hidefiles.globalConfig": {
+        "profiles": [
+            {
+                "hidden": [
+                    "README.md",
+                    "server",
+                    "target/",
+                    ".gitignore",
+                    "Cargo.lock",
+                    "Cargo.lock",
+                    "modules/ui/",
+                    "modules/user/",
+                    "modules/world/",
+                    "src/",
+                    "modules/chars/",
+                    "modules/core/",
+                    ".vscode/",
+                    ".vscode/settings.json",
+                    "assets/"
+                ],
+                "name": "net",
+                "description": "",
+                "detail": "",
+                "peek": [
+                    "core/",
+                    "core/",
+                    "core/",
+                    "core/",
+                    "core/"
+                ]
+            },
+            {
+                "name": "Default",
+                "detail": "",
+                "description": "Test",
+                "hidden": [
+                    ".vscode/",
+                    "target/",
+                    "target/",
+                    "modules/world/",
+                    "assets/",
+                    "modules/ui/",
+                    "modules/user/",
+                    "README.md",
+                    "Cargo.lock",
+                    ".gitignore",
+                    "target/",
+                    "src/"
+                ]
+            },
+            {
+                "name": "Strict",
+                "detail": "Hide everything not immediately required",
+                "hidden": [
+                    "$Default"
+                ]
+            }
+        ]
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true
+    },
+    "hidefiles.selectedProfile": "Show All Files"
+}

@@ -14,7 +14,7 @@ pub fn save_snap(mut commands: Commands) {
 
 pub fn store_snapshot(
     mut save_events: EventReader<SaveEvent<SnapShot>>,
-    mut save_slot: ResMut<SaveSlot>,
+    mut save_slot: ResMut<SnapStorage>,
 ) {
     for save_event in save_events.iter() {
 
@@ -24,7 +24,7 @@ pub fn store_snapshot(
 
     }
 }
-pub fn load_snap(mut commands: Commands, keys: Res<Input<KeyCode>>, save_slot: ResMut<SaveSlot>){
+pub fn load_snap(mut commands: Commands, keys: Res<Input<KeyCode>>, save_slot: ResMut<SnapStorage>){
     if keys.just_pressed(KeyCode::E) {
         
         commands.load::<SnapShot>(save_slot.0[TICKRATE as usize].clone())
