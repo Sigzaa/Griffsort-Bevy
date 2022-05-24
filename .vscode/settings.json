@@ -66,23 +66,7 @@
         "**/.svn": true,
         "**/.hg": true,
         "**/CVS": true,
-        "**/.DS_Store": true,
-        "README.md": true,
-        "server": true,
-        "target/": true,
-        ".gitignore": true,
-        "Cargo.lock": true,
-        "modules/ui/": true,
-        "modules/user/": true,
-        "modules/world/": true,
-        "src/": true,
-        "modules/chars/": true,
-        "modules/core/": true,
-        ".vscode/": true,
-        ".vscode/settings.json": true,
-        "assets/": true,
-        "modules/gocha/": true,
-        "modules/levels/": true
+        "**/.DS_Store": true
     },
-    "hidefiles.selectedProfile": "net"
+    "hidefiles.selectedProfile": "Show All Files"
 }

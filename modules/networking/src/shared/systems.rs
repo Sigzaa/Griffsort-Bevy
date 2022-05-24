@@ -4,8 +4,6 @@ use super::resources::*;
 
 
 pub fn save_snap(mut commands: Commands) {
-    
-
         // This triggers saving the world the next time commands are processed.
         // The snapshot is then sent as an event so it can be picked up by other systems.
         commands.save::<SnapShot>();

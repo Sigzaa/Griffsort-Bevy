@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use serde::{Serialize, Deserialize};
-#[derive(Component,Serialize, Deserialize, Debug, Copy, Clone)]
+#[derive(Component, Serialize, Deserialize, Debug, Copy, Clone)]
 pub struct GoInputs {
     // Events
     pub mouse_delta_y: f32,
