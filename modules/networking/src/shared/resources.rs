@@ -48,6 +48,6 @@ pub struct TickCount(pub i32);
 pub const NetStage: &str = "net_stage_label"; 
 
 pub(crate) const TICKRATE: i32 = 66;
-pub(crate) const BUFFER_SIZE_LIMIT: i32 = 200;
+pub(crate) const BUFFER_CAPACITY: i32 = 200;
 
 
