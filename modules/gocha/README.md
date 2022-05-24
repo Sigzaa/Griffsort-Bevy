@@ -1,2 +1,2 @@
 GriffsOrt Characters -> gocha
-Managing all related to characters.
+Managing everything related to characters.
