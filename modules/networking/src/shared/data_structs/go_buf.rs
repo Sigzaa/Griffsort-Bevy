@@ -15,9 +15,6 @@ pub(crate) struct GoBuf{
     size_limit: i32,
 }
 
-
-
-
 impl GoBuf{
     pub fn new(size_limit: i32) -> Self {
         GoBuf{
@@ -56,17 +53,9 @@ impl GoBuf{
 
     }
     pub fn remake(){
-        
+
     }
     fn cut_excess(){
 
     }
 }
-
-
-// Buffer PQ impl-->
-
-
-
-
-// <--

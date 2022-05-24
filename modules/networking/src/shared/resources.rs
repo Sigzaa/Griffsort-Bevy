@@ -17,7 +17,6 @@ impl SnapType for SnapShot {
 }
 // <--
 
-
 // Serde pack sending/receiving via UDP -->
 #[derive(Eq, PartialEq, Hash)]
 pub enum BufContent{
@@ -49,13 +48,6 @@ pub struct TickCount(pub i32);
 pub const NetStage: &str = "net_stage_label"; 
 
 pub(crate) const TICKRATE: i32 = 66;
+pub(crate) const BUFFER_SIZE_LIMIT: i32 = 200;
 
-#[derive(Default)]
-pub struct IternalShots(GoBuf); // Collecting all client-made SnapShots in Buffer
-
-#[derive(Default)]
-struct ServerShot(GoBuf); // Collecting all 
-
-#[derive(Component)]
-pub struct InputsHistory(GoBuf);
 
