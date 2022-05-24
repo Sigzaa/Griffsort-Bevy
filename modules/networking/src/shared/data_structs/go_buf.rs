@@ -2,10 +2,11 @@ pub use priority_queue::PriorityQueue;
 use crate::shared::resources::*;
 use std::ops::Index;
 /*
-    This is an Interface on vector.
+    This is an easy Interface on vector.
     Very slow...
 */
 
+#[derive(Default)]
 pub(crate) struct GoBuf{
     vec: Vec<Box>,
     capacity: i32,
@@ -25,6 +26,7 @@ impl GoBuf{
     }
     pub fn push(&self, content: BufContent, tick: i32){
         self.vec.push(Box{content, tick});
+        self.sort();
     }
     pub fn cut_after(&self, tick: i32){
         let index = self.tick_to_index(tick);
@@ -35,7 +37,10 @@ impl GoBuf{
         self.vec.drain(0..index);
     }
     pub fn change_tick_count(){
-
+        todo!();
+    }
+    fn sort(&self){
+        self.vec.sort_by(|a, b| a.tick.cmp(&b.tick));
     }
     fn cut_excess(&self){
         if self.capacity <= self.vec.len() as i32{
@@ -43,9 +48,9 @@ impl GoBuf{
         }
     }
     fn tick_to_index(&self, tick: i32) -> usize{
-        self.vec.iter().position(|&r| r == self.index_box(tick)).unwrap()
+        self.vec.iter().position(|&r| r == self.index_to_box(tick)).unwrap()
     }
-    fn index_box(&self, tick: i32) -> Box{ // -> Box
+    fn index_to_box(&self, tick: i32) -> Box{ // -> Box
         for i in self.vec{
             if i.tick == tick{
                 return i;
