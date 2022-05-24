@@ -48,9 +48,9 @@ impl GoBuf{
         }
     }
     fn tick_to_index(&self, tick: i32) -> usize{
-        self.vec.iter().position(|&r| r == self.index_to_box(tick)).unwrap()
+        self.vec.iter().position(|&r| r == self.tick_to_box(tick)).unwrap()
     }
-    fn index_to_box(&self, tick: i32) -> Box{ // -> Box
+    fn tick_to_box(&self, tick: i32) -> Box{ // -> Box
         for i in self.vec{
             if i.tick == tick{
                 return i;
