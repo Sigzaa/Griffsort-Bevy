@@ -1,7 +1,7 @@
 use serde::{Serialize, Deserialize};
 use bevy::prelude::*;
 
-#[derive(Component, Clone, Copy, Serialize, Deserialize, Debug)]
+#[derive(Default, Component, Clone, Copy, Serialize, Deserialize, Debug)]
 pub struct GoRot {
     pub x: Quat,
     pub y: Quat,

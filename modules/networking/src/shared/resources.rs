@@ -7,7 +7,7 @@ use bevy_snap::*;
 use super::data_structs::go_buf::*;
 
 // Snapshots -->
-#[derive(Default, Clone, Copy, Serialize, Deserialize, Debug)]
+#[derive(Default, Clone, Copy, Serialize, Deserialize, Debug, PartialEq)]
 pub struct SnapShot;
 
 impl SnapType for SnapShot {
@@ -18,24 +18,30 @@ impl SnapType for SnapShot {
 // <--
 
 // Serde pack sending/receiving via UDP -->
-#[derive(Eq, PartialEq, Hash)]
-pub enum BufContent{
-    SnapShot,
-    Inputs,
-}
-#[derive(Clone, Copy, Serialize, Deserialize, Debug)]
+
+#[derive(Default, Clone, Copy, Serialize, Deserialize, Debug)]
 pub struct Inputs{
     pub ginp: GoInputs,
     pub grot: GoRot,
 }
 
 #[derive(Component, Clone, Serialize, Deserialize, Debug)]
-pub struct MsgPack {
+pub struct FromClient {
     pub id: i32,
     pub tick: i32,
-    pub inputs: Option<Vec<Inputs>>,
-    pub snap: Option<SnapShot>,
+    pub inputs: Inputs,
 }
+#[derive(Component, Clone, Serialize, Deserialize, Debug)]
+pub struct FromServer {
+    pub tick: i32,
+    pub inputs: Vec<Inputs>,
+    pub snap: SnapShot,
+}
+#[derive(Default)]
+pub struct SnapBuffer(pub GoBuf<SnapShot>);
+
+#[derive(Component)]
+pub struct InputsBuffer(pub GoBuf<Inputs>); // Collecting all 
 // <--
 #[derive(Default)]
 pub struct IsStarted(pub bool);

@@ -1,45 +1,6 @@
 use super::shared::{resources::*, systems::*};
 use bevy::prelude::*;
-
-
-
-// struct SpecialStagingPlugin {
-//     schedule: Schedule,
-// }
-
-// impl SpecialStagingPlugin {
-//     pub fn new(schedule: Schedule) -> Self {
-//         Self { schedule }
-//     }
-// }
-
-// impl SpecialStagingPlugin {
-//     fn build(self, app: &mut App) {
-//         app.add_stage_before(
-//             CoreStage::Update,
-//             "special_staging_plugin_stage",
-//             SpecialStage::new(self.schedule),
-//         );
-//     }
-// }
-
-// struct SpecialStage {
-//     schedule: Schedule,
-// }
-
-// impl SpecialStage {
-//     pub fn new(schedule: Schedule) -> Self {
-//         Self { schedule }
-//     }
-// }
-
-// impl Stage for SpecialStage {
-//     fn run(&mut self, world: &mut World) {
-//         self.schedule.run_once(world);
-//     }
-// }
-
-
+use crate::{server::plugin::Server, client::plugin::Client};
 
 pub struct Networking;
 impl Plugin for Networking {
@@ -58,9 +19,9 @@ impl Plugin for Networking {
             //         ..Default::default()
             //     }
             // )
-
-            .add_plugin(super::client::Client) // add run criteria
-            .add_plugin(super::server::Server) // add run criteria
+            
+            .add_plugin(Client) // add run criteria or feature
+            .add_plugin(Server) // add run criteria
             
             .run();
     }
