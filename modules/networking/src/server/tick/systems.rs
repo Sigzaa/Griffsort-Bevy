@@ -7,19 +7,19 @@ use core::prelude::*;
 use gocha::prelude::*;
 
 
-pub fn pop_buffer(
+pub(crate) fn pop_buffer(
     mut q_core: Query<(&mut InputsBuffer, &mut GoInputs, &mut GoRot), With<Core>>,
     tick: ResMut<TickCount>,
 ) {
     for (mut inp_buf, mut ginp, mut grot) in q_core.iter_mut(){
-        let input = inp_buf.0[tick.0];
-        if input.is_none(){
-            warn!("missed package at {}", tick.0);
-            return;
-        } else {
-            let input = input.unwrap(); 
-            *ginp = input.ginp;
-            *grot = input.grot;
+        match inp_buf.0.get(tick.0) {
+            Ok(input) => {
+                *ginp = input.ginp;
+                *grot = input.grot;
+            },
+            Err(err) => {
+                warn!("missed package at {}", tick.0);
+            }
         }
     }
 }

@@ -10,7 +10,7 @@ pub fn save_snap(mut commands: Commands) {
 
 }
 
-pub fn store_snapshot(
+pub(crate) fn store_snapshot(
     mut save_events: EventReader<SaveEvent<SnapShot>>,
     mut save_slot: ResMut<SnapBuffer>,
     tick: Res<TickCount>,
@@ -23,7 +23,7 @@ pub fn store_snapshot(
 
     }
 }
-pub fn load_snap(mut commands: Commands, keys: Res<Input<KeyCode>>, save_slot: ResMut<SnapBuffer>){
+pub(crate) fn load_snap(mut commands: Commands, keys: Res<Input<KeyCode>>, save_slot: ResMut<SnapBuffer>){
     if keys.just_pressed(KeyCode::E) {
         
         //commands.load::<SnapShot>(save_slot.0[TICKRATE as usize].clone())

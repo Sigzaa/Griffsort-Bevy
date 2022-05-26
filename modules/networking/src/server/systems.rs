@@ -4,9 +4,9 @@ use bevy::{ prelude::*};
 use crate::shared::resources::*;
 use std::str;
 use gocha::prelude::*;
-use crate::prelude::GoBuf;
+use crate::prelude::GoHistory;
 
-pub fn connection_handler(
+pub(crate) fn connection_handler(
     mut q_core: Query<(&mut InputsBuffer, &Id), With<Core>>,
     mut events: EventReader<NetworkEvent>,
     mut transport: ResMut<Transport>,
@@ -59,12 +59,12 @@ pub fn connection_handler(
 }
 fn setup_players(
     mut commands: &mut Commands,
-    q: Query<Entity, With<Core>>,
+    mut q: Query<Entity, With<Core>>,
 ){
     for ent in q.iter_mut(){
         commands
         .entity(ent)
-        .insert(InputsBuffer(GoBuf::<Inputs>::new(BUFFER_CAPACITY)));
+        .insert(InputsBuffer(GoHistory::<Inputs>::new(BUFFER_CAPACITY)));
     }
 }
 

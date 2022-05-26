@@ -4,7 +4,7 @@ use serde::{Serialize, Deserialize};
 use bevy::{prelude::*, reflect::TypeRegistry};
 pub use priority_queue::PriorityQueue;
 use bevy_snap::*;
-use super::data_structs::go_buf::*;
+use super::data_structs::go_history::*;
 
 // Snapshots -->
 #[derive(Default, Clone, Copy, Serialize, Deserialize, Debug, PartialEq)]
@@ -19,7 +19,7 @@ impl SnapType for SnapShot {
 
 // Serde pack sending/receiving via UDP -->
 
-#[derive(Default, Clone, Copy, Serialize, Deserialize, Debug)]
+#[derive(Default, Clone, Copy, Serialize, Deserialize, Debug, PartialEq)]
 pub struct Inputs{
     pub ginp: GoInputs,
     pub grot: GoRot,
@@ -38,10 +38,10 @@ pub struct FromServer {
     pub snap: SnapShot,
 }
 #[derive(Default)]
-pub struct SnapBuffer(pub GoBuf<SnapShot>);
+pub(crate) struct SnapBuffer(pub GoHistory<SnapShot>);
 
-#[derive(Component)]
-pub struct InputsBuffer(pub GoBuf<Inputs>); // Collecting all 
+#[derive(Component, Clone)]
+pub(crate) struct InputsBuffer(pub GoHistory<Inputs>); // Collecting all 
 // <--
 #[derive(Default)]
 pub struct IsStarted(pub bool);

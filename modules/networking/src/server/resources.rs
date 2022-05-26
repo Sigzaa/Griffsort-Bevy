@@ -1,4 +1,4 @@
-use crate::prelude::{AList, GoBuf, *};
+use crate::prelude::{AList, GoHistory, *};
 use serde::{Serialize, Deserialize};
 
 use bevy::prelude::*;

@@ -1,12 +1,13 @@
 use serde::{Serialize, Deserialize};
 use bevy::prelude::*;
 
-#[derive(Default, Component, Clone, Copy, Serialize, Deserialize, Debug)]
+#[derive(Default, Component, Clone, Copy, Serialize, Deserialize, Debug, PartialEq)]
 pub struct GoRot {
     pub x: Quat,
     pub y: Quat,
     pub z: Quat,
 }
+
 #[derive(Component)]
 pub struct GoVel(pub Vec3);
 

@@ -15,7 +15,7 @@ impl Plugin for Tick {
             )
             .add_system_to_stage(
                 NetStage,
-                check_for_desync_sys, // -
+                is_desync, // -
             )
             .add_system_to_stage(NetStage, send_message) // -
            // .add_system_to_stage(NetStage, prepare_rollback.after(send_message)) // +

@@ -40,13 +40,19 @@ pub fn update_tick(mut tick: ResMut<TickCount>) {
     tick.0 += 1;
 }
 
-pub fn check_for_desync_sys(
+pub(crate) fn is_desync(
     external_buf: ResMut<ServerShots>,
     internal_buf: ResMut<InternalShots>,
 ) {
-    let tick = external_buf.0.highest_tick();
-    if external_buf.0[tick] != internal_buf.0[tick]{
-        warn!("desync on {}", tick);
+    let tick = external_buf.0.last_tick();
+
+    match (&external_buf.0.get(tick), &internal_buf.0.get(tick)){
+        (Ok(ext_content), Ok(int_content)) => {
+            if ext_content != int_content{
+                warn!("desync on {}", tick);
+            }
+        },
+        _ => (),
     }
     todo!();
 }

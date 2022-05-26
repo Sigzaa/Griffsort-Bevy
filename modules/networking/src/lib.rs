@@ -8,7 +8,7 @@ pub mod prelude{
     pub use crate::shared::data_structs::{
         *,
         a_list::*,
-        go_buf::*,
+        go_history::*,
     };
 
 }

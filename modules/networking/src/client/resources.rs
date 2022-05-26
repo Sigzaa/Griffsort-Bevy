@@ -22,8 +22,8 @@ pub struct MyId(pub i32);
 
 
 #[derive(Default)]
-pub struct InternalShots(pub GoBuf<SnapShot>); // Collecting all client-made SnapShots in Buffer
+pub(crate) struct InternalShots(pub GoHistory<SnapShot>); // Collecting all client-made SnapShots in Buffer
 
 #[derive(Default)]
-pub struct ServerShots(pub GoBuf<SnapShot>); // =)
+pub(crate) struct ServerShots(pub GoHistory<SnapShot>); // =)
 

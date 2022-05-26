@@ -1,4 +1,4 @@
-use crate::prelude::go_buf::*;
+use crate::prelude::go_history::*;
 use crate::shared::resources::*;
 use bevy::prelude::*;
 use bevy_simple_networking::ClientPlugin;
@@ -36,8 +36,8 @@ impl Plugin for Client {
             .insert_resource(socket)
             .insert_resource(IsStarted(false))
             .insert_resource(TPS(Timer::from_seconds(2.0, false)))
-            .insert_resource(InternalShots(GoBuf::new(200)))
-            .insert_resource(ServerShots(GoBuf::new(BUFFER_CAPACITY)))
+            .insert_resource(InternalShots(GoHistory::new(200)))
+            .insert_resource(ServerShots(GoHistory::new(BUFFER_CAPACITY)))
             .add_system(connection_handler)
             .add_plugin(Tick)
             .run();

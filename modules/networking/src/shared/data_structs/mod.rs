@@ -1,2 +1,2 @@
 pub(crate) mod a_list;
-pub(crate) mod go_buf;
+pub(crate) mod go_history;
