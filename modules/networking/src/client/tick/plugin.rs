@@ -20,7 +20,7 @@ impl Plugin for Tick {
             .add_system_to_stage(NetStage, send_message) // -
            // .add_system_to_stage(NetStage, prepare_rollback.after(send_message)) // +
             // -> Add another stage
-            .add_system_to_stage(NetStage, save_snap.label("root")/*.after(prepare_rollback)*/) // +
+            //.add_system_to_stage(NetStage, save_snap.label("root")/*.after(prepare_rollback)*/) // +
 
             // ->
             //  Here adding all external systems after the "root" and to the NetStage stage

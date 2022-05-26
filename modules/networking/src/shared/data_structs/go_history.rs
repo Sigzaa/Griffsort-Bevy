@@ -65,8 +65,11 @@ where
     pub fn change_tick_count(&self) {
         todo!();
     }
-    pub fn last_tick(&self) -> i32 {
-        todo!()
+    pub fn last_tick(&self) -> Option<i32> {
+        match self.vec.last(){
+            Some(last) => Some(last.tick),
+            None => None,
+        }
     }
     pub fn last_box() -> Box<T>{
         todo!()

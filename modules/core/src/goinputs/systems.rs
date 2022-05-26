@@ -5,12 +5,7 @@ pub fn collect_inputs(
     input: Res<Input<KeyCode>>,
     buttons: Res<Input<MouseButton>>,
     mut q_selected: Query<&mut GoInputs, With<Selected>>,
-    grabbed_flag: Res<GrabbedCursor>,
 ) {
-    //println!("collinputs");
-    if !grabbed_flag.0 {
-        return;
-    }
     for mut ginp in q_selected.iter_mut() {
         if buttons.pressed(MouseButton::Left) {
             ginp.fire = 1;

@@ -28,10 +28,8 @@ pub fn send_message(
         
         let msg_ser = serde_json::to_string(&msg_des).unwrap();
 
-        if serv_addr.0.len() >= 1 {
-            // Check for avaliable server in another place
-            // Sending via UDP.
-            transport.send("main", serv_addr.0[0], &msg_ser);
+        if !serv_addr.0.is_none(){
+            transport.send("main", serv_addr.0.unwrap(), &msg_ser);
         }
     }
 }
@@ -44,7 +42,10 @@ pub(crate) fn is_desync(
     external_buf: ResMut<ServerShots>,
     internal_buf: ResMut<InternalShots>,
 ) {
-    let tick = external_buf.0.last_tick();
+    let tick = match external_buf.0.last_tick(){
+        Some(tick) => tick,
+        None => return,
+    };
 
     match (&external_buf.0.get(tick), &internal_buf.0.get(tick)){
         (Ok(ext_content), Ok(int_content)) => {

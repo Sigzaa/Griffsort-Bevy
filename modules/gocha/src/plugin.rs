@@ -1,11 +1,13 @@
 use bevy::{ prelude::*};
 use crate::shared::systems::*;
+use crate::shared::resources::*;
 
-pub struct Logic;
-impl Plugin for Logic {
+pub struct Gocha;
+impl Plugin for Gocha {
     fn build(&self, app: &mut App) {
         app
-        //.add_system(collect_inputs)
+            .insert_resource(SelectedId(None))
+            .insert_resource(CharList(Vec::new()))
 
         ;
     }

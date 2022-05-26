@@ -7,7 +7,7 @@ use gocha::prelude::*;
 pub fn connection_handler(
     mut events: EventReader<NetworkEvent>,
     mut serv_addr: ResMut<ServerAddr>,
-    mut binded_id: ResMut<BindedId>,
+    mut selected_id: ResMut<SelectedId>,
     mut my_id: ResMut<MyId>,
 ) {
     for event in events.iter() {
@@ -23,8 +23,8 @@ pub fn connection_handler(
             }
             // discard irrelevant events
             NetworkEvent::CliEvent(handle, msg) => {
-                if serv_addr.0.len() <= 0 {
-                    serv_addr.0.push(*handle);
+                if serv_addr.0.is_none() {
+                    serv_addr.0  = Some(*handle);
                 }
                 
                 todo!();
@@ -36,10 +36,12 @@ pub fn connection_handler(
                     Ok(v) => v.parse().unwrap(),
                     Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
                 };
-                serv_addr.0.push(*handle);
+                if serv_addr.0.is_none() {
+                    serv_addr.0  = Some(*handle);
+                }
                 println!("msg: {:?}, s: {}", msg, s);
                 my_id.0 = s;
-                binded_id.0 = s;
+                selected_id.0 = Some(s);
             }
             _ => {}
         }

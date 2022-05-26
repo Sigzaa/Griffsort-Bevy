@@ -15,7 +15,7 @@ pub struct IsRollback(pub bool);
 pub struct RollTicker(pub i32);
 
 #[derive(Default)]
-pub struct ServerAddr(pub Vec<SocketAddr>); // TODO: Replace Vec by something better.
+pub struct ServerAddr(pub Option<SocketAddr>);
 
 #[derive(Default)]
 pub struct MyId(pub i32);

@@ -2,7 +2,6 @@ use bevy::prelude::*;
 use serde::{Serialize, Deserialize};
 #[derive(Component, Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
 pub struct GoInputs {
-    // Events
     pub mouse_delta_y: f32,
     pub mouse_delta_x: f32,
     pub jump: i8,
@@ -40,3 +39,5 @@ impl Default for GoInputs {
         }
     }
 }
+#[derive(Default)]
+pub struct IsGoInActive(pub bool);

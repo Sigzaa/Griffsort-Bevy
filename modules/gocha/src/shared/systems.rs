@@ -16,9 +16,12 @@ fn spawn_projectile(){
 fn velocity_to_position(){
 
 }
-fn update_cur_mode(){
+fn sync_current_mode(){
 
 }
-fn update_cur_character(){
+fn sync_current_character(){
 
+}
+fn sync_id(){
+    
 }
