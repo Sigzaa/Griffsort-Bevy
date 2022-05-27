@@ -8,6 +8,8 @@ Api this module provides:
         *every of this events will be checked on the server*
 
         Spawn(Type, Team): Spawning character.
+        Respawn(Id, Pos),
+        Spawnpoint(Id, Pos),
         Despawn(Id): Despawning character.
         Kill(Id): Killing character.
         Select(Id): Bind inputs and camera to another char.
@@ -16,17 +18,14 @@ Api this module provides:
 
 
     Components:
-        Read-Only:
-            Selected: Has only player-character.
-            Core: Every character has it. Can be used for hooking characters.
-            Killed: Killed characters are not despawning. You can access it via this filter.
-
         Read-And-Write:
             LocalRespawnPeriod(Option<f32>): Uses only for special chars. None by default.
 
     Resources:
         Read-Only:
-            CharList: Vec bevy-entities of chars.
+            Chars: Vec bevy-entities of chars.
+            Died: Vec of died chars with respawn timer.
+
 
         Read-And-Write:
             RespawnPeriod(f32): Global respawn period.
