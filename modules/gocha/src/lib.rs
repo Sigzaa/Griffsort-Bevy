@@ -5,4 +5,5 @@ mod characters;
 
 pub mod prelude{
     pub use crate::shared::resources::*;
+    pub use crate::shared::*;
 }
