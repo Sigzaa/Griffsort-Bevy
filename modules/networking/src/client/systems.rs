@@ -2,7 +2,7 @@ use bevy_simple_networking::NetworkEvent;
 use super::resources::*;
 use bevy::{math::*, prelude::*};
 use std::str;
-use gocha::prelude::*;
+use core::prelude::Character::*;
 
 pub fn connection_handler(
     mut events: EventReader<NetworkEvent>,

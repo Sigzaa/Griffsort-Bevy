@@ -1,10 +1,9 @@
 use super::super::resources::*;
-//use crate::shared::resources::{filters::*, player_data::*};
 use crate::shared::resources::*;
 use bevy::prelude::*;
 use bevy_simple_networking::Transport;
 use core::prelude::*;
-use gocha::prelude::*;
+use core::prelude::Character::*;
 
 
 pub(crate) fn pop_buffer(

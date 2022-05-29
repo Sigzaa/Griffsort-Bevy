@@ -39,7 +39,24 @@ pub struct Timer3(pub f32, pub f32, pub f32);
 pub struct Counter(pub f32);
 // <--
 
-// Bevy Filters -->
+// Filters -->
+pub mod Character{
+    use bevy::prelude::*;
+
+    #[derive(Component)]
+    pub struct Core;
+
+    #[derive(Component)]
+    pub struct Selected;
+
+    #[derive(Component, Debug)]
+    pub struct Id(pub i32);
+
+    #[derive(Default)]
+    pub struct SelectedId(pub Option<i32>);
+}
+
+
 pub mod filters {
     use bevy::prelude::*;
     #[derive(Component)]

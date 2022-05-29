@@ -17,6 +17,5 @@ serde = "1.0.137"
 serde_json = "1.0.81"
 
 core = { path = "../core" }
-gocha = { path = "../gocha"}
 
 priority-queue = "1.2.1"

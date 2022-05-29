@@ -1,5 +1,7 @@
-pub mod collection;
-pub mod plugin;
+pub mod default_char;
+pub mod soul;
 
-pub use plugin::CharPlugin;
-pub use collection::*;
+pub use {
+    default_char::DefaultChar,
+    soul::Soul,
+};

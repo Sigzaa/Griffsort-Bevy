@@ -1,27 +1,12 @@
 use serde::{Serialize, Deserialize};
 use bevy::prelude::*;
-
-#[derive(Default, Component, Clone, Copy, Serialize, Deserialize, Debug, PartialEq)]
-pub struct GoRot {
-    pub x: Quat,
-    pub y: Quat,
-    pub z: Quat,
-}
+use core::prelude::Character::*;
 
 #[derive(Component)]
 pub struct GoVel(pub Vec3);
 
 #[derive(Component)]
-pub struct Core;
-
-#[derive(Component)]
 pub struct Head;
-
-#[derive(Component)]
-pub struct Selected;
-
-#[derive(Default)]
-pub struct SelectedId(pub Option<i32>);
 
 #[derive(Default)]
 pub struct CharList(pub Vec<Entity>);
@@ -74,8 +59,7 @@ impl Default for Config {
     }
 }
 
-#[derive(Component, Debug)]
-pub struct Id(pub i32);
+
 #[derive(Component)]
 pub struct CharName(pub Option<&'static str>);
 #[derive(Component)]

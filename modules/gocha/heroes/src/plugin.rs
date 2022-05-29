@@ -1,27 +1,26 @@
 use bevy::prelude::*;
-use std::marker::PhantomData;
 
 #[derive(Default)]
 pub struct CharPlugin<C: 'static> {
     pub char_type: C,
 }
-impl<C: Character + Send + Sync> CharPlugin<C> {
+impl<C: Character + Send + Sync + Copy> CharPlugin<C> {
     pub fn new(char_type: C) -> Self {
         Self { char_type }
     }
 }
 
-impl<C: Character + Send + Sync> Plugin for CharPlugin<C> {
+impl<C: Character + Send + Sync + Copy> Plugin for CharPlugin<C> {
     fn build(&self, app: &mut App) {
-        app.add_system(C::movement)
-            .add_system(C::shoot.after(C::movement));
+        app.add_plugin(self.char_type);
     }
 }
 
-pub trait Character {
+pub trait Character : Plugin{
     fn movement() {}
     fn shoot() {}
 }
+
 
 // fn spawn(
 //     mut spawn_reader: EventReader<SpawnCharacter>,

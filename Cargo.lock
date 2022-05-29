@@ -1901,6 +1901,9 @@ version = "0.1.0"
 dependencies = [
  "bevy",
  "bevy_rapier3d",
+ "core",
+ "heroes",
+ "networking",
  "serde",
  "serde_json",
 ]
@@ -1971,6 +1974,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "62b467343b94ba476dcb2500d242dadbb39557df889310ac77c5d99100aaac33"
 dependencies = [
  "libc",
+]
+
+[[package]]
+name = "heroes"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "bevy_rapier3d",
 ]
 
 [[package]]
@@ -2565,7 +2576,6 @@ dependencies = [
  "bevy_system_graph",
  "bytes",
  "core",
- "gocha",
  "iyes_loopless",
  "priority-queue",
  "serde",

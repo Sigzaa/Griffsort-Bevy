@@ -1,6 +1,8 @@
 use bevy::{ prelude::*};
 use crate::shared::{systems::*, resources::*};
 use crate::characters::*;
+use core::prelude::Character::*;
+use heroes::*;
 
 pub struct Gocha;
 impl Plugin for Gocha {

@@ -1,5 +1,12 @@
 use bevy::prelude::*;
 use serde::{Serialize, Deserialize};
+#[derive(Default, Component, Clone, Copy, Serialize, Deserialize, Debug, PartialEq)]
+pub struct GoRot {
+    pub x: Quat,
+    pub y: Quat,
+    pub z: Quat,
+}
+
 #[derive(Component, Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
 pub struct GoInputs {
     pub mouse_delta_y: f32,
