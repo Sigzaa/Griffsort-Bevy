@@ -7,7 +7,7 @@ edition = "2021"
 
 [workspace]
 members = [
-    "modules/*",
+    "crates/*",
 ]
 
 
@@ -23,8 +23,8 @@ rapier3d = "0.12.0"
 serde = "1.0.137"
 serde_json = "1.0.81"
 
-networking = { path = "modules/networking"}
-core = { path = "modules/core"}
-gocha = { path = "modules/gocha"}
+networking = { path = "crates/networking"}
+core = { path = "crates/core"}
+gocha = { path = "crates/gocha"}
 
 priority-queue = "1.2.1"

@@ -19,6 +19,8 @@ impl<C: Character + Send + Sync + Copy> Plugin for CharPlugin<C> {
 pub trait Character : Plugin{
     fn movement() {}
     fn shoot() {}
+    fn spawn() {}
+    fn hit() {}
 }
 
 
