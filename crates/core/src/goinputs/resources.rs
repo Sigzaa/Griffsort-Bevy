@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use serde::{Serialize, Deserialize};
+
 #[derive(Default, Component, Clone, Copy, Serialize, Deserialize, Debug, PartialEq)]
 pub struct GoRot {
     pub x: Quat,

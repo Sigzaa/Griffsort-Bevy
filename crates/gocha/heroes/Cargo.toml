@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 bevy_rapier3d = { git = "https://github.com/dimforge/bevy_rapier", features = [ "enhanced-determinism" ] }
 bevy = { version = "0.7.0"}
+core = { path = "../../core"}

@@ -40,7 +40,7 @@ pub struct Counter(pub f32);
 // <--
 
 // Filters -->
-pub mod Character{
+pub mod Character {
     use bevy::prelude::*;
 
     #[derive(Component)]
@@ -54,8 +54,58 @@ pub mod Character{
 
     #[derive(Default)]
     pub struct SelectedId(pub Option<i32>);
-}
 
+    //<--
+    #[derive(Bundle, Component)]
+    pub struct Config {
+        pub character_name: CharName,
+        pub max_hp: MaxHp,
+        pub max_jump_height: MaxJump,
+        pub max_velocity: Speed,
+        pub weight: Weight,
+    }
+    #[derive(Bundle, Component)]
+    pub struct States {
+        pub character_name: CharName,
+        pub id: Id,
+        pub team: Team,
+        pub hp: Hp,
+        pub spawn: SpawnCoords,
+    }
+
+    impl Default for Config {
+        fn default() -> Self {
+            Self {
+                character_name: CharName(None),
+                max_hp: MaxHp(500),
+                weight: Weight(20.),
+                max_jump_height: MaxJump(20.),
+                max_velocity: Speed(30.),
+            }
+        }
+    }
+
+    #[derive(Component)]
+    pub struct CharName(pub Option<&'static str>);
+    #[derive(Component)]
+    pub struct Team(pub i16);
+    #[derive(Component)]
+    pub struct Hp(pub i32);
+    #[derive(Component)]
+    pub struct MaxHp(pub i32);
+    #[derive(Component)]
+    pub struct JumpValue(pub f32);
+    #[derive(Component)]
+    pub struct VerticalVelocity(pub f32);
+    #[derive(Component)]
+    pub struct Speed(pub f32);
+    #[derive(Component)]
+    pub struct Weight(pub f32);
+    #[derive(Component)]
+    pub struct SpawnCoords(pub f32);
+    #[derive(Component)]
+    pub struct MaxJump(pub f32);
+}
 
 pub mod filters {
     use bevy::prelude::*;
@@ -97,7 +147,7 @@ pub mod filters {
 // Information about players in Bevy entities -->
 pub mod player_data {
     use bevy::prelude::*;
-    use serde::{Serialize, Deserialize};
+    use serde::{Deserialize, Serialize};
 
     #[derive(Component)]
     pub struct Trans {

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
-use super::resources::*;
-
+use super::resources::{*};
+use heroes::Character;
 fn confirm_go_rotation(){
     todo!();
 }
@@ -25,14 +25,7 @@ fn sync_current_character(){
 fn sync_id(){
     todo!();
 }
-pub(crate) fn spawn_char(
-    mut spawn_request: EventReader<SpawnCharacter>,
-){
-    for spawn_info in spawn_request.iter() {
-        let team = spawn_info.1;
-        //spawn_info.2
-    }
-}
+
 fn reload_config(){
     todo!();
 }

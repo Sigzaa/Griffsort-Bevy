@@ -4,7 +4,7 @@ use bevy::prelude::*;
 #[derive(Copy, Clone)]
 pub struct DefaultChar;
 
-impl Character for DefaultChar { }
+impl Character<DefaultChar> for DefaultChar { }
 
 impl Plugin for DefaultChar {
     fn build(&self, app: &mut App) {
