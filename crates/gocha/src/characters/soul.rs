@@ -1,31 +1,37 @@
-use heroes::*;
 use bevy::prelude::*;
-use networking::prelude::*;
 use core::prelude::Character::*;
-#[derive(Copy, Clone)]
-pub struct Soul;
-
-impl Character<Soul> for Soul { }
+use heroes::*;
+use networking::prelude::*;
+use crate::prelude::*;
 
 impl Plugin for Soul {
     fn build(&self, app: &mut App) {
         app
-        //.add_system_set_to_stage()
-        .add_event::<SpawnCharacterRequest>()
-        .add_system(Soul::spawn::<1>)
-        
-        ;
+            //.add_system_set_to_stage()
+            ;
     }
 }
 
 impl Soul {
-    fn spawn<const LAYER_ID: i32>(
-        mut spawn_request: EventReader<SpawnCharacterRequest>,
-    ){
-        
+
+}
+impl Character<Soul> for Soul {
+    fn spawn(mut spawn_request: EventReader<SpawnChar>, mut commands: Commands) {
+        for spawn_request in spawn_request.iter() {
+            if spawn_request.0 == "Soul" {
+
+                println!("Spawning Soul");
+
+                commands
+                .spawn()
+                .insert(Soul)
+                .insert_bundle(Config{ ..Default::default() })
+                .insert_bundle(States{
+                    id: Id(spawn_request.2),
+                    ..Default::default()
+                })
+                ;
+            }
+        }
     }
 }
-
-
-
-

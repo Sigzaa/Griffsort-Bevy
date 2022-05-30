@@ -1,5 +1,5 @@
 use bevy::{input::mouse::MouseMotion, prelude::*};
-use crate::prelude::{*, filters::*};
+use crate::prelude::{*, Character::*};
 
 pub fn collect_inputs(
     input: Res<Input<KeyCode>>,

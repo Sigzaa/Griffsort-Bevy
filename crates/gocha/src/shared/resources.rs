@@ -27,6 +27,11 @@ pub struct Killed {
     pub timer: f32,
 }
 
+#[derive(Copy, Clone, Component)]
+pub struct Soul;
+
+#[derive(Copy, Clone, Component)]
+pub struct DefaultChar;
 
 // Events structs -->
 
