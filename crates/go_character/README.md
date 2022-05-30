@@ -31,7 +31,15 @@ Api this module provides:
             RespawnPeriod(f32): Global respawn period.
             IsActiveInputs(bool): pause inputs to chars.
             IsActiveSim(bool): pause of physic simulation.
-        
 
+Camera Rotation guide:
+
+This crate uses {rotation component} from go-core to provide api for getting/changing character rotation.
+
+![My Diagram](docs/diagrams/rotation.drawio.svg)
+        
+It uses the same Component for camera and actual character rotation.
+
+Also here is avalable all 3 Axis of rotation.
         
 
