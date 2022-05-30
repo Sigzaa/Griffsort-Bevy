@@ -1,0 +1,15 @@
+[package]
+name = "go_character"
+version = "0.0.1"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bevy_rapier3d = { git = "https://github.com/dimforge/bevy_rapier", features = [ "enhanced-determinism" ] }
+bevy = { version = "0.7.0"}
+serde = "1.0.137"
+serde_json = "1.0.81"
+go_multiplayer = { path = "../go_multiplayer" }
+go_core = { path = "../go_core"}
+heroes = { path = "heroes"}
