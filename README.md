@@ -1,3 +1,3 @@
-<img src="go_logo.svg" width="500">
+<img src="go_logo.svg" width="300">
 
 Griffsort source code
