@@ -3,9 +3,14 @@ use serde::{Serialize, Deserialize};
 
 #[derive(Default, Component, Clone, Copy, Serialize, Deserialize, Debug, PartialEq)]
 pub struct GoRot {
+    
     pub x: Quat,
     pub y: Quat,
     pub z: Quat,
+
+    pub cam_x: Rot,
+    pub cam_y: Rot,
+    pub cam_z: Rot,
 }
 
 #[derive(Component, Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
@@ -49,3 +54,13 @@ impl Default for GoInputs {
 }
 #[derive(Default)]
 pub struct IsGoInActive(pub bool);
+
+#[derive(Component, Clone, Copy, Serialize, Deserialize, Debug, PartialEq)]
+pub enum Rot{
+    Synced,
+    Own(Quat)
+}
+
+impl Default for Rot {
+    fn default() -> Self { Rot::Synced }
+}

@@ -11,7 +11,8 @@ impl<T: Character<T> + Send + Sync + Copy + Component> Plugin for CharPlugin<T> 
             .add_plugin(CameraTypePlugin::<CharacterCamera>::default())
             .add_event::<SpawnChar>()
             .add_system(T::spawn)
-            .add_system(T::select)
+            .add_system(T::sync_rotation)
+            .add_system(T::sync_camera)
             .add_system(T::extend::<T>);
     }
 }
@@ -78,35 +79,52 @@ pub trait Character<T: Character<T>>: Plugin {
                     //forward: true,
                     ..Default::default()
                 })
-                .insert(Core);
+                .insert(Core)
+                .with_children(|parent| {
+                    // child cube
+                    parent.spawn_bundle(PbrBundle {
+                        mesh: meshes.add(Mesh::from(bevy::prelude::shape::Cube { size: 0.5 })),
+                        material: materials.add(StandardMaterial {
+                            //base_color: Color::BLACK,
+                            ..Default::default()
+                        }),
+                        transform: Transform::from_xyz(0.0, 1.2, -0.5),
+                        ..Default::default()
+                    })
+                    .insert(Head);
+            });
         }
     }
 
     fn spawn(spawn_request: EventReader<SpawnChar>, commands: Commands);
 
-    fn select(
+    fn sync_camera(
         selected_id: Res<SelectedId>,
         cam: Query<Entity, With<CharacterCamera>>,
         sel: Query<(Entity, &Id), With<Selected>>,
         q_core: Query<(&Id, Entity), (With<Core>, Without<Killed>)>,
         mut commands: Commands,
+    ){
+        let cam_ent = cam.single();
+
+    for (sel_ent, id )in sel.iter(){
+        if Some(id.0) == selected_id.0{
+            return;
+        }
+        commands.entity(sel_ent).remove::<Selected>();
+        commands.entity(sel_ent).remove_children(&[cam_ent]);
+    }
+    for (id, ent)in q_core.iter(){
+        if Some(id.0) == selected_id.0{
+            commands.entity(ent).push_children(&[cam_ent]);
+            commands.entity(ent).insert(Selected);
+        }
+    }
+    }
+
+    fn sync_rotation(
+
     ) {
-        let cam_ent = match selected_id.0 {
-            None => return,
-            _ => cam.single(),
-        };
-        for (sel_ent, id) in sel.iter() {
-            if Some(id.0) == selected_id.0 {
-                return;
-            }
-            commands.entity(sel_ent).remove::<Selected>();
-            commands.entity(sel_ent).remove_children(&[cam_ent]);
-        }
-        for (id, ent) in q_core.iter() {
-            if Some(id.0) == selected_id.0 {
-                commands.entity(ent).push_children(&[cam_ent]);
-                commands.entity(ent).insert(Selected);
-            }
-        }
+       
     }
 }
