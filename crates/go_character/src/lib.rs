@@ -1,9 +1,8 @@
 pub mod plugin;
 pub mod shared;
-pub use plugin::Gocha;
-pub(crate) mod characters;
+pub mod controller;
 
-pub mod prelude{
-    pub use crate::shared::resources::*;
-    pub use crate::shared::*;
-}
+pub use plugin::CharController;
+pub use crate::shared::resources::*;
+pub use crate::shared::*;
+pub use controller::{resources::*, plugin::*};

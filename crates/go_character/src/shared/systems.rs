@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use super::resources::{*};
-use heroes::Character;
+use crate::controller::Character;
 fn confirm_go_rotation(){
     todo!();
 }

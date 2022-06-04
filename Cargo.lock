@@ -315,18 +315,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bevy_config_cam"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2008bc7616676eb4165fc8caccbad2f43a2f409c1d9113749397189c1a2fde8a"
-dependencies = [
- "bevy",
- "rand",
- "strum",
- "strum_macros",
-]
-
-[[package]]
 name = "bevy_core"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -677,14 +665,14 @@ dependencies = [
 
 [[package]]
 name = "bevy_rapier3d"
-version = "0.13.2"
-source = "git+https://github.com/dimforge/bevy_rapier#3f04e8d6b9c4bacf54ce09a6cd358979329e4980"
+version = "0.14.1"
+source = "git+https://github.com/dimforge/bevy_rapier#3a53f581d840dc323853c3e7f5c834b8f3fb6ea5"
 dependencies = [
  "bevy",
  "bitflags",
  "log",
  "nalgebra",
- "rapier3d",
+ "rapier3d 0.13.0",
 ]
 
 [[package]]
@@ -1893,7 +1881,7 @@ dependencies = [
  "go_multiplayer",
  "iyes_loopless",
  "priority-queue",
- "rapier3d",
+ "rapier3d 0.12.0",
  "serde",
  "serde_json",
 ]
@@ -1906,7 +1894,6 @@ dependencies = [
  "bevy_rapier3d",
  "go_core",
  "go_multiplayer",
- "heroes",
  "serde",
  "serde_json",
 ]
@@ -2004,28 +1991,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "heck"
-version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2540771e65fc8cb83cd6e8a237f70c319bd5c29f78ed1084ba5d50eeac86f7f9"
-
-[[package]]
 name = "hermit-abi"
 version = "0.1.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "62b467343b94ba476dcb2500d242dadbb39557df889310ac77c5d99100aaac33"
 dependencies = [
  "libc",
-]
-
-[[package]]
-name = "heroes"
-version = "0.1.0"
-dependencies = [
- "bevy",
- "bevy_config_cam",
- "bevy_rapier3d",
- "go_core",
 ]
 
 [[package]]
@@ -3116,6 +3087,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "rapier3d"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3de4a0087979f2c5c856bd7121b1cd295930cbbadf16b00f814f10cbf53bb02f"
+dependencies = [
+ "approx",
+ "arrayvec",
+ "bit-vec",
+ "bitflags",
+ "crossbeam",
+ "downcast-rs",
+ "nalgebra",
+ "num-derive",
+ "num-traits",
+ "parry3d",
+ "rustc-hash",
+ "simba",
+]
+
+[[package]]
 name = "raw-window-handle"
 version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3218,12 +3209,6 @@ checksum = "138e3e0acb6c9fb258b19b67cb8abd63c00679d2851805ea151465464fe9030a"
 dependencies = [
  "semver",
 ]
-
-[[package]]
-name = "rustversion"
-version = "1.0.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f2cc38e8fa666e2de3c4aba7edeb5ffc5246c1c2ed0e3d17e560aeeba736b23f"
 
 [[package]]
 name = "rusty-xinput"
@@ -3486,25 +3471,6 @@ name = "strsim"
 version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "73473c0e59e6d5812c5dfe2a064a6444949f089e20eec9a2e5506596494e4623"
-
-[[package]]
-name = "strum"
-version = "0.24.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e96acfc1b70604b8b2f1ffa4c57e59176c7dbb05d556c71ecd2f5498a1dee7f8"
-
-[[package]]
-name = "strum_macros"
-version = "0.24.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6878079b17446e4d3eba6192bb0a2950d5b14f0ed8424b852310e5a94345d0ef"
-dependencies = [
- "heck",
- "proc-macro2",
- "quote",
- "rustversion",
- "syn",
-]
 
 [[package]]
 name = "svg_fmt"

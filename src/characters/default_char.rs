@@ -1,6 +1,6 @@
-use heroes::*;
+use go_character::*;
 use bevy::prelude::*;
-use crate::prelude::*;
+use super::*;
 
 
 
