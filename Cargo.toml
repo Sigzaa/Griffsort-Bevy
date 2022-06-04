@@ -12,17 +12,24 @@ members = [
 
 
 [dependencies]
-bevy = { version = "0.7.0" }
+bevy = { version = "0.7.0" , features = ["dynamic"] }
 bevy_rapier3d = { git = "https://github.com/dimforge/bevy_rapier", features = [ "enhanced-determinism" ] }
 bevy_egui = "0.13"
 bevy_simple_networking = { git = "https://github.com/ggaast/bevy_simple_networking.git" , branch = "main"}
 bytes = "1"
-iyes_loopless = "0.3.0"
-serde = "1.0.137"
-serde_json = "1.0.81"
+
 go_core = { path = "crates/go_core"}
+go_multiplayer = { path = "crates/go_multiplayer" }
 go_character = { path = "crates/go_character"}
 
+[profile.dev]
+opt-level = 1
 
-[dev-dependencies]
-bevy = { version = "0.7.0", features = ["dynamic"]}
+# Enable high optimizations for dependencies (incl. Bevy), but not for our code:
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.dev.package.bevy_rapier3d]
+opt-level = 3
+
+

@@ -1,5 +1,5 @@
+use crate::{Character::*, *};
 use bevy::{input::mouse::MouseMotion, prelude::*};
-use crate::{*, Character::*};
 
 pub fn collect_inputs(
     input: Res<Input<KeyCode>>,
@@ -61,6 +61,17 @@ pub fn collect_inputs(
         }
         if input.just_released(KeyCode::E) {
             ginp.a_2 = 0;
+        }
+    }
+}
+pub fn camera_motion(
+    mut motion_evr: EventReader<MouseMotion>,
+    mut q_core: Query<&mut GoRot, With<Selected>>,
+) {
+    for ev in motion_evr.iter() {
+        for mut gorot in q_core.iter_mut(){
+            gorot.x *= Quat::from_rotation_y(-ev.delta.x * SENSITIVITY);
+            gorot.y *= Quat::from_rotation_x(-ev.delta.y * SENSITIVITY);
         }
     }
 }

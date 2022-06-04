@@ -93,6 +93,17 @@ pub mod Character {
             }
         }
     }
+    impl Config{
+        fn default() -> Self{
+            Self {
+                character_name: CharName(None),
+                max_hp: MaxHp(500),
+                weight: Weight(20.),
+                max_jump_height: MaxJump(20.),
+                max_velocity: Speed(30.),
+            }
+        }
+    }
 
     #[derive(Component)]
     pub struct CharName(pub Option<&'static str>);

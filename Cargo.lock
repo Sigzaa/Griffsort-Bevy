@@ -1888,9 +1888,7 @@ dependencies = [
  "bytes",
  "go_character",
  "go_core",
- "iyes_loopless",
- "serde",
- "serde_json",
+ "go_multiplayer",
 ]
 
 [[package]]
