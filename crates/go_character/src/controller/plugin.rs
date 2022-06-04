@@ -49,21 +49,6 @@ pub trait Character<T: Character<T>>: Plugin {
     fn jump() {}
     fn slab_handle() {}
     fn sprint() {}
-    fn sync_rotation<C: Component>(
-        mut q_sel: Query<(&GoRot, &mut Transform, &Children), With<C>>,
-        q_cam: Query<&mut GlobalTransform, (With<CharacterCamera>, Without<C>)>,
-    ){
-        for (gorot, mut body_transform, children) in q_sel.iter_mut(){
-            for &child in children.iter(){
-                let mut cam_transform = *q_cam.get(child).unwrap();
-
-                body_transform.rotation = gorot.x;
-                cam_transform.rotation = gorot.y;
-
-                println!("gorot y: {}", cam_transform.rotation);
-            }
-        }
-    }
 
     fn extend<C: Component>(
         mut meshes: ResMut<Assets<Mesh>>,
@@ -121,6 +106,19 @@ pub trait Character<T: Character<T>>: Plugin {
                 .insert(GoRot::default())
                 .insert(GoInputs::new())
                 .insert(ChCore);
+        }
+    }
+    fn sync_rotation<C: Component>(
+        mut q_sel: Query<(&GoRot, &mut Transform, &Children), With<C>>,
+        q_cam: Query<&mut GlobalTransform, (With<CharacterCamera>, Without<C>)>,
+    ){
+        for (gorot, mut body_transform, children) in q_sel.iter_mut(){
+            for &child in children.iter(){
+                let mut cam_transform = *q_cam.get(child).unwrap();
+
+                body_transform.rotation = gorot.x;
+                cam_transform.rotation = gorot.y;
+            }
         }
     }
 

@@ -4,7 +4,7 @@ use go_character::*;
 use go_core::Character::*;
 
 impl Plugin for Soul {
-    fn build(&self, app: &mut App) {}
+    fn build(&self, _app: &mut App) {}
 }
 
 impl Soul {}

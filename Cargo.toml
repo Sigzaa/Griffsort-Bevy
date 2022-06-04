@@ -1,6 +1,6 @@
 [package]
 name = "go"
-version = "0.0.1"
+version = "0.0.5"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -10,17 +10,14 @@ members = [
     "crates/*",
 ]
 
-
 [dependencies]
-bevy = { version = "0.7.0" , features = ["dynamic"] }
-bevy_rapier3d = { git = "https://github.com/dimforge/bevy_rapier", features = [ "enhanced-determinism" ] }
-bevy_egui = "0.13"
-bevy_simple_networking = { git = "https://github.com/ggaast/bevy_simple_networking.git" , branch = "main"}
-bytes = "1"
-
+bevy = { version = "0.7.0" }
 go_core = { path = "crates/go_core"}
 go_multiplayer = { path = "crates/go_multiplayer" }
 go_character = { path = "crates/go_character"}
+
+[dev-dependencies]
+bevy = { version = "0.7.0" , features = ["dynamic"] }
 
 [profile.dev]
 opt-level = 1

@@ -4,7 +4,7 @@ use go_character::*;
 use go_core::Character::*;
 
 impl Plugin for Zero {
-    fn build(&self, app: &mut App) {}
+    fn build(&self, _app: &mut App) {}
 }
 
 impl Character<Zero> for Zero {
