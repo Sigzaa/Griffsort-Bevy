@@ -5,4 +5,4 @@ Griffsort source code
 
 ATTENTION!!!
 
-Project is very jung and grow fast, because of that **almost all documentation is outdated**!
+Project is very jung and grow up fast, because of that **almost all documentation is outdated**!
