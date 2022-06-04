@@ -210,6 +210,7 @@ version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4fce306d40a111309ee61d4626efbafccdd46bb80657122c38061fa7264c08e4"
 dependencies = [
+ "bevy_dylib",
  "bevy_internal",
 ]
 
@@ -405,6 +406,15 @@ dependencies = [
  "bevy_ecs 0.7.0",
  "bevy_log",
  "bevy_utils 0.7.0",
+]
+
+[[package]]
+name = "bevy_dylib"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6bf02ce7a578743cd94cb38dc7a9b405d6058a2317011744371eaa56b4d6e786"
+dependencies = [
+ "bevy_internal",
 ]
 
 [[package]]
@@ -1878,7 +1888,6 @@ dependencies = [
  "bytes",
  "go_character",
  "go_core",
- "go_multiplayer",
  "iyes_loopless",
  "priority-queue",
  "rapier3d 0.12.0",
@@ -1893,7 +1902,6 @@ dependencies = [
  "bevy",
  "bevy_rapier3d",
  "go_core",
- "go_multiplayer",
  "serde",
  "serde_json",
 ]
@@ -1917,7 +1925,7 @@ version = "0.0.0"
 
 [[package]]
 name = "go_multiplayer"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = [
  "bevy",
  "bevy_simple_networking",

@@ -1,2 +1,0 @@
-#!/bin/bash
-cargo run --release server 127.0.0.1:4567

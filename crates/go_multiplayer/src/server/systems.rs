@@ -3,11 +3,11 @@ use super::resources::*;
 use bevy::{ prelude::*};
 use crate::shared::resources::*;
 use std::str;
-use go_core::prelude::Character::*;
+use go_core::Character::*;
 use crate::prelude::GoHistory;
 
 pub(crate) fn connection_handler(
-    mut q_core: Query<(&mut InputsBuffer, &Id), With<Core>>,
+    mut q_core: Query<(&mut InputsBuffer, &Id), With<ChCore>>,
     mut events: EventReader<NetworkEvent>,
     mut transport: ResMut<Transport>,
     mut con: ResMut<ConnectedList>,
@@ -59,7 +59,7 @@ pub(crate) fn connection_handler(
 }
 fn setup_players(
     mut commands: &mut Commands,
-    mut q: Query<Entity, With<Core>>,
+    mut q: Query<Entity, With<ChCore>>,
 ){
     for ent in q.iter_mut(){
         commands

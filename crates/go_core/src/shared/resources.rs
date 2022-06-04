@@ -44,7 +44,7 @@ pub mod Character {
     use bevy::prelude::*;
 
     #[derive(Component)]
-    pub struct Core;
+    pub struct ChCore;
 
     #[derive(Component)]
     pub struct Selected;

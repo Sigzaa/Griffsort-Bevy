@@ -1,4 +1,4 @@
-use go_core::prelude::{GoInputs, GoRot};
+use go_core::{GoInputs, GoRot};
 use serde::{Serialize, Deserialize};
 use bevy::{prelude::*, reflect::TypeRegistry};
 pub use priority_queue::PriorityQueue;

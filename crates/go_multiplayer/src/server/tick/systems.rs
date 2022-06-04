@@ -2,12 +2,12 @@ use super::super::resources::*;
 use crate::shared::resources::*;
 use bevy::prelude::*;
 use bevy_simple_networking::Transport;
-use go_core::prelude::*;
-use go_core::prelude::Character::*;
+use go_core::*;
+use go_core::Character::*;
 
 
 pub(crate) fn pop_buffer(
-    mut q_core: Query<(&mut InputsBuffer, &mut GoInputs, &mut GoRot), With<Core>>,
+    mut q_core: Query<(&mut InputsBuffer, &mut GoInputs, &mut GoRot), With<ChCore>>,
     tick: ResMut<TickCount>,
 ) {
     for (mut inp_buf, mut ginp, mut grot) in q_core.iter_mut(){
@@ -28,7 +28,7 @@ pub fn update_tick(mut s_tick: ResMut<TickCount>) {
 }
 
 pub fn send_sys(
-    mut q_core: Query<(&Id, &mut GoInputs, &mut Transform, &mut GoRot), With<Core>>,
+    mut q_core: Query<(&Id, &mut GoInputs, &mut Transform, &mut GoRot), With<ChCore>>,
     mut transport: ResMut<Transport>,
     con: ResMut<ConnectedList>,
     s_tick: ResMut<TickCount>,

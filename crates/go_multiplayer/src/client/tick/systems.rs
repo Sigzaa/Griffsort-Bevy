@@ -1,11 +1,11 @@
 use crate::shared::resources::*;
 use bevy::ecs::schedule::{ShouldRun, ShouldRun::*};
 use bevy::{ prelude::*};
-use go_core::prelude::Character::*;
+use go_core::Character::*;
 use bevy_simple_networking::Transport;
 use serde::{Serialize, Deserialize};
 use super::super::resources::*;
-use go_core::prelude::*;
+use go_core::*;
 
 pub fn send_message(
     time: Res<Time>,

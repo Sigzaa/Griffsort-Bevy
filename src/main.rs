@@ -1,7 +1,7 @@
 mod characters;
 
 use bevy::prelude::*;
-//use networking::*;
+//use go_multiplayer::*;
 use go_core::{*, Character::*};
 use go_character::*;
 use characters::CharactersImpl;
@@ -16,7 +16,6 @@ fn main() {
         .add_startup_system(_temp_setup)
         .run();
 }
-
 
 fn _temp_setup(
     mut spawn_request: EventWriter<SpawnChar>,
