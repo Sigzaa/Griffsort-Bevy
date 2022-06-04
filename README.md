@@ -6,3 +6,5 @@ Griffsort source code
 ATTENTION!!!
 
 Project is very jung and grow up fast, because of that **almost all documentation is outdated**!
+
+<img src="assets/hummer_girl.jpg" width="900">
