@@ -46,16 +46,9 @@ pub trait Character<T: Character<T>>: Plugin {
             }
         }
     }
-    fn jump(){
-
-    }
-    fn slab_handle(){
-
-    }
-
-    fn sprint(){
-
-    }
+    fn jump() {}
+    fn slab_handle() {}
+    fn sprint() {}
     fn sync_rotation<C: Component>(
         mut q_sel: Query<(&GoRot, &mut Transform, &Children), With<C>>,
         q_cam: Query<&mut GlobalTransform, (With<CharacterCamera>, Without<C>)>,
