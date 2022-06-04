@@ -1,0 +1,23 @@
+[package]
+name = "go_multiplayer"
+version = "0.0.5"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bevy_system_graph = "0.1.1"
+bevy_snap = { git = "https://github.com/johanhelsing/bevy_snap", version = "0.2.0"}
+bevy = { version = "0.7.0", features = [ "trace"]}
+bevy_simple_networking = { git = "https://github.com/ggaast/bevy_simple_networking.git" , branch = "main"}
+bytes = "1"
+iyes_loopless = "0.3.0"
+serde = "1.0.137"
+serde_json = "1.0.81"
+go_core = { path = "../go_core" }
+priority-queue = "1.2.1"
+
+[features]
+# No features: client and localhost
+server = []
+address = []
