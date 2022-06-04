@@ -5,7 +5,6 @@ pub use bevy_rapier3d::prelude::*;
 use go_core::{Character::*, GoInputs, GoRot};
 use bevy::render::camera::Camera3d;
 
-
 impl<T: Character<T> + Send + Sync + Copy + Component> Plugin for Controller<T> {
     fn build(&self, app: &mut App) {
         app.add_plugin(self.char_type)
