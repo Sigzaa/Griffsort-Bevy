@@ -129,7 +129,6 @@ pub trait Character<T: Character<T>>: Plugin {
             commands
                 .entity(entity)
                 .insert_bundle(Config::default())
-                .insert(GoInputs::new())
                 .insert(GoRot::default())
                 .insert(GoInputs::new())
                 .insert(ChCore);
