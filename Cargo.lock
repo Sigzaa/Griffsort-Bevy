@@ -755,7 +755,21 @@ dependencies = [
 [[package]]
 name = "bevy_simple_networking"
 version = "0.3.0"
+<<<<<<< HEAD
 source = "git+https://github.com/ggaast/bevy_simple_networking.git?branch=main#d08f564b70800cf5220abaf69a61b9b38c39db3b"
+=======
+source = "git+https://github.com/ggaast/bevy_simple_networking#8793de65d1fbb65ac2a88f27e11b65d3077b9f36"
+dependencies = [
+ "bevy",
+ "bytes",
+]
+
+[[package]]
+name = "bevy_sprite"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "66439831ff57c11c7fb2692e7ccf8d0551f4368a9908908d3c38f2da53115b33"
+>>>>>>> main
 dependencies = [
  "bevy",
  "bytes",
@@ -2282,6 +2296,22 @@ dependencies = [
 ]
 
 [[package]]
+<<<<<<< HEAD
+=======
+name = "moba"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "bevy_egui",
+ "bevy_rapier3d",
+ "bevy_simple_networking",
+ "bytes",
+ "priority-queue",
+ "rapier3d",
+]
+
+[[package]]
+>>>>>>> main
 name = "naga"
 version = "0.8.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
