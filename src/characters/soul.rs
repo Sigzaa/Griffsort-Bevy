@@ -1,17 +1,14 @@
 use super::*;
 use bevy::prelude::*;
 use go_character::*;
-use go_core::prelude::Character::*;
+use go_core::Character::*;
 
 impl Plugin for Soul {
-    fn build(&self, app: &mut App) {
-        app
-            //.add_system_set_to_stage()
-            ;
-    }
+    fn build(&self, app: &mut App) {}
 }
 
 impl Soul {}
+
 impl Character<Soul> for Soul {
     fn spawn(mut spawn_request: EventReader<SpawnChar>, mut commands: Commands) {
         for spawn_request in spawn_request.iter() {

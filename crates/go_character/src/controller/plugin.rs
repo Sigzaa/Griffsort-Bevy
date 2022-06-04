@@ -1,8 +1,8 @@
 use super::resources::*;
 use bevy::prelude::*;
 use bevy::render::camera::{ActiveCamera, CameraTypePlugin};
-use bevy_rapier3d::prelude::*;
-use go_core::prelude::{Character::*, GoInputs};
+pub use bevy_rapier3d::prelude::*;
+use go_core::{Character::*, GoInputs};
 
 impl<T: Character<T> + Send + Sync + Copy + Component> Plugin for Controller<T> {
     fn build(&self, app: &mut App) {
@@ -134,7 +134,7 @@ pub trait Character<T: Character<T>>: Plugin {
                     //forward: true,
                     ..Default::default()
                 })
-                .insert(Core)
+                .insert(ChCore)
                 .with_children(|parent| {
                     // child cube
                     parent
@@ -159,7 +159,7 @@ pub trait Character<T: Character<T>>: Plugin {
         selected_id: Res<SelectedId>,
         cam: Query<Entity, With<CharacterCamera>>,
         sel: Query<(Entity, &Id), With<Selected>>,
-        q_core: Query<(&Id, Entity), (With<Core>, Without<Killed>)>,
+        q_core: Query<(&Id, Entity), (With<ChCore>, Without<Killed>)>,
         mut commands: Commands,
     ) {
         let cam_ent = cam.single();

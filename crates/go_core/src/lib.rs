@@ -1,11 +1,7 @@
 pub mod goinputs;
-mod shared;
 pub mod plugin;
+mod shared;
+
 pub use plugin::Core;
-
-pub mod prelude {
-    pub use crate::goinputs::{resources::*, *, resources::GoInputs};
-    pub use crate::shared::resources::*;
-}
-
-
+pub use crate::goinputs::{resources::GoInputs, resources::*, *};
+pub use crate::shared::resources::*;

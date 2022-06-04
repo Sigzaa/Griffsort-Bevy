@@ -1,7 +1,7 @@
 
 use crate::shared::{resources::*, systems::*};
 use bevy::prelude::*;
-use go_core::prelude::Character::*;
+use go_core::Character::*;
 use bevy_rapier3d::prelude::*;
 
 pub struct CharController;
