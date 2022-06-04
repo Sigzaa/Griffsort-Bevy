@@ -16,10 +16,7 @@ impl<T: Character<T> + Send + Sync + Copy + Component> Plugin for Controller<T> 
             .add_system(T::sync_components)
             .add_system(T::sync_camera)
             .add_system(T::movement::<T>)
-            .add_system(T::sync_rotation::<T>)
-            
-            //.add_system(T::hover::<T>)
-            ;
+            .add_system(T::sync_rotation::<T>);
     }
 }
 
