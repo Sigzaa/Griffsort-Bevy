@@ -27,22 +27,25 @@ impl<T: Character<T> + Send + Sync + Copy> Controller<T> {
 
 pub trait Character<T: Character<T>>: Plugin {
     fn movement<C: Component>(
-        mut q_sel: Query<(&GoInputs, &mut Velocity), With<Selected>>,
+        mut q_sel: Query<(&GoInputs, &mut Velocity, &Transform), With<Selected>>,
         time: Res<Time>,
     ){
         const MAX_SPEED: f32 = 9.;
-        for (inputs, mut velocity) in q_sel.iter_mut(){
-            if inputs.forward == 1 && velocity.linvel[2] > - MAX_SPEED{
-                velocity.linvel += Vec3::new(0., 0.,-20.) * time.delta_seconds();
+        for (inputs, mut velocity, transform) in q_sel.iter_mut(){
+
+            let coef = time.delta_seconds() * 15.;
+
+            if inputs.forward == 1{
+                velocity.linvel += transform.forward() * coef;
             }
-            if inputs.back == 1 && velocity.linvel[2] < MAX_SPEED{
-                velocity.linvel += Vec3::new(0., 0., 20.) * time.delta_seconds();
+            if inputs.back == 1{
+                velocity.linvel += transform.back() * coef;
             }
-            if inputs.left == 1 && velocity.linvel[0] > - MAX_SPEED{
-                velocity.linvel += Vec3::new(-20., 0., 0.) * time.delta_seconds();
+            if inputs.left == 1 {
+                velocity.linvel += transform.left() * coef;
             }
-            if inputs.right == 1 && velocity.linvel[0] < MAX_SPEED{
-                velocity.linvel += Vec3::new(20., 0., 0.) * time.delta_seconds();
+            if inputs.right == 1 {
+                velocity.linvel += transform.right() * coef;
             }
         }
     }

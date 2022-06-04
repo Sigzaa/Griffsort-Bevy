@@ -1,17 +1,10 @@
 use bevy_simple_networking::{NetworkEvent, Transport};
-<<<<<<< HEAD:crates/go_multiplayer/src/server/systems.rs
 use super::resources::*;
 use bevy::{ prelude::*};
 use crate::shared::resources::*;
 use std::str;
 use go_core::Character::*;
 use crate::prelude::GoHistory;
-=======
-use super::components::*;
-use crate::game::components::{filters::*, player_data::*};
-use bevy::{math::*, prelude::*};
-use crate::game::networking::additional::*;
->>>>>>> main:src/game/networking/server/connection_handler.rs
 
 pub(crate) fn connection_handler(
     mut q_core: Query<(&mut InputsBuffer, &Id), With<ChCore>>,
