@@ -8,3 +8,9 @@ pub struct SpawnChar(pub &'static str, pub i32, pub i32); // Character code, tea
 pub struct Controller<T: 'static> {
     pub char_type: T,
 }
+
+#[derive(Component)]
+pub struct ZHead;
+
+#[derive(Component)]
+pub struct InAir;

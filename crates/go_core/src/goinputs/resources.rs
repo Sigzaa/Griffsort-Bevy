@@ -7,18 +7,21 @@ pub const SENSITIVITY: f32 = 0.002;
 pub struct GoRot {
     pub x: Quat,
     pub y: Quat,
+    pub z: Quat,
 }
 impl GoRot{
     pub fn default() -> Self{
         Self{
             x: Quat::from_rotation_x(0.),
             y: Quat::from_rotation_y(0.),
+            z: Quat::from_rotation_z(0.),
         }
     }
-    pub fn new(x: f32, y: f32) -> Self{
+    pub fn new(x: f32, y: f32, z: f32) -> Self{
         Self{
             x: Quat::from_rotation_x(x),
             y: Quat::from_rotation_y(y),
+            z: Quat::from_rotation_z(z),
         }
     }
 }

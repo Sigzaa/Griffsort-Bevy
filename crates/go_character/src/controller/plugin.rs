@@ -1,5 +1,5 @@
 use super::resources::*;
-use bevy::prelude::*;
+use bevy::prelude::{*, shape::*};
 use bevy::render::camera::{ActiveCamera, CameraTypePlugin};
 pub use bevy_rapier3d::prelude::*;
 use go_core::{Character::*, GoInputs, GoRot};
@@ -15,7 +15,8 @@ impl<T: Character<T> + Send + Sync + Copy + Component> Plugin for Controller<T> 
             .add_system(T::sync_components)
             .add_system(T::sync_camera)
             .add_system(T::movement::<T>)
-            .add_system(T::sync_rotation::<T>);
+            .add_system(T::sync_rotation::<T>)
+            ;
     }
 }
 
@@ -65,12 +66,13 @@ pub trait Character<T: Character<T>>: Plugin {
             commands
                 .entity(entity)
                 .insert_bundle(PbrBundle {
-                    mesh: meshes.add(Mesh::from(bevy::prelude::shape::Capsule {
+                    mesh: meshes.add(Mesh::from(Capsule {
                         radius: 0.3,
                         ..Default::default()
                     })),
                     material: materials.add(StandardMaterial {
                         base_color: Color::rgba(0.9, 0.2, 0.1, 0.5),
+                        alpha_mode: AlphaMode::Blend, 
                         ..Default::default()
                     }),
                     transform: Transform::from_xyz(2.0, 5.5, -id.0 as f32 * 1.5),
@@ -78,16 +80,37 @@ pub trait Character<T: Character<T>>: Plugin {
                 })
                 .with_children(|parent| {
                     parent
-                        .spawn_bundle(PerspectiveCameraBundle {
-                            transform: Transform::from_xyz(0., 0.4, 0.),
-                            perspective_projection: PerspectiveProjection {
-                                fov: 1.3,
+                        .spawn_bundle(
+                            PbrBundle {
+                                mesh: meshes.add(Mesh::from(Cube {
+                                    size: 0.2,
+                                })),
+                                material: materials.add(StandardMaterial {
+                                    base_color: Color::DARK_GRAY,
+                                    metallic: 0.1,
+                                    ..Default::default()
+                                }),
+                                transform: Transform::from_xyz(0., 0.4, 0.),
                                 ..Default::default()
-                            },
-                            ..Default::default()
-                        })
-                        .insert(CharacterCamera);
-                });
+                            }
+                        )
+                        .insert(ZHead)
+                        .with_children(|parent| {
+                            parent
+                                .spawn_bundle(PerspectiveCameraBundle {
+                                    transform: Transform::from_xyz(0., 0., 0.),
+                                    perspective_projection: PerspectiveProjection {
+                                        fov: 1.5,
+                                        ..Default::default()
+                                    },
+                                    ..Default::default()
+                                })
+                                .insert(CharacterCamera)
+                                
+                                ;
+                        });
+                })
+                ;
 
             commands
                 .entity(entity)
@@ -112,15 +135,22 @@ pub trait Character<T: Character<T>>: Plugin {
         }
     }
     fn sync_rotation<C: Component>(
+        mut q_head: Query<(&Children, &mut Transform), (With<ZHead>, Without<C>)>,
         mut q_sel: Query<(&GoRot, &mut Transform, &Children), With<C>>,
-        q_cam: Query<&mut GlobalTransform, (With<CharacterCamera>, Without<C>)>,
+        mut q_cam: Query<&mut Transform, (With<CharacterCamera>, Without<C>, Without<ZHead>)>,
     ){
         for (gorot, mut body_transform, children) in q_sel.iter_mut(){
             for &child in children.iter(){
-                let mut cam_transform = *q_cam.get(child).unwrap();
 
-                body_transform.rotation = gorot.x;
-                cam_transform.rotation = gorot.y;
+                let (children, mut head_transform) = q_head.get_mut(child).unwrap();
+
+                for &child in children.iter(){
+
+                    let mut cam_transform = q_cam.get_mut(child).unwrap();
+                    body_transform.rotation = gorot.x;
+                    cam_transform.rotation = gorot.y;
+                    head_transform.rotation = gorot.z;
+                } 
             }
         }
     }
@@ -128,14 +158,24 @@ pub trait Character<T: Character<T>>: Plugin {
     fn sync_camera(
         selected_id: Res<SelectedId>,
         q_camera: Query<Entity, With<CharacterCamera>>,
+        q_head: Query<&Children, With<ZHead>>,
         q_core: Query<(&Id, &Children), (With<ChCore>, Without<Killed>, Without<Selected>)>,
         mut active_camera: ResMut<ActiveCamera<Camera3d>>,
     ) {
         for (id, children) in q_core.iter() {
+
             if Some(id.0) == selected_id.0 {
+
                 for &child in children.iter() {
-                    let cam_ent = q_camera.get(child);
-                    active_camera.set(cam_ent.unwrap());
+
+                    let children = q_head.get(child).unwrap();
+
+                    for &child in children.iter(){
+
+                        let cam_ent = q_camera.get(child).unwrap();
+                        active_camera.set(cam_ent);
+                    }
+                    
                 }
             }
         }

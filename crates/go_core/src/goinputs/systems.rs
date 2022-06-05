@@ -72,6 +72,7 @@ pub fn camera_motion(
         for mut gorot in q_core.iter_mut(){
             gorot.x *= Quat::from_rotation_y(-ev.delta.x * SENSITIVITY);
             gorot.y *= Quat::from_rotation_x(-ev.delta.y * SENSITIVITY);
+            //gorot.z = Quat::from_rotation_z(-ev.delta.x * SENSITIVITY); TODO!
         }
     }
 }
