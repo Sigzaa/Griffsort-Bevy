@@ -4,30 +4,31 @@ mod temp;
 use bevy::prelude::*;
 use bevy::window::PresentMode;
 //use go_multiplayer::*;
+use bevy_atmosphere::*;
 use characters::CharactersImpl;
 use go_character::*;
 use go_core::{Character::*, *};
+use go_level::plugin::Level;
 use temp::stats::Stats;
-use bevy_atmosphere::*;
 fn main() {
     App::new()
         .insert_resource(WindowDescriptor {
             title: "Griffsort".to_string(),
             width: 1200.,
             height: 800.,
-            present_mode: PresentMode::Immediate,
-            //mode: bevy::window::WindowMode::BorderlessFullscreen,
+            present_mode: PresentMode::Fifo,
+            //mode: bevy::window::WindowMode::Fullscreen,
             ..Default::default()
         })
         .add_plugins(DefaultPlugins)
         .insert_resource(bevy_atmosphere::AtmosphereMat::default()) // Default Earth sky
         .add_plugin(bevy_atmosphere::AtmospherePlugin {
-            dynamic: false,  // Set to false since we aren't changing the sky's appearance
+            dynamic: false, // Set to false since we aren't changing the sky's appearance
             sky_radius: 50.0,
         })
-        
         .add_plugin(CharController)
         .add_plugin(CharactersImpl)
+        .add_plugin(Level)
         .add_plugin(Core)
         .add_plugin(Stats)
         //.add_plugin(Networking)

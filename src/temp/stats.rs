@@ -21,7 +21,7 @@ impl Plugin for Stats {
             .add_plugin(ObjPlugin)
             .add_startup_system(fps)
             .add_system(text_update_system)
-            .add_startup_system(example_startup_system)
+            //.add_startup_system(example_startup_system)
             //.add_system(world::text_update_system)
             
             //.add_plugin(Console)

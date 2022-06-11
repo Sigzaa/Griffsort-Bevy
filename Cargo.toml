@@ -11,8 +11,11 @@ bevy = { version = "0.7.0" , features = ["dynamic", "jpeg"]}
 go_core = { path = "crates/go_core" , version = "0.1.0"}
 go_multiplayer = { path = "crates/go_multiplayer" , version = "0.0.5"}
 go_character = { path = "crates/go_character", version = "0.0.5"}
+go_level = { path = "crates/go_level", version = "0.1.0"}
 bevy_obj = "0.7.0"
 bevy_atmosphere = { git = "https://github.com/JonahPlusPlus/bevy_atmosphere" } 
+
+
 [dev-dependencies]
 bevy = { version = "0.7.0" , features = ["dynamic", "jpeg"]}
 
@@ -21,12 +24,13 @@ opt-level = 1
 
 # Enable high optimizations for dependencies (incl. Bevy), but not for our code:
 [profile.dev.package."*"]
-opt-level = 0
+opt-level = 3
 
 [profile.dev.package.bevy_rapier3d]
 opt-level = 1
 
 [profile.release]
-opt-level = 3
+lto = true
+codegen-units = 1
 
 
