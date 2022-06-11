@@ -1,15 +1,16 @@
 [package]
 name = "go_character"
-version = "0.0.1"
+version = "0.0.5"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy_rapier3d = { git = "https://github.com/dimforge/bevy_rapier", features = [ "enhanced-determinism" ] }
-bevy = { version = "0.7.0"}
+bevy_rapier3d = { version = "0.14.1" , features = [ "enhanced-determinism" ] }
+bevy = { version = "0.7.0" , features = ["dynamic"] }
 serde = "1.0.137"
 serde_json = "1.0.81"
 bevy_asset_ron = "0.4.0"
+bevy_prototype_debug_lines = { git = "https://github.com/Toqozz/bevy_debug_lines", features = ["3d"] }
 
-go_core = { path = "../go_core" }
+go_core = { path = "../go_core", version = "*" }

@@ -27,7 +27,8 @@ pub struct Killed {
     pub timer: f32,
 }
 
-
+#[derive(Default)]
+pub struct ShowRay(pub bool);
 
 // Events structs -->
 

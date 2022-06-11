@@ -1,10 +1,5 @@
 //This file is a place, where you can put bevy components, events etc.
 
-// Constants -->
-pub const SENSITIVITY: f32 = 0.002;
-pub const RESPAWNGAP: f32 = 9.;
-// <--
-
 // Events structs -->
 pub struct BindControls(pub i32);
 pub struct SpawnCharacter(pub &'static str, pub i32, pub i32); // Character name/code, player_id, team.
@@ -61,8 +56,9 @@ pub mod Character {
         pub character_name: CharName,
         pub max_hp: MaxHp,
         pub max_jump_height: MaxJump,
-        pub max_velocity: Speed,
+        pub max_velocity: MaxSpeed,
         pub weight: Weight,
+        pub acceleration: Acceleration,
     }
     #[derive(Bundle, Component)]
     pub struct States {
@@ -88,19 +84,9 @@ pub mod Character {
                 character_name: CharName(None),
                 max_hp: MaxHp(500),
                 weight: Weight(20.),
-                max_jump_height: MaxJump(20.),
-                max_velocity: Speed(30.),
-            }
-        }
-    }
-    impl Config{
-        fn default() -> Self{
-            Self {
-                character_name: CharName(None),
-                max_hp: MaxHp(500),
-                weight: Weight(20.),
-                max_jump_height: MaxJump(20.),
-                max_velocity: Speed(30.),
+                max_jump_height: MaxJump(5.),
+                max_velocity: MaxSpeed(5.),
+                acceleration: Acceleration(500.),
             }
         }
     }
@@ -110,6 +96,8 @@ pub mod Character {
     #[derive(Component)]
     pub struct Team(pub i16);
     #[derive(Component)]
+    pub struct Acceleration(pub f32);
+    #[derive(Component)]
     pub struct Hp(pub i32);
     #[derive(Component)]
     pub struct MaxHp(pub i32);
@@ -118,7 +106,7 @@ pub mod Character {
     #[derive(Component)]
     pub struct VerticalVelocity(pub f32);
     #[derive(Component)]
-    pub struct Speed(pub f32);
+    pub struct MaxSpeed(pub f32);
     #[derive(Component)]
     pub struct Weight(pub f32);
     #[derive(Component)]
@@ -135,6 +123,8 @@ pub mod Character {
     pub struct CustomHeadMovement;
     #[derive(Default, Component)]
     pub struct CharacterCamera;
+    #[derive(Default, Component)]
+    pub struct SelectedCamera;
     #[derive(Component)]
     pub struct Crosshair;
     #[derive(Component)]

@@ -1,8 +1,6 @@
 use bevy::prelude::*;
 use serde::{Serialize, Deserialize};
 
-pub const SENSITIVITY: f32 = 0.002;
-
 #[derive(Default, Component, Clone, Copy, Serialize, Deserialize, Debug, PartialEq)]
 pub struct GoRot {
     pub x: Quat,
@@ -31,6 +29,7 @@ impl GoRot{
 pub struct GoInputs {
     pub mouse_delta_y: f32,
     pub mouse_delta_x: f32,
+    pub movement: Vec2,
     pub jump: i8,
     pub left: i8,
     pub right: i8,
@@ -45,36 +44,16 @@ pub struct GoInputs {
     pub sprint: i8,
     pub fire: i8,
 }
-impl GoInputs{
-    pub fn new() -> Self{
-        Self {
-            mouse_delta_x: 0.,
-            mouse_delta_y: 0.,
-            jump: 0,
-            left: 0,
-            right: 0,
-            forward: 0,
-            back: 0,
-            a_1: 0,
-            a_2: 0,
-            a_3: 0,
-            a_4: 0,
-            a_5: 0,
-            a_6: 0,
-            sprint: 0,
-            fire: 0,
-        }
-    }
-}
 impl Default for GoInputs {
     fn default() -> Self {
         Self {
             mouse_delta_x: 0.,
             mouse_delta_y: 0.,
+            movement: Vec2::new(0.,0.),
             jump: 0,
+            forward: 0,
             left: 0,
             right: 0,
-            forward: 0,
             back: 0,
             a_1: 0,
             a_2: 0,
@@ -87,8 +66,14 @@ impl Default for GoInputs {
         }
     }
 }
+
+pub struct MyGamepad(pub Gamepad);
+
 #[derive(Default)]
 pub struct IsGoInActive(pub bool);
+
+#[derive(Default)]
+pub struct Sensitivity(pub f32);
 
 #[derive(Component, Clone, Copy, Serialize, Deserialize, Debug, PartialEq)]
 pub enum Rot{

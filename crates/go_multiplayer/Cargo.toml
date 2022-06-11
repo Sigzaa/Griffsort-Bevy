@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 bevy_system_graph = "0.1.1"
 bevy_snap = { git = "https://github.com/johanhelsing/bevy_snap", version = "0.2.0"}
-bevy = { version = "0.7.0", features = [ "trace"]}
+bevy = { version = "0.7.0" , features = ["dynamic"] }
 bevy_simple_networking = { git = "https://github.com/ggaast/bevy_simple_networking.git" , branch = "main"}
 bytes = "1"
 iyes_loopless = "0.3.0"

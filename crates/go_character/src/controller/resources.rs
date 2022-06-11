@@ -13,4 +13,8 @@ pub struct Controller<T: 'static> {
 pub struct ZHead;
 
 #[derive(Component)]
-pub struct InAir;
+pub struct Grounded;
+
+#[derive(Component)]
+pub struct RideHeight(pub f32);
+

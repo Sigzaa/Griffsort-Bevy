@@ -1,0 +1,11 @@
+Model Information:
+* title:	minecraft map
+* source:	https://sketchfab.com/3d-models/minecraft-map-e05e1b19751e47caa4122639901f040e
+* author:	Opitax (https://sketchfab.com/Opitax)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "minecraft map" (https://sketchfab.com/3d-models/minecraft-map-e05e1b19751e47caa4122639901f040e) by Opitax (https://sketchfab.com/Opitax) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

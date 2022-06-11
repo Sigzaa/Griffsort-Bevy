@@ -280,6 +280,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "bevy_atmosphere"
+version = "0.3.1"
+source = "git+https://github.com/JonahPlusPlus/bevy_atmosphere#b6cf6d49db0da3c6d425514dab7d862768aacb8a"
+dependencies = [
+ "bevy",
+]
+
+[[package]]
 name = "bevy_audio"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -568,7 +576,6 @@ dependencies = [
  "bevy_app 0.7.0",
  "bevy_utils 0.7.0",
  "console_error_panic_hook",
- "tracing-error",
  "tracing-log",
  "tracing-subscriber",
  "tracing-wasm",
@@ -617,6 +624,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "bevy_obj"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4ec5999eb52b848744af3c58e9ac810a7fbc2fedce412d651d640ba4c352868d"
+dependencies = [
+ "anyhow",
+ "bevy_app 0.7.0",
+ "bevy_asset",
+ "bevy_render",
+ "bevy_utils 0.7.0",
+ "obj-rs",
+ "thiserror",
+]
+
+[[package]]
 name = "bevy_pbr"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -638,9 +660,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "bevy_prototype_debug_lines"
+version = "0.7.1"
+source = "git+https://github.com/Toqozz/bevy_debug_lines#9066fb8e4da8292cc38349f519108ee68cdc5fe3"
+dependencies = [
+ "bevy",
+]
+
+[[package]]
 name = "bevy_rapier3d"
 version = "0.14.1"
-source = "git+https://github.com/dimforge/bevy_rapier#64545b78949d37f30e828801767f993a397682bb"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cb6a83c09dfeb6c614168388bd2944202b08ad86324554e684337035f787d982"
 dependencies = [
  "bevy",
  "bitflags",
@@ -1771,6 +1802,8 @@ name = "go"
 version = "0.0.6"
 dependencies = [
  "bevy",
+ "bevy_atmosphere",
+ "bevy_obj",
  "go_character",
  "go_core",
  "go_multiplayer",
@@ -1778,10 +1811,11 @@ dependencies = [
 
 [[package]]
 name = "go_character"
-version = "0.0.1"
+version = "0.0.5"
 dependencies = [
  "bevy",
  "bevy_asset_ron",
+ "bevy_prototype_debug_lines",
  "bevy_rapier3d",
  "go_core",
  "serde",
@@ -1790,20 +1824,12 @@ dependencies = [
 
 [[package]]
 name = "go_core"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "bevy",
  "serde",
  "serde_json",
 ]
-
-[[package]]
-name = "go_interface"
-version = "0.0.0"
-
-[[package]]
-name = "go_level"
-version = "0.0.0"
 
 [[package]]
 name = "go_multiplayer"
@@ -1926,6 +1952,7 @@ dependencies = [
  "bytemuck",
  "byteorder",
  "color_quant",
+ "jpeg-decoder",
  "num-iter",
  "num-rational 0.3.2",
  "num-traits",
@@ -2043,6 +2070,12 @@ checksum = "af25a77299a7f711a01975c35a6a424eb6862092cc2d6c72c4ed6cbc56dfc1fa"
 dependencies = [
  "libc",
 ]
+
+[[package]]
+name = "jpeg-decoder"
+version = "0.1.22"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "229d53d58899083193af11e15917b5640cd40b29ff475a1fe4ef725deb02d0f2"
 
 [[package]]
 name = "js-sys"
@@ -2583,6 +2616,15 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "obj-rs"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c90a2f645433dba5c609451d3fa847282b0f23ee8d8fa75491a946af53cb1db4"
+dependencies = [
+ "num-traits",
 ]
 
 [[package]]
@@ -3348,16 +3390,6 @@ checksum = "f54c8ca710e81886d498c2fd3331b56c93aa248d49de2222ad2742247c60072f"
 dependencies = [
  "lazy_static",
  "valuable",
-]
-
-[[package]]
-name = "tracing-error"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d686ec1c0f384b1277f097b2f279a2ecc11afe8c133c1aabf036a27cb4cd206e"
-dependencies = [
- "tracing",
- "tracing-subscriber",
 ]
 
 [[package]]

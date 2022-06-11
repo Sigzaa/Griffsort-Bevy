@@ -8,18 +8,24 @@ use characters::CharactersImpl;
 use go_character::*;
 use go_core::{Character::*, *};
 use temp::stats::Stats;
-
+use bevy_atmosphere::*;
 fn main() {
     App::new()
         .insert_resource(WindowDescriptor {
             title: "Griffsort".to_string(),
-            width: 720.,
-            height: 500.,
+            width: 1200.,
+            height: 800.,
             present_mode: PresentMode::Immediate,
             //mode: bevy::window::WindowMode::BorderlessFullscreen,
             ..Default::default()
         })
         .add_plugins(DefaultPlugins)
+        .insert_resource(bevy_atmosphere::AtmosphereMat::default()) // Default Earth sky
+        .add_plugin(bevy_atmosphere::AtmospherePlugin {
+            dynamic: false,  // Set to false since we aren't changing the sky's appearance
+            sky_radius: 50.0,
+        })
+        
         .add_plugin(CharController)
         .add_plugin(CharactersImpl)
         .add_plugin(Core)
@@ -36,7 +42,7 @@ fn switch(buttons: Res<Input<MouseButton>>, mut selected: ResMut<SelectedId>) {
     }
 }
 fn _temp_setup(
-    mut spawn_request: EventWriter<SpawnChar>,
+    mut spawner: EventWriter<SpawnChar>,
     mut selected: ResMut<SelectedId>,
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
@@ -73,24 +79,25 @@ fn _temp_setup(
     });
 
     commands
-        .spawn_bundle(PbrBundle {
-            mesh: meshes.add(Mesh::from(shape::Plane { size: 1000.0 })),
-            material: materials.add(StandardMaterial {
-                base_color: Color::WHITE,
-                perceptual_roughness: 1.0,
-                ..default()
-            }),
-            ..default()
-        })
+        .spawn()
+        // .insert_bundle(PbrBundle {
+        //     mesh: meshes.add(Mesh::from(shape::Plane { size: 500.0 })),
+        //     material: materials.add(StandardMaterial {
+        //         base_color: Color::WHITE,
+        //         perceptual_roughness: 1.0,
+        //         ..default()
+        //     }),
+        //     ..default()
+        // })
         .insert(RigidBody::Fixed)
-        .insert(Collider::cuboid(500.0, 0., 500.0));
+        .insert(Friction {
+            coefficient: 3.9,
+            combine_rule: CoefficientCombineRule::Min,
+        })
+        .insert(Collider::cuboid(100.0, 0., 100.0));
 
-    spawn_request.send(SpawnChar("Zero", 1, -1));
-    spawn_request.send(SpawnChar("Zero", 1, 1));
-    // spawn_request.send(SpawnChar("Soul", 1, 1));
-    // spawn_request.send(SpawnChar("Soul", 1, 2));
-    // spawn_request.send(SpawnChar("Soul", 1, 3));
-    // spawn_request.send(SpawnChar("Soul", 1, 4));
-    // spawn_request.send(SpawnChar("Soul", 1, 5)); // Spawning Soul in team 1 with id 0
-    selected.0 = Some(1);
+    spawner.send(SpawnChar("Zero", 1, -1));
+    spawner.send(SpawnChar("Zero", 1, 1));
+
+    selected.0 = Some(-1);
 }
