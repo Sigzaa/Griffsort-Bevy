@@ -2,7 +2,7 @@ use bevy_simple_networking::NetworkEvent;
 use super::resources::*;
 use bevy::{math::*, prelude::*};
 use std::str;
-use go_core::Character::*;
+use go_core::*;
 
 pub fn connection_handler(
     mut events: EventReader<NetworkEvent>,

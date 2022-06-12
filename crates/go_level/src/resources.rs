@@ -1,7 +1,20 @@
-use bevy::prelude::*;
+use bevy::prelude::*;   
+
+#[derive(Debug, Clone, Eq, PartialEq, Hash)]
 
 #[derive(Default)]
-pub(crate) struct Loaded{
-    path: &'static str,
-    scene: Handle<Scene>
+pub struct LoadedMap{
+    scene_handle: Handle<Scene>
+}
+
+// impl AssociatedAsset for Map {
+//     fn asset_path(&self) -> &str {
+//         match self {
+//             Map::TestingPolygon => "maps/sky_roof.glb#Scene0",
+//         }
+//     }
+// }
+trait AssociatedAsset {
+    /// Returns path to associated asset
+    fn asset_path(&self) -> &str;
 }

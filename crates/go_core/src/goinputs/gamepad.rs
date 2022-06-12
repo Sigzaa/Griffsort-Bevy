@@ -1,5 +1,5 @@
 use super::resources::*;
-use crate::shared::resources::Character::*;
+use crate::*;
 /// Simple resource to store the ID of the connected gamepad.
 /// We need to know which gamepad to use for player input.
 ///

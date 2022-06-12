@@ -7,7 +7,7 @@ use bevy::window::PresentMode;
 use bevy_atmosphere::*;
 use characters::CharactersImpl;
 use go_character::*;
-use go_core::{Character::*, *};
+use go_core::{character::*, *};
 use go_level::plugin::Level;
 use temp::stats::Stats;
 fn main() {
@@ -16,8 +16,8 @@ fn main() {
             title: "Griffsort".to_string(),
             width: 1200.,
             height: 800.,
-            present_mode: PresentMode::Fifo,
-            //mode: bevy::window::WindowMode::Fullscreen,
+            present_mode: PresentMode::Immediate,
+            mode: bevy::window::WindowMode::Fullscreen,
             ..Default::default()
         })
         .add_plugins(DefaultPlugins)

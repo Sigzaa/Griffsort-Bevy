@@ -1,5 +1,5 @@
 use super::resources::MyGamepad;
-use crate::{Character::*, *};
+use crate::*;
 use bevy::{
     input::mouse::MouseMotion,
     prelude::{KeyCode, *},

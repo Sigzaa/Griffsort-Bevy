@@ -3,7 +3,7 @@ use crate::shared::resources::*;
 use bevy::prelude::*;
 use bevy_simple_networking::Transport;
 use go_core::*;
-use go_core::Character::*;
+use go_core::*;
 
 
 pub(crate) fn pop_buffer(

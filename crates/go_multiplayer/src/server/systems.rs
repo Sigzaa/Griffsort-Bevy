@@ -3,7 +3,7 @@ use super::resources::*;
 use bevy::{ prelude::*};
 use crate::shared::resources::*;
 use std::str;
-use go_core::Character::*;
+use go_core::*;
 use crate::prelude::GoHistory;
 
 pub(crate) fn connection_handler(

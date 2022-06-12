@@ -1,7 +1,7 @@
 use crate::shared::resources::*;
 use bevy::ecs::schedule::{ShouldRun, ShouldRun::*};
 use bevy::{ prelude::*};
-use go_core::Character::*;
+use go_core::*;
 use bevy_simple_networking::Transport;
 use serde::{Serialize, Deserialize};
 use super::super::resources::*;

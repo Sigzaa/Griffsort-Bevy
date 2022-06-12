@@ -8,7 +8,7 @@ use bevy::window::PresentMode;
 //use go_multiplayer::*;
 use super::super::characters::CharactersImpl;
 use go_character::*;
-use go_core::{Character::*, *};
+use go_core::{character::*, *};
 
 
 #[derive(Component)]

@@ -55,4 +55,33 @@ pub const NetStage: &str = "net_stage_label";
 pub(crate) const TICKRATE: i32 = 66;
 pub(crate) const BUFFER_CAPACITY: i32 = 200;
 
+#[derive(Default)]
+pub struct MatchSettings{
+    map: &'static str,
+    allowed_cheating: bool,
+    //chars_config: Vec<i32>,
+    timer: f32,
+    //game_match: MatchType,
+
+
+    // feature "Client"
+    do_i_have_op: bool,
+
+    // feature "Server"
+    //player_op: Vec<f32>,
+}
+// pub enum MatchType{
+//     Classic{
+
+//     },
+//     Free{
+
+//     },
+//     DeathMatch{
+
+//     },
+// }
+
+
+
 
