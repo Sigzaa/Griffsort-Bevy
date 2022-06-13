@@ -11,8 +11,7 @@ use go_character::*;
 use corgee::{character::*, *};
 
 
-#[derive(Component)]
-struct FpsText;
+
 pub struct Stats;
 impl Plugin for Stats {
     fn build(&self, app: &mut App) {
@@ -20,6 +19,7 @@ impl Plugin for Stats {
             .add_plugin(FrameTimeDiagnosticsPlugin::default())
             .add_plugin(ObjPlugin)
             .add_startup_system(fps)
+            .add_startup_system(tick)
             .add_system(text_update_system)
             //.add_startup_system(example_startup_system)
             //.add_system(world::text_update_system)
@@ -79,7 +79,46 @@ fn example_startup_system(
     // ;
     
 }
-
+#[derive(Component)]
+struct TickDebug;
+fn tick(
+    mut commands: Commands, asset_server: Res<AssetServer>
+){
+    commands
+        .spawn_bundle(TextBundle {
+            style: Style {
+                align_self: AlignSelf::FlexEnd,
+                ..Default::default()
+            },
+            // Use `Text` directly
+            text: Text {
+                // Construct a `Vec` of `TextSection`s
+                sections: vec![
+                    TextSection {
+                        value: "Tick: ".to_string(),
+                        style: TextStyle {
+                            font: asset_server.load("fonts/FiraSans-Bold.ttf"),
+                            font_size: 30.0,
+                            color: Color::WHITE,
+                        },
+                    },
+                    TextSection {
+                        value: "".to_string(),
+                        style: TextStyle {
+                            font: asset_server.load("fonts/FiraMono-Medium.ttf"),
+                            font_size: 30.0,
+                            color: Color::GOLD,
+                        },
+                    },
+                ],
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .insert(TickDebug);
+}
+#[derive(Component)]
+struct FpsText;
 fn fps(
     mut commands: Commands, asset_server: Res<AssetServer>
 ){
@@ -117,7 +156,12 @@ fn fps(
         })
         .insert(FpsText);
 }
-fn text_update_system(diagnostics: Res<Diagnostics>, mut query: Query<&mut Text, With<FpsText>>) {
+use multigo::shared::resources::TickCount;
+fn text_update_system(diagnostics: Res<Diagnostics>, 
+    mut query: Query<&mut Text, (With<FpsText>, Without<TickDebug>)>,
+    mut tick_q: Query<&mut Text, (With<TickDebug>, Without<FpsText>)>,
+    tick_count: Res<TickCount>,
+) {
     for mut text in query.iter_mut() {
         if let Some(fps) = diagnostics.get(FrameTimeDiagnosticsPlugin::FPS) {
             if let Some(average) = fps.average() {
@@ -125,5 +169,10 @@ fn text_update_system(diagnostics: Res<Diagnostics>, mut query: Query<&mut Text,
                 text.sections[1].value = format!("{:.2}", average);
             }
         }
+    }
+    for mut text in tick_q.iter_mut() {
+
+                text.sections[1].value = format!("{:.2}", tick_count.0);
+
     }
 }

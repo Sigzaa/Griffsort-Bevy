@@ -1,4 +1,4 @@
-pub(crate) mod shared;
+pub mod shared;
 pub mod client;
 pub mod server;
 pub mod plugin;

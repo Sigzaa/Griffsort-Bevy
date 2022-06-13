@@ -41,7 +41,7 @@ pub(crate) fn connection_handler(mut commands: Commands, mut client: ResMut<Rene
 
         match server_message {
             GenericMessages::PlayerConnected { id } => {
-                todo!();
+                println!("Server confirmed my id {id}");
             }
             GenericMessages::PlayerDisconnected { id } => {
                 todo!();
@@ -72,7 +72,7 @@ pub(crate) fn send_input_history(
         };
 
         let input_message = bincode::serialize(&client_inputs).unwrap();
-        client.send_message(0, input_message);
+        client.send_message(2, input_message);
     }
 }
 pub(crate) fn send_chat(){

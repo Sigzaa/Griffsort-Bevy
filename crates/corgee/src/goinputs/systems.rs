@@ -70,3 +70,15 @@ pub fn camera_motion(
     time: Res<Time>,
 ) {
 }
+
+use bevy::ecs::schedule::ShouldRun;
+
+pub fn if_not_server() -> ShouldRun{
+    let args: Vec<String> = std::env::args().collect();
+    
+    let exec_type = &args[1];
+    return match exec_type.as_str() {
+            "server" => ShouldRun::No,
+            _ => ShouldRun::Yes,
+    };
+}

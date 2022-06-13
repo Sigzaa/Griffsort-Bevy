@@ -7,7 +7,7 @@ use bevy_renet::{
     run_if_client_conected, RenetClientPlugin, RenetServerPlugin,
 };
 use renet::RenetError;
-
+use corgee::*;
 use bevy::prelude::*;
 
 const PRIVATE_KEY: &[u8; NETCODE_KEY_BYTES] = b"an example very very secret key."; // 32-bytes
@@ -19,9 +19,8 @@ impl Plugin for Networking {
         //app.add_plugin(RapierPhysicsPlugin::<NoUserData>::default().with_default_system_setup(false));
         app
         .insert_resource(TickCount(0))
+        .insert_resource(Lobby::default());
 
-        //.insert_resource(Lobby::default())
-        ;
         let args: Vec<String> = std::env::args().collect();
     
         let exec_type = &args[1];
@@ -49,6 +48,7 @@ impl Plugin for Networking {
         //     0.05,
         // )))
         .insert_resource(IsStarted(false))
+        .add_startup_system(setup_characters)
         .add_plugin(RenetServerPlugin)
         .add_plugin(ServerPipeline);
         }
@@ -75,4 +75,7 @@ fn new_renet_server() -> RenetServer {
     let server_config = ServerConfig::new(12, PROTOCOL_ID, server_addr, *PRIVATE_KEY);
     let current_time = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap();
     RenetServer::new(current_time, server_config, connection_config, socket).unwrap()
+}
+fn setup_characters(){
+    todo!();
 }

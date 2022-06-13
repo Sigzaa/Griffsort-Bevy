@@ -2,6 +2,7 @@ use corgee::{GoInputs, GoRot};
 use serde::{Serialize, Deserialize};
 use bevy::{prelude::*, reflect::TypeRegistry};
 use bevy_snap::*;
+use std::collections::HashMap;
 use super::data_structs::go_history::*;
 
 // Snapshots -->
@@ -33,6 +34,9 @@ pub enum GenericMessages {
         tick: i32,
         //msg: &'static str,
     },
+    ChooseCharacter{
+        code: f32
+    }
 }
 #[derive(Debug, Serialize, Deserialize, Component)]
 pub enum ServerMessages {
@@ -62,7 +66,7 @@ pub struct TickCount(pub i32);
 
 pub const PhysNet: &str = "net_stage_label"; 
 
-pub(crate) const CONST_TICKRATE: i32 = 66;
+pub(crate) const CONST_TICKRATE: f64 = 2.;
 pub(crate) const BUFFER_CAPACITY: i32 = 200;
 
 #[derive(Default)]

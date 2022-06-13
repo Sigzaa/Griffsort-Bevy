@@ -17,7 +17,7 @@ impl Plugin for ClientPipeline {
                 CoreStage::PreUpdate,
                 PhysNet,
                 SystemStage::single_threaded()
-                    .with_run_criteria(FixedTimestep::steps_per_second(24.)),
+                    .with_run_criteria(FixedTimestep::steps_per_second(CONST_TICKRATE)),
             )
             .add_system_to_stage(PhysNet, is_desync)
             .add_system_to_stage(PhysNet, send_input_history) // -

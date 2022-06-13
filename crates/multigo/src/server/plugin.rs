@@ -18,7 +18,7 @@ impl Plugin for ServerPipeline {
                 CoreStage::PreUpdate,
                 PhysNet,
                 SystemStage::single_threaded()
-                    .with_run_criteria(FixedTimestep::steps_per_second(24.)),
+                    .with_run_criteria(FixedTimestep::steps_per_second(CONST_TICKRATE)),
             )
             .add_system_to_stage(PhysNet, pop_buffer.label("root")) // -
     

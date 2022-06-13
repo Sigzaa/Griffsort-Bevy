@@ -12,14 +12,22 @@ use crate::prelude::History;
 
 pub(crate) fn connection_handler(
     mut server_events: EventReader<ServerEvent>,
-   // mut lobby: ResMut<Lobby>,
+    mut lobby: ResMut<Lobby>,
     mut server: ResMut<RenetServer>,
 ) {
     for event in server_events.iter() {
         match event {
             ServerEvent::ClientConnected(id, _) => {
                 println!("Client {id} has been connected");
-                
+                for &player_id in lobby.players.keys() {
+                    let message = bincode::serialize(&ServerMessages::PlayerConnected { id: player_id }).unwrap();
+                    server.send_message(*id, 0, message);
+                }
+
+                lobby.players.insert(*id, None);
+
+                let message = bincode::serialize(&ServerMessages::PlayerConnected { id: *id }).unwrap();
+                server.broadcast_message(0, message);
             }
             ServerEvent::ClientDisconnected(id) => {
                 println!("Client {id} has been disconnected");
@@ -32,13 +40,17 @@ pub(crate) fn connection_handler(
 pub(crate) fn receive_handler(
     mut server: ResMut<RenetServer>,
     mut commands: Commands,
+    mut q_selected: Query<(&mut GoInputs, &mut GoRot), With<Selected>>
 ){
     for client_id in server.clients_id().into_iter() {
         while let Some(message) = server.receive_message(client_id, 2) {
             match bincode::deserialize(&message).unwrap() {
 
                 GenericMessages::ClientInputs { id, tick, inputs } => {
-                    todo!();
+                    for (mut ginp, mut gorot) in q_selected.iter_mut(){
+                        *ginp = inputs[0].ginp;
+                        *gorot = inputs[0].gorot;
+                    }
                 }
                 GenericMessages::Chat { id, tick } => {
                     todo!();
