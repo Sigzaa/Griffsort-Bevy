@@ -1,5 +1,5 @@
 [package]
-name = "go"
+name = "Griffsort"
 version = "0.0.6"
 edition = "2021"
 
@@ -7,12 +7,12 @@ edition = "2021"
 
 [dependencies]
 bevy = { version = "0.7.0" , features = ["jpeg"]}
-go_core = { path = "crates/go_core" , version = "0.1.0"}
-go_multiplayer = { path = "crates/go_multiplayer" , version = "0.0.5"}
+corgee = { path = "crates/corgee" , version = "0.1.0"}
+multigo = { path = "crates/multigo" , version = "0.1.0"}
 go_character = { path = "crates/go_character", version = "0.0.5"}
 go_level = { path = "crates/go_level", version = "0.1.0"}
 bevy_obj = "0.7.0"
-bevy_atmosphere = { git = "https://github.com/JonahPlusPlus/bevy_atmosphere" } 
+bevy_atmosphere = { git = "https://github.com/JonahPlusPlus/bevy_atmosphere" }
 
 
 [dev-dependencies]

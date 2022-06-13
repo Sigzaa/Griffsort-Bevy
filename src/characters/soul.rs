@@ -1,7 +1,7 @@
 use super::*;
 use bevy::prelude::*;
 use go_character::*;
-use go_core::character::*;
+use corgee::character::*;
 
 impl Plugin for Soul {
     fn build(&self, _app: &mut App) {}

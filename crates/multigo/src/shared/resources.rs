@@ -1,4 +1,4 @@
-use go_core::{GoInputs, GoRot};
+use corgee::{GoInputs, GoRot};
 use serde::{Serialize, Deserialize};
 use bevy::{prelude::*, reflect::TypeRegistry};
 use bevy_snap::*;

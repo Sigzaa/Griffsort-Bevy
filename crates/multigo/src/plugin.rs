@@ -22,8 +22,15 @@ impl Plugin for Networking {
 
         //.insert_resource(Lobby::default())
         ;
-
-        #[cfg(feature = "client")]
+        let args: Vec<String> = std::env::args().collect();
+    
+        let exec_type = &args[1];
+        let is_host = match exec_type.as_str() {
+            "server" => true,
+            _ => false,
+        };
+        if !is_host{
+        println!("Game is running in client mode");
         app
         .insert_resource(new_renet_client())
         .add_plugin(RenetClientPlugin)
@@ -33,8 +40,9 @@ impl Plugin for Networking {
         .insert_resource(ServerShots(History::new(BUFFER_CAPACITY)))
         .add_plugin(ClientPipeline)
         .run();
+        } else {
         
-        #[cfg(feature = "server")]
+        println!("Game is running in server mode");
         app
         .insert_resource(new_renet_server())
         // .insert_resource(ScheduleRunnerSettings::run_loop(Duration::from_secs_f32(
@@ -43,6 +51,7 @@ impl Plugin for Networking {
         .insert_resource(IsStarted(false))
         .add_plugin(RenetServerPlugin)
         .add_plugin(ServerPipeline);
+        }
     }
 }
 

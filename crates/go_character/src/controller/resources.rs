@@ -1,5 +1,5 @@
 use super::plugin::Character;
-use go_core::*;
+use corgee::*;
 use bevy::prelude::*;
 
 pub struct SpawnChar(pub &'static str, pub i32, pub i32); // Character code, team code, id.

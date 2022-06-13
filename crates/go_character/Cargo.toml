@@ -12,7 +12,7 @@ serde = "1.0.137"
 serde_json = "1.0.81"
 bevy_asset_ron = "0.4.0"
 bevy_prototype_debug_lines = { git = "https://github.com/Toqozz/bevy_debug_lines", features = ["3d"] }
-go_core = { path = "../go_core", version = "*" }
+corgee = { path = "../corgee", version = "*" }
 
 
 [dev-dependencies]

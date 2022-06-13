@@ -1,6 +1,6 @@
 use crate::shared::{resources::*, systems::*};
 use bevy::prelude::*;
-use go_core::*;
+use corgee::*;
 use bevy_rapier3d::prelude::*;
 use bevy_prototype_debug_lines::{DebugLines, DebugLinesPlugin};
 

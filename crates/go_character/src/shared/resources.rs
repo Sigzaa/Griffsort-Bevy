@@ -1,6 +1,6 @@
 use serde::{Serialize, Deserialize};
 use bevy::prelude::*;
-use go_core::*;
+use corgee::*;
 use crate::controller::Character;
 
 

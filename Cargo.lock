@@ -3,6 +3,19 @@
 version = 3
 
 [[package]]
+name = "Griffsort"
+version = "0.0.6"
+dependencies = [
+ "bevy",
+ "bevy_atmosphere",
+ "bevy_obj",
+ "corgee",
+ "go_character",
+ "go_level",
+ "multigo",
+]
+
+[[package]]
 name = "ab_glyph"
 version = "0.2.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1255,6 +1268,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "corgee"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "cpal"
 version = "0.13.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1713,19 +1735,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "go"
-version = "0.0.6"
-dependencies = [
- "bevy",
- "bevy_atmosphere",
- "bevy_obj",
- "go_character",
- "go_core",
- "go_level",
- "go_multiplayer",
-]
-
-[[package]]
 name = "go_character"
 version = "0.0.5"
 dependencies = [
@@ -1733,16 +1742,7 @@ dependencies = [
  "bevy_asset_ron",
  "bevy_prototype_debug_lines",
  "bevy_rapier3d",
- "go_core",
- "serde",
- "serde_json",
-]
-
-[[package]]
-name = "go_core"
-version = "0.1.0"
-dependencies = [
- "bevy",
+ "corgee",
  "serde",
  "serde_json",
 ]
@@ -1753,20 +1753,7 @@ version = "0.1.0"
 dependencies = [
  "bevy",
  "bevy_rapier3d",
- "go_core",
-]
-
-[[package]]
-name = "go_multiplayer"
-version = "0.0.5"
-dependencies = [
- "bevy",
- "bevy_renet",
- "bevy_snap",
- "bincode",
- "go_core",
- "renet",
- "serde",
+ "corgee",
 ]
 
 [[package]]
@@ -2234,6 +2221,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b9f1c5b025cda876f66ef43a113f91ebc9f4ccef34843000e0adf6ebbab84e21"
 dependencies = [
  "winapi",
+]
+
+[[package]]
+name = "multigo"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "bevy_renet",
+ "bevy_snap",
+ "bincode",
+ "corgee",
+ "renet",
+ "serde",
 ]
 
 [[package]]

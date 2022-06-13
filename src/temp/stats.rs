@@ -5,10 +5,10 @@ use bevy::{
 use bevy_obj::*;
 use bevy::prelude::*;
 use bevy::window::PresentMode;
-//use go_multiplayer::*;
+//use multigo::*;
 use super::super::characters::CharactersImpl;
 use go_character::*;
-use go_core::{character::*, *};
+use corgee::{character::*, *};
 
 
 #[derive(Component)]

@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 bevy = { version = "0.7.0" , features = ["jpeg"]}
 bevy_rapier3d = { version = "0.14.1" , features = [ "enhanced-determinism" ] }
-go_core = { path = "../go_core", version = "*" }
+corgee = { path = "../corgee", version = "*" }
 
 [dev-dependencies]
 bevy = { version = "0.7.0" , features = ["dynamic", "jpeg"]}

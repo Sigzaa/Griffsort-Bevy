@@ -6,7 +6,7 @@ use bevy::render::camera::Camera3d;
 use bevy::render::camera::{ActiveCamera, CameraTypePlugin};
 use bevy_prototype_debug_lines::*;
 pub use bevy_rapier3d::prelude::*;
-use go_core::{additional::*, *, GoInputs, GoRot};
+use corgee::{additional::*, *, GoInputs, GoRot};
 
 impl<T: Character<T> + Send + Sync + Copy + Component> Plugin for Controller<T> {
     fn build(&self, app: &mut App) {

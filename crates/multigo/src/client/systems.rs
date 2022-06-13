@@ -8,7 +8,7 @@ use bevy_renet::{
     },
     run_if_client_conected, RenetClientPlugin, RenetServerPlugin,
 };
-use go_core::*;
+use corgee::*;
 use renet::RenetError;
 
 /*

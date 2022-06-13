@@ -1,8 +1,8 @@
 use crate::goinputs::{systems::*, resources::*, gamepad::*};
 use bevy::prelude::*;
 
-pub struct Core;
-impl Plugin for Core {
+pub struct Corgee;
+impl Plugin for Corgee {
     fn build(&self, app: &mut App) {
         app
         .insert_resource(Sensitivity(0.1))

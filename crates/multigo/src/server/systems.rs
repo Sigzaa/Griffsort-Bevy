@@ -7,7 +7,7 @@ use super::resources::*;
 use bevy::{ prelude::*};
 use crate::shared::resources::*;
 use std::str;
-use go_core::*;
+use corgee::*;
 use crate::prelude::History;
 
 pub(crate) fn connection_handler(
@@ -18,11 +18,11 @@ pub(crate) fn connection_handler(
     for event in server_events.iter() {
         match event {
             ServerEvent::ClientConnected(id, _) => {
-                print!("Client {} has been connected", id);
-                todo!();
+                println!("Client {id} has been connected");
+                
             }
             ServerEvent::ClientDisconnected(id) => {
-                todo!();
+                println!("Client {id} has been disconnected");
             }
         }
     }

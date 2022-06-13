@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use super::{systems::*, resources::*};
 use bevy_rapier3d::prelude::*;
-use go_core::*;
+use corgee::*;
 pub struct Level;
 impl Plugin for Level {
     fn build(&self, app: &mut App) {

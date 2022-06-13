@@ -2,7 +2,7 @@ use bevy_rapier3d::prelude::{AsyncCollider, AsyncSceneCollider, *};
 use bevy::prelude::*;
 use super::resources::*;
 use bevy::utils::HashMap;
-use go_core::Map;
+use corgee::Map;
 
 pub(crate) fn load_map(
     mut commands: Commands, 
