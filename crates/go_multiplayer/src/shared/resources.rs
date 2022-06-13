@@ -1,7 +1,6 @@
 use go_core::{GoInputs, GoRot};
 use serde::{Serialize, Deserialize};
 use bevy::{prelude::*, reflect::TypeRegistry};
-pub use priority_queue::PriorityQueue;
 use bevy_snap::*;
 use super::data_structs::go_history::*;
 
@@ -14,74 +13,61 @@ impl SnapType for SnapShot {
         registry.write().register::<Transform>();
     }
 }
-// <--
 
-// Serde pack sending/receiving via UDP -->
+#[derive(Debug, Serialize, Deserialize, Component)]
+pub enum GenericMessages {
+    PlayerConnected { id: u64 },
+    PlayerDisconnected { id: u64 },
+    ClientInputs {
+        id: i32,
+        tick: i32,
+        inputs: [Inputs; 4],
+    },
+    World{
+        tick: i32,
+        //inputs: Vec<Inputs>, // TODO: remove it and handle with snapshots.
+        snap: SnapShot,
+    },
+    Chat{
+        id: i32,
+        tick: i32,
+        //msg: &'static str,
+    },
+}
+#[derive(Debug, Serialize, Deserialize, Component)]
+pub enum ServerMessages {
+    PlayerConnected { id: u64 },
+    PlayerDisconnected { id: u64 },
+}
+
+#[derive(Debug, Serialize, Deserialize, Component)]
+pub enum ClientMessages {
+    
+}
 
 #[derive(Default, Clone, Copy, Serialize, Deserialize, Debug, PartialEq)]
 pub struct Inputs{
     pub ginp: GoInputs,
-    pub grot: GoRot,
-}
-
-#[derive(Component, Clone, Serialize, Deserialize, Debug)]
-pub struct FromClient {
-    pub id: i32,
-    pub tick: i32,
-    pub inputs: Inputs,
-}
-#[derive(Component, Clone, Serialize, Deserialize, Debug)]
-pub struct FromServer {
-    pub tick: i32,
-    pub inputs: Vec<Inputs>,
-    pub snap: SnapShot,
+    pub gorot: GoRot,
 }
 #[derive(Default)]
-pub(crate) struct SnapBuffer(pub GoHistory<SnapShot>);
+pub(crate) struct SnapBuffer(pub History<SnapShot>);
 
 #[derive(Component, Clone)]
-pub(crate) struct InputsBuffer(pub GoHistory<Inputs>); // Collecting all 
+pub(crate) struct InputsBuffer(pub History<Inputs>); // Collecting all 
 // <--
-#[derive(Default)]
-pub struct IsStarted(pub bool);
-
-struct FrameCount(u32);
 
 #[derive(Default)]
 pub struct TickCount(pub i32);
 
-pub const NetStage: &str = "net_stage_label"; 
+pub const PhysNet: &str = "net_stage_label"; 
 
-pub(crate) const TICKRATE: i32 = 66;
+pub(crate) const CONST_TICKRATE: i32 = 66;
 pub(crate) const BUFFER_CAPACITY: i32 = 200;
 
 #[derive(Default)]
-pub struct MatchSettings{
-    map: &'static str,
-    allowed_cheating: bool,
-    //chars_config: Vec<i32>,
-    timer: f32,
-    //game_match: MatchType,
+pub(crate) struct TickRate(pub bevy::prelude::Timer);
 
 
-    // feature "Client"
-    do_i_have_op: bool,
-
-    // feature "Server"
-    //player_op: Vec<f32>,
-}
-// pub enum MatchType{
-//     Classic{
-
-//     },
-//     Free{
-
-//     },
-//     DeathMatch{
-
-//     },
-// }
-
-
-
-
+#[derive(Default)]
+pub struct IsStarted(pub bool);

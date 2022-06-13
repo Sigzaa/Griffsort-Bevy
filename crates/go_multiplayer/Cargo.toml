@@ -1,23 +1,25 @@
 [package]
-name = "go_multiplayer"
+name = "go_multiplayer" #multigo
 version = "0.0.5"
 edition = "2021"
 
+# rename to multigo
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy_system_graph = "0.1.1"
+bevy = "0.7.0"
 bevy_snap = { git = "https://github.com/johanhelsing/bevy_snap", version = "0.2.0"}
-bevy = { version = "0.7.0" , features = ["dynamic"] }
-bevy_simple_networking = { git = "https://github.com/ggaast/bevy_simple_networking.git" , branch = "main"}
-bytes = "1"
-iyes_loopless = "0.3.0"
-serde = "1.0.137"
-serde_json = "1.0.81"
+bevy_renet = "0.0.2"
+renet = "0.0.7"
+
+serde = { version = "1.0", features = [ "derive" ] } 
+bincode = "1.3.1"
+
 go_core = { path = "../go_core" }
-priority-queue = "1.2.1"
 
 [features]
-# No features: client and localhost
+default = ["client"]
+client = []
 server = []
-address = []
+offline = []
+localhost = []

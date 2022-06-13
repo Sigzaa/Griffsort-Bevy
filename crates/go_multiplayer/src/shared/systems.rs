@@ -2,7 +2,9 @@ use bevy::{prelude::*, reflect::TypeRegistry};
 use bevy_snap::*;
 use super::resources::*;
 
-
+pub fn update_tick(mut tick: ResMut<TickCount>) {
+    tick.0 += 1;
+}
 // pub fn save_snap(mut commands: Commands) {
 //         // This triggers saving the world the next time commands are processed.
 //         // The snapshot is then sent as an event so it can be picked up by other systems.

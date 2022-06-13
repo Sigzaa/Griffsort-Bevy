@@ -3,7 +3,7 @@ mod temp;
 
 use bevy::prelude::*;
 use bevy::window::PresentMode;
-//use go_multiplayer::*;
+use go_multiplayer::*;
 use bevy_atmosphere::*;
 use characters::CharactersImpl;
 use go_character::*;
@@ -17,7 +17,7 @@ fn main() {
             width: 1200.,
             height: 800.,
             present_mode: PresentMode::Immediate,
-            mode: bevy::window::WindowMode::Fullscreen,
+            //mode: bevy::window::WindowMode::Fullscreen,
             ..Default::default()
         })
         .add_plugins(DefaultPlugins)
@@ -31,9 +31,9 @@ fn main() {
         .add_plugin(Level)
         .add_plugin(Core)
         .add_plugin(Stats)
-        //.add_plugin(Networking)
         .add_startup_system(_temp_setup)
         .add_system(switch)
+        .add_plugin(Networking)
         .run();
 }
 fn switch(buttons: Res<Input<MouseButton>>, mut selected: ResMut<SelectedId>) {

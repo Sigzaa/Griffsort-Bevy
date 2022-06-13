@@ -7,7 +7,7 @@ use std::io::*;
     Very slow...
 */
 #[derive(Default, Clone)]
-pub(crate) struct GoHistory<T: Clone> {
+pub(crate) struct History<T: Clone> {
     pub vec: Vec<Box<T>>,
     pub capacity: i32,
 }
@@ -17,12 +17,12 @@ pub(crate) struct Box<T> {
     tick: i32,
 }
 
-impl<T> GoHistory<T>
+impl<T> History<T>
 where
     T: PartialEq + Copy,
 {
     pub fn new(capacity: i32) -> Self {
-        GoHistory {
+        History {
             vec: Vec::new(),
             capacity,
         }
@@ -94,7 +94,7 @@ where
         Err(Error::new(ErrorKind::Other, "given element does not exist"))
     }
 }
-impl<T: Clone + PartialEq + Copy> Index<i32> for GoHistory<T> { // If ur shure, what element exist, use it.
+impl<T: Clone + PartialEq + Copy> Index<i32> for History<T> { // If ur shure, what element exist, use it.
     type Output = T;
     fn index(&self, tick: i32) -> &Self::Output {
         return match self.tick_to_index(tick){

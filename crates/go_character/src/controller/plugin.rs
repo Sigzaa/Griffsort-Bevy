@@ -126,7 +126,7 @@ pub trait Character<T: Character<T>>: Plugin {
 
             let ray_pos = transform.translation;
             let ray_dir = Vec3::new(0., -1., 0.);
-            let max_toi = 0.8;
+            let max_toi = 0.81;
             let groups = InteractionGroups::new(0b11, 0b1001);
 
             if let Some((_entity, toi)) =
