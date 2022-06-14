@@ -3,6 +3,7 @@ use serde::{Serialize, Deserialize};
 use bevy::{prelude::*, reflect::TypeRegistry};
 use bevy_snap::*;
 use std::collections::HashMap;
+use std::error::Error;
 use super::data_structs::go_history::*;
 
 // Snapshots -->
@@ -22,7 +23,7 @@ pub enum GenericMessages {
     ClientInputs {
         id: i32,
         tick: i32,
-        inputs: [Inputs; 4],
+        inputs: [Inputs; INPUTS_BUFFER_CAPACITY],
     },
     World{
         tick: i32,
@@ -30,7 +31,6 @@ pub enum GenericMessages {
         snap: SnapShot,
     },
     Chat{
-        id: i32,
         tick: i32,
         //msg: &'static str,
     },
@@ -66,8 +66,9 @@ pub struct TickCount(pub i32);
 
 pub const PhysNet: &str = "net_stage_label"; 
 
-pub(crate) const CONST_TICKRATE: f64 = 2.;
-pub(crate) const BUFFER_CAPACITY: i32 = 200;
+pub(crate) const CONST_TICKRATE: f64 = 5.;
+pub(crate) const BUFFER_CAPACITY: usize = 200;
+pub(crate) const INPUTS_BUFFER_CAPACITY: usize = 3;
 
 #[derive(Default)]
 pub(crate) struct TickRate(pub bevy::prelude::Timer);

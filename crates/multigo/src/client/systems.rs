@@ -27,7 +27,7 @@ pub(crate) fn receive_handler(mut commands: Commands, mut client: ResMut<RenetCl
             GenericMessages::World { tick, snap } => {
                 todo!();
             }
-            GenericMessages::Chat { id, tick } => {
+            GenericMessages::Chat { tick } => {
                 todo!();
             }
             _ => info!("Received message type is undefined or invalid. Make sure you are using correct channel and enum"),
@@ -41,7 +41,7 @@ pub(crate) fn connection_handler(mut commands: Commands, mut client: ResMut<Rene
 
         match server_message {
             GenericMessages::PlayerConnected { id } => {
-                println!("Server confirmed my id {id}");
+                println!("Player {id} has been connected to the server");
             }
             GenericMessages::PlayerDisconnected { id } => {
                 todo!();
@@ -68,24 +68,23 @@ pub(crate) fn send_input_history(
             inputs: [Inputs {
                 ginp: *ginp,
                 gorot: *gorot,
-            }; 4],
+            }; INPUTS_BUFFER_CAPACITY],
         };
-
         let input_message = bincode::serialize(&client_inputs).unwrap();
-        client.send_message(2, input_message);
+        client.send_message(0, input_message);
     }
 }
 pub(crate) fn send_chat(){
     todo!();
 }
 pub(crate) fn is_desync(external_buf: ResMut<ServerShots>, internal_buf: ResMut<InternalShots>) {
-    let tick = match external_buf.0.last_tick() {
+    let tick = match external_buf.0.max_tick() {
         Some(tick) => tick,
         None => return,
     };
 
-    match (&external_buf.0.get(tick), &internal_buf.0.get(tick)) {
-        (Ok(ext_content), Ok(int_content)) => {
+    match (&external_buf.0.map.get(&tick), &internal_buf.0.map.get(&tick)) {
+        (Some(ext_content), Some(int_content)) => {
             if ext_content != int_content {
                 warn!("Desync on {}", tick);
             }

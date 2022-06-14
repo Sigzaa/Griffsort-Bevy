@@ -90,11 +90,12 @@ fn new_renet_server() -> RenetServer {
 fn setup_characters(query: Query<Entity, Added<NetSync>>, mut commands: Commands) {
     for ent in query.iter() {
         let mut ent_com = commands.entity(ent);
-        ent_com.insert(InputsBuffer(History::new(BUFFER_CAPACITY)));
+        ent_com.insert(InputsBuffer(History::<Inputs>::new(BUFFER_CAPACITY)));
 
-        match is_server() {
-            true => {}
-            false => {}
+        if is_server() {
+            
+        } else {
+
         }
     }
 }

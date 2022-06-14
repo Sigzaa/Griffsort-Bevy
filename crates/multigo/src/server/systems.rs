@@ -1,12 +1,9 @@
 use bevy_renet::{
-    renet::{ConnectToken, RenetClient, RenetConnectionConfig, RenetServer, ServerConfig, ServerEvent, NETCODE_KEY_BYTES},
-    run_if_client_conected, RenetClientPlugin, RenetServerPlugin,
+    renet::{ RenetServer, ServerEvent},
 };
-use renet::RenetError;
-use super::resources::*;
+
 use bevy::{ prelude::*};
 use crate::shared::resources::*;
-use std::str;
 use corgee::*;
 use crate::prelude::History;
 
@@ -18,7 +15,7 @@ pub(crate) fn connection_handler(
     for event in server_events.iter() {
         match event {
             ServerEvent::ClientConnected(id, _) => {
-                println!("Client {id} has been connected");
+                println!("Player {id} connected.");
                 for &player_id in lobby.players.keys() {
                     let message = bincode::serialize(&ServerMessages::PlayerConnected { id: player_id }).unwrap();
                     server.send_message(*id, 0, message);
@@ -30,7 +27,11 @@ pub(crate) fn connection_handler(
                 server.broadcast_message(0, message);
             }
             ServerEvent::ClientDisconnected(id) => {
-                println!("Client {id} has been disconnected");
+                println!("Player {id} disconnected.");
+                lobby.players.remove(id);
+
+                let message = bincode::serialize(&ServerMessages::PlayerDisconnected { id: *id }).unwrap();
+                server.broadcast_message(0, message);
             }
         }
     }
@@ -42,26 +43,52 @@ pub(crate) fn receive_handler(
     mut q_char: Query<(&mut InputsBuffer, &Id), With<NetSync>>
 ){
     for client_id in server.clients_id().into_iter() {
-        while let Some(message) = server.receive_message(client_id, 2) {
-            match bincode::deserialize(&message).unwrap() {
-
+        while let Some(message) = server.receive_message(client_id, 0) {
+            
+            match bincode::deserialize(&message).unwrap() {              
                 GenericMessages::ClientInputs { id, tick, inputs } => {
                     let arr_len = inputs.len();
                     let u_tick = tick as usize;
-
-                    for (mut inp_buf, id) in q_char.iter_mut(){
-                        for i in u_tick..(u_tick - arr_len){
-                            inp_buf.0.insert(i as i32, inputs[i])
+                    for (mut inp_buf, _id) in q_char.iter_mut(){
+                        for i in 0..arr_len{
+                            
+                            inp_buf.0.map.insert( tick - (i as i32), inputs[i]);
                         }
-                    }
+                        println!("buffe: {}", inp_buf.0.map.len());
+                    }   
                 }
-                GenericMessages::Chat { id, tick } => {
-                    todo!();
+                GenericMessages::Chat { tick } => {
+
                 }
-                _ => info!("Received message type is undefined or invalid"),
+                _ => warn!("Received message type is undefined or invalid"),
             }
         }
     }
+}
+
+pub(crate) fn pop_buffer( // User should implement this (May be)
+    mut q_core: Query<(&mut InputsBuffer, &mut GoInputs, &mut GoRot), With<NetSync>>,
+    tick: ResMut<TickCount>,
+) {
+    for (inp_buf, mut ginp, mut grot) in q_core.iter_mut(){
+        match inp_buf.0.map.get(&tick.0) {
+            Some(input) => {
+                *ginp = input.ginp;
+                *grot = input.gorot;
+            },
+            None => {
+                warn!("Loss packet at {}", tick.0);
+            }
+        }
+    }
+}
+
+pub fn send_world(
+    snap_shot: Res<SnapShot>,
+    s_tick: ResMut<TickCount>,
+    mut server: ResMut<RenetServer>,
+) {
+    
 }
 
 
@@ -117,39 +144,4 @@ pub(crate) fn receive_handler(
 //         }
 //     }
 // }
-fn setup_players(
-    mut commands: &mut Commands,
-    mut q: Query<Entity, With<ChCore>>,
-){
-    for ent in q.iter_mut(){
-        commands
-        .entity(ent)
-        .insert(InputsBuffer(History::<Inputs>::new(BUFFER_CAPACITY)));
-    }
-}
-
-pub(crate) fn pop_buffer( // User should implement this (May be)
-    mut q_core: Query<(&mut InputsBuffer, &mut GoInputs, &mut GoRot), With<ChCore>>,
-    tick: ResMut<TickCount>,
-) {
-    for (mut inp_buf, mut ginp, mut grot) in q_core.iter_mut(){
-        match inp_buf.0.get(tick.0) {
-            Ok(input) => {
-                *ginp = input.ginp;
-                *grot = input.gorot;
-            },
-            Err(err) => {
-                warn!("missed package at {}", tick.0);
-            }
-        }
-    }
-}
-
-pub fn send_world(
-    snap_shot: Res<SnapShot>,
-    s_tick: ResMut<TickCount>,
-    mut server: ResMut<RenetServer>,
-) {
-    
-}
 

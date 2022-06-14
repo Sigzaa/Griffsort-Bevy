@@ -98,7 +98,7 @@ fn _temp_setup(
         .insert(Collider::cuboid(100.0, 0., 100.0));
 
     spawner.send(SpawnChar("Zero", 1, -1));
-    spawner.send(SpawnChar("Zero", 1, 1));
+    //spawner.send(SpawnChar("Zero", 1, 1));
 
     selected.0 = Some(-1);
 }
