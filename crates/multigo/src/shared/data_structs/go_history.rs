@@ -37,8 +37,15 @@ where
             }
         }
     }
-    pub fn push(&mut self, content: T, tick: i32) {
-        self.vec.push(Box { content, tick });
+    pub fn insert(&mut self, tick: i32, content: T) {
+        match self.tick_to_index(tick){
+            Ok(index) => {
+                self.vec.insert(index, Box { content, tick });
+            }
+            _ => {
+                self.vec.push(Box { content, tick });
+            }
+        }
         self.sort();
     }
     pub fn cut_after(mut self, tick: i32){

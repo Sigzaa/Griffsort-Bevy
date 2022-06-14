@@ -40,6 +40,15 @@ impl Default for States {
     }
 }
 
+impl States{
+    pub fn new_with_id(id: i32) -> Self{
+        Self {
+            id: Id(id),
+            ..Default::default()
+        }
+    }
+}
+
 impl Default for Config {
     fn default() -> Self {
         Self {

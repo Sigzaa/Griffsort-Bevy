@@ -39,17 +39,20 @@ pub(crate) fn connection_handler(
 
 pub(crate) fn receive_handler(
     mut server: ResMut<RenetServer>,
-    mut commands: Commands,
-    mut q_selected: Query<(&mut GoInputs, &mut GoRot), With<Selected>>
+    mut q_char: Query<(&mut InputsBuffer, &Id), With<NetSync>>
 ){
     for client_id in server.clients_id().into_iter() {
         while let Some(message) = server.receive_message(client_id, 2) {
             match bincode::deserialize(&message).unwrap() {
 
                 GenericMessages::ClientInputs { id, tick, inputs } => {
-                    for (mut ginp, mut gorot) in q_selected.iter_mut(){
-                        *ginp = inputs[0].ginp;
-                        *gorot = inputs[0].gorot;
+                    let arr_len = inputs.len();
+                    let u_tick = tick as usize;
+
+                    for (mut inp_buf, id) in q_char.iter_mut(){
+                        for i in u_tick..(u_tick - arr_len){
+                            inp_buf.0.insert(i as i32, inputs[i])
+                        }
                     }
                 }
                 GenericMessages::Chat { id, tick } => {

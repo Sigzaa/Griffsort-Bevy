@@ -75,3 +75,6 @@ pub(crate) struct TickRate(pub bevy::prelude::Timer);
 
 #[derive(Default)]
 pub struct IsStarted(pub bool);
+
+#[derive(Component)]
+pub struct NetSync;

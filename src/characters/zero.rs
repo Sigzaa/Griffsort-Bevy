@@ -2,6 +2,7 @@ use super::*;
 use bevy::prelude::*;
 use go_character::*;
 use corgee::character::*;
+use multigo::shared::resources::NetSync;
 
 impl Plugin for Zero {
     fn build(&self, _app: &mut App) {}
@@ -14,13 +15,9 @@ impl Character<Zero> for Zero {
                 commands
                 .spawn()
                 .insert(Zero)
-                .insert_bundle(Config {
-                    ..Default::default()
-                })
-                .insert_bundle(States {
-                    id: Id(spawn_request.2),
-                    ..Default::default()
-                });
+                .insert_bundle(Config::default())
+                .insert_bundle(States::new_with_id(spawn_request.2))
+                .insert(NetSync);
             }
         }
     }
