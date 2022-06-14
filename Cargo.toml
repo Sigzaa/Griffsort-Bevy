@@ -2,7 +2,7 @@
 name = "Griffsort"
 version = "0.0.6"
 edition = "2021"
-author = "Sigzaa"
+author = "Sigzaa Studio"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
