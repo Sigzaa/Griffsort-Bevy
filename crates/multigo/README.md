@@ -15,9 +15,9 @@ Road map:
 
 
 
-How to use:
+Usage:
 
-    Tag Entities/Resources/Components which should be synced.
+    Tag Entities/Resources/Components which should be synced with bevy reflect.
 
     Set fixed timestep in physic engine.
 
@@ -28,4 +28,12 @@ How to use:
 Use limitations:
 
     Systems for synced Entities should be single threaded
-    
+
+
+It Depends on Corgee-rs
+
+How does it work:
+
+    Client sends keyboard input and mouse rotation to the server.
+
+    Every 

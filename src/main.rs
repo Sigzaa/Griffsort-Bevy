@@ -10,6 +10,8 @@ use go_character::*;
 use corgee::{character::*, *};
 use go_level::plugin::Level;
 use temp::stats::Stats;
+
+
 fn main() {
     App::new()
         .insert_resource(WindowDescriptor {
@@ -21,6 +23,8 @@ fn main() {
             ..Default::default()
         })
         .add_plugins(DefaultPlugins)
+        .add_plugin(SnapPlugin::<MySnap>::default())
+        .insert_resource(Steps(3.))
         .insert_resource(bevy_atmosphere::AtmosphereMat::default()) // Default Earth sky
         .add_plugin(bevy_atmosphere::AtmospherePlugin {
             dynamic: false, // Set to false since we aren't changing the sky's appearance
@@ -32,7 +36,10 @@ fn main() {
         .add_plugin(Corgee)
         .add_plugin(Stats)
         .add_startup_system(_temp_setup)
+        .add_system(add_id_provider)
         .add_system(switch)
+        .add_system(save_keys)
+        .add_system(store_snapshot)
         .add_plugin(Networking)
         .run();
 }
@@ -101,4 +108,54 @@ fn _temp_setup(
     //spawner.send(SpawnChar("Zero", 1, 1));
 
     selected.0 = Some(-1);
+}
+fn add_id_provider(
+    q: Query<Entity, Added<ChCore>>,
+    mut snapshot_id_provider: ResMut<SnapshotIdProvider<MySnap>>,
+    mut commands: Commands,
+){
+    for ent in q.iter(){
+        commands.entity(ent).insert(snapshot_id_provider.next());
+    }
+}
+
+#[derive(Component, Reflect, Default)]
+// Resources also (at least at the moment) need to be marked as Components, as well as Resources
+#[reflect(Component, Resource)]
+struct Steps(f32);
+
+#[derive(Default, Debug)]
+struct MySnap;
+
+// Define types by creating a struct that implements the SnapType trait
+impl SnapType for MySnap {
+    fn add_types(registry: &mut TypeRegistry) {
+        // Register the types you want to be saved and loaded
+        registry.write().register::<Transform>();
+        registry.write().register::<Steps>();
+
+
+    }
+}
+
+
+fn save_keys(mut commands: Commands, keys: Res<Input<KeyCode>>) {
+    if keys.just_pressed(KeyCode::S) {
+        info!("Making snapshot");
+        // This triggers saving the world the next time commands are processed.
+        // The snapshot is then sent as an event so it can be picked up by other systems.
+        commands.save::<MySnap>();
+    }
+}
+
+fn store_snapshot(
+    mut save_events: EventReader<SaveEvent<MySnap>>,
+
+) {
+    for save_event in save_events.iter() {
+        info!("Writing snapshot to save slot resource");
+
+        // Save the snapshot in a resource so we can restore it later
+        println!("{:?}",save_event.snapshot.clone());
+    }
 }

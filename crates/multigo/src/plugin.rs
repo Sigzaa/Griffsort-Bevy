@@ -10,6 +10,7 @@ use bevy_renet::{
     run_if_client_conected, RenetClientPlugin, RenetServerPlugin,
 };
 use corgee::*;
+use bevy_snap::*;
 use renet::RenetError;
 use std::{collections::HashMap, net::UdpSocket, time::SystemTime};
 
@@ -90,10 +91,11 @@ fn new_renet_server() -> RenetServer {
 fn setup_characters(query: Query<Entity, Added<NetSync>>, mut commands: Commands) {
     for ent in query.iter() {
         let mut ent_com = commands.entity(ent);
-        ent_com.insert(InputsBuffer(History::<Inputs>::new(BUFFER_CAPACITY)));
+        ent_com
+        .insert(InputsBuffer(History::<Inputs>::new(BUFFER_CAPACITY)));
 
         if is_server() {
-            
+
         } else {
 
         }

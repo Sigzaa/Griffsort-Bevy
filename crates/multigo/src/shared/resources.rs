@@ -2,8 +2,6 @@ use corgee::{GoInputs, GoRot};
 use serde::{Serialize, Deserialize};
 use bevy::{prelude::*, reflect::TypeRegistry};
 use bevy_snap::*;
-use std::collections::HashMap;
-use std::error::Error;
 use super::data_structs::go_history::*;
 
 // Snapshots -->
