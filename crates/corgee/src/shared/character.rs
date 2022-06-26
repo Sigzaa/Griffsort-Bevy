@@ -1,19 +1,19 @@
 use bevy::prelude::*;
 
-#[derive(Component)]
+#[derive(Component, Reflect, Default)]
 pub struct ChCore;
 
-#[derive(Component)]
+#[derive(Component, Reflect, Default)]
 pub struct Selected;
 
-#[derive(Component, Debug)]
+#[derive(Component, Debug, Reflect, Default, Copy, Clone)]
 pub struct Id(pub i32);
 
-#[derive(Default)]
+#[derive(Component, Reflect, Default, Clone)]
 pub struct SelectedId(pub Option<i32>);
 
 //<--
-#[derive(Bundle, Component)]
+#[derive(Bundle, Component, Reflect, Clone)]
 pub struct Config {
     pub character_name: CharName,
     pub max_hp: MaxHp,
@@ -22,7 +22,8 @@ pub struct Config {
     pub weight: Weight,
     pub acceleration: Acceleration,
 }
-#[derive(Bundle, Component)]
+// And be marked as components
+#[derive(Bundle, Component, Reflect)]
 pub struct States {
     pub id: Id,
     pub team: Team,
@@ -62,27 +63,27 @@ impl Default for Config {
     }
 }
 
-#[derive(Component)]
-pub struct CharName(pub Option<&'static str>);
-#[derive(Component)]
+#[derive(Component, Reflect, Default, Clone)]
+pub struct CharName(pub Option<String>);
+#[derive(Component, Reflect, Default, Clone)]
 pub struct Team(pub i16);
-#[derive(Component)]
+#[derive(Component, Reflect, Default, Clone)]
 pub struct Acceleration(pub f32);
-#[derive(Component)]
+#[derive(Component, Reflect, Default, Copy, Clone, Debug)]
 pub struct Hp(pub i32);
-#[derive(Component)]
+#[derive(Component, Reflect, Default, Clone)]
 pub struct MaxHp(pub i32);
-#[derive(Component)]
+#[derive(Component, Reflect, Default, Clone)]
 pub struct JumpValue(pub f32);
-#[derive(Component)]
+#[derive(Component, Reflect, Default, Clone)]
 pub struct VerticalVelocity(pub f32);
-#[derive(Component)]
+#[derive(Component, Reflect, Default, Clone)]
 pub struct MaxSpeed(pub f32);
-#[derive(Component)]
+#[derive(Component, Reflect, Default, Clone)]
 pub struct Weight(pub f32);
-#[derive(Component)]
+#[derive(Component, Reflect, Default, Clone)]
 pub struct SpawnCoords(pub Vec3);
-#[derive(Component)]
+#[derive(Component, Reflect, Default, Clone)]
 pub struct MaxJump(pub f32);
 
 use bevy::prelude::*;

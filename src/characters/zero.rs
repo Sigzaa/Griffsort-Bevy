@@ -2,7 +2,7 @@ use super::*;
 use bevy::prelude::*;
 use go_character::*;
 use corgee::character::*;
-use multigo::shared::resources::NetSync;
+use reactive::shared::resources::NetSync;
 
 impl Plugin for Zero {
     fn build(&self, _app: &mut App) {}

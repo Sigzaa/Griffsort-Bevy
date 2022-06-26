@@ -83,13 +83,13 @@ pub(crate) fn pop_buffer( // User should implement this (May be)
     }
 }
 
-pub fn send_world(
-    snap_shot: Res<SnapShot>,
-    s_tick: ResMut<TickCount>,
-    mut server: ResMut<RenetServer>,
-) {
+// pub fn send_world(
+//     snap_shot: Res<SnapShot>,
+//     s_tick: ResMut<TickCount>,
+//     mut server: ResMut<RenetServer>,
+// ) {
     
-}
+// }
 
 
 

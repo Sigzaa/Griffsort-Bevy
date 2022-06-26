@@ -5,7 +5,7 @@ use bevy::{
 use bevy_obj::*;
 use bevy::prelude::*;
 use bevy::window::PresentMode;
-//use multigo::*;
+//use reactive::*;
 use super::super::characters::CharactersImpl;
 use go_character::*;
 use corgee::{character::*, *};
@@ -16,11 +16,11 @@ pub struct Stats;
 impl Plugin for Stats {
     fn build(&self, app: &mut App) {
         app
-            .add_plugin(FrameTimeDiagnosticsPlugin::default())
+
             .add_plugin(ObjPlugin)
-            .add_startup_system(fps)
-            .add_startup_system(tick)
-            .add_system(text_update_system)
+            // .add_startup_system(fps)
+            // .add_startup_system(tick)
+            // .add_system(text_update_system)
             //.add_startup_system(example_startup_system)
             //.add_system(world::text_update_system)
             
@@ -156,8 +156,9 @@ fn fps(
         })
         .insert(FpsText);
 }
-use multigo::shared::resources::TickCount;
-fn text_update_system(diagnostics: Res<Diagnostics>, 
+use reactive::shared::resources::TickCount;
+fn text_update_system(
+    diagnostics: Res<Diagnostics>, 
     mut query: Query<&mut Text, (With<FpsText>, Without<TickDebug>)>,
     mut tick_q: Query<&mut Text, (With<TickDebug>, Without<FpsText>)>,
     tick_count: Res<TickCount>,

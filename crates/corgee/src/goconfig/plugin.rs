@@ -1,11 +1,12 @@
-use crate::goinputs::systems::*;
 use bevy::prelude::*;
+use bevy::window::PresentMode;
 
-pub struct GoInputs;
-impl Plugin for GoInputs {
+pub struct Config;
+impl Plugin for Config {
     fn build(&self, app: &mut App) {
+        println!("config");
         app.insert_resource(WindowDescriptor {
-            title: "Moba".to_string(),
+            title: "griffsort".to_string(),
             width: 720.,
             height: 500.,
             present_mode: PresentMode::Immediate,

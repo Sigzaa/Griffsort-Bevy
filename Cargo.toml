@@ -9,15 +9,17 @@ author = "Sigzaa Studio"
 [dependencies]
 bevy = { version = "0.7.0" , features = ["jpeg"]}
 corgee = { path = "crates/corgee" , version = "0.1.0"}
-multigo = { path = "crates/multigo" , version = "0.1.0"}
+reactive = { path = "crates/reactive" , version = "0.1.0"}
 go_character = { path = "crates/go_character", version = "0.0.5"}
 go_level = { path = "crates/go_level", version = "0.1.0"}
+inspector = { path = "crates/inspector" }
+ui = { path = "crates/ui" }
+
+
 bevy_obj = "0.7.0"
-bevy_atmosphere = { git = "https://github.com/JonahPlusPlus/bevy_atmosphere" }
 
-
-[dev-dependencies]
-bevy = { version = "0.7.0" , features = ["dynamic", "jpeg"]}
+bincode = "1.3.1"
+serde = "1.0.137"
 
 # [profile.dev]
 # opt-level = 1

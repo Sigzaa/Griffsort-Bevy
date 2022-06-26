@@ -12,6 +12,24 @@ pub(crate) struct History<T: Clone> {
     pub map: HashMap<i32, T>,
 }
 
+pub trait MapExt<K> {
+    fn max_tick(&self) -> Option<K>;
+}
+
+impl<K: Ord + Copy, V: Copy> MapExt<K> for HashMap<K, V>{
+    fn max_tick(&self) -> Option<K>{
+        
+        let mut vec: Vec<K> = self.clone().into_keys().collect();
+        vec.sort();
+        vec.reverse();
+        if vec.len() != 0{
+            return Some(vec[0]);
+        } else {
+            None
+        }
+    }
+}
+
 impl<T> History<T>
 where
     T: PartialEq + Copy,

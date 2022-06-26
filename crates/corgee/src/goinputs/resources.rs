@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use serde::{Serialize, Deserialize};
 
-#[derive(Default, Component, Clone, Copy, Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Default, Component, Clone, Copy, Serialize, Deserialize, Debug, PartialEq, Reflect)]
 pub struct GoRot {
     pub x: Quat,
     pub y: Quat,
@@ -25,7 +25,7 @@ impl GoRot{
 }
 
 
-#[derive(Component, Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]
+#[derive(Component, Serialize, Deserialize, Debug, Copy, Clone, PartialEq, Reflect)]
 pub struct GoInputs {
     pub mouse_delta_y: f32,
     pub mouse_delta_x: f32,
