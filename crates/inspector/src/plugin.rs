@@ -14,6 +14,7 @@ impl Plugin for Inspector {
         app.add_plugin(FrameTimeDiagnosticsPlugin::default())
             .insert_resource(OpenTab::Console)
             .insert_resource(Stats::new())
+            .insert_resource(Config::new())
             .insert_resource(Console::new())
             .insert_resource(InspectorToggle::default())
             .add_plugin(EguiPlugin)
@@ -27,9 +28,11 @@ fn inspector(
     mut insp: ResMut<InspectorToggle>,
     diagnostics: Res<Diagnostics>,
     mut tab: ResMut<OpenTab>,
-    mut stats: ResMut<Stats>,
     state: Res<State<GameState>>,
+    mut stats: ResMut<Stats>,
+    mut config: ResMut<Config>,
     mut cons: ResMut<Console>,
+    keys: Res<Input<KeyCode>>,
 ) {
     egui_context.ctx_mut().set_visuals(egui::Visuals {
         dark_mode: false,
@@ -40,14 +43,19 @@ fn inspector(
             //.fixed_size([150.0, 340.0])
             .default_pos([200., 200.])
             .collapsible(false)
+            .resizable(false)
             
             .show(egui_context.ctx_mut(), |ui| {
+
+                
                 ui.horizontal(|ui| {
                     ui.selectable_value(&mut *tab, OpenTab::Console, "Console");
                     ui.selectable_value(&mut *tab, OpenTab::Debug, "Debug");
-                    ui.selectable_value(&mut *tab, OpenTab::Heroes, "Heroes");
+                    //ui.selectable_value(&mut *tab, OpenTab::Heroes, "Heroes");
+                    ui.selectable_value(&mut *tab, OpenTab::Config, "Config");
                     ui.selectable_value(&mut *tab, OpenTab::About, "About");
                 });
+                
                 match &*tab {
                     OpenTab::Console => {
                         let response = ui.add(egui::TextEdit::singleline(&mut cons.string));
@@ -86,41 +94,47 @@ fn inspector(
                         }
                     }
                     OpenTab::Debug => {
-                        ui.separator();
-                        ui.label("General:");
-                        ui.separator();
-                        ui.horizontal(|ui| {
-                            ui.label("Show FPS");
-                            ui.add(toggle(&mut stats.fps));
-                        });
-                        ui.separator();
-                        ui.label("Networking:");
-                        ui.separator();
-                        ui.horizontal(|ui| {
-                            ui.label("Show Tickrate");
-                            ui.add(toggle(&mut stats.fps));
-                        });
-                        ui.horizontal(|ui| {
-                            ui.label("Show Buffer Plot");
-                            ui.add(toggle(&mut stats.fps));
-                        });
-                        ui.horizontal(|ui| {
-                            ui.label("Open Networking debug");
-                            ui.add(toggle(&mut stats.fps));
-                        });
-                        ui.separator();
-                        ui.label("State:");
-                        ui.separator();
-                        ui.horizontal(|ui| {
-                            ui.label("Show current state");
-                            ui.add(toggle(&mut stats.state));
-                        });
-                        ui.horizontal(|ui| {
-                            ui.label("Show state list");
-                            ui.add(toggle(&mut stats.state_list));
-                        });
-                        //ui.checkbox(, "Show fps");
-                    }
+                        egui::Grid::new("my_grid")
+                                .num_columns(2)
+                                .spacing([130.0, 9.0])
+                                .striped(true)
+                                .show(ui, |ui| {
+                                    
+                                    ui.label("General:");
+                                    ui.end_row();
+                                    
+                                    ui.label("Show FPS");
+                                    ui.add(toggle(&mut stats.fps));
+                                    ui.end_row();
+
+                                    ui.end_row();
+                                    ui.label("Networking:");
+                                    ui.end_row();
+
+                                    ui.label("Show Tickrate");
+                                    ui.add(toggle(&mut stats.tick));
+                                    ui.end_row();
+
+                                    ui.label("Show Buffer Plot");
+                                    ui.add(toggle(&mut stats.net_buffer));
+                                    ui.end_row();
+
+                                    // ui.label("Open Networking debug");
+                                    // ui.add(toggle(&mut stats.fps));
+                                    // ui.end_row();
+
+                                    ui.end_row();
+                                    ui.label("State:");
+                                    ui.end_row();
+
+                                    ui.label("Show current state");
+                                    ui.add(toggle(&mut stats.state));
+                                    ui.end_row();
+
+                                    ui.label("Show state list");
+                                    ui.add(toggle(&mut stats.state_list));
+                                    ui.end_row();
+                    });}
                     OpenTab::About => {
                         ui.separator();
                         ui.label("Griffsort v0.0.6");
@@ -128,10 +142,27 @@ fn inspector(
                         ui.label("We should think about a license");
                         ui.end_row();
                         ui.label("Sigzaa Studio");
-                    }
+                    },
+                    OpenTab::Config => {
+                        egui::Grid::new("my_grid")
+                                .num_columns(2)
+                                .spacing([130.0, 9.0])
+                                .striped(true)
+                                .show(ui, |ui| {
+                                    
+                                    ui.label("General:");
+                                    ui.end_row();
+                                
+                                    ui.label("Close with Del:");
+                                    ui.add(toggle(&mut config.exit_on_del));
+                                    ui.end_row();
+                    });}
                     _ => {}
                 }
             });
+    }
+    if config.exit_on_del && keys.pressed(KeyCode::Delete){
+        std::process::exit(0);
     }
     if stats.fps {
         egui::Window::new("fps")
@@ -160,6 +191,17 @@ fn inspector(
                 
             });
     }
+    if stats.state_list {
+        egui::Window::new("State_List")
+            .resizable(false)
+            .title_bar(false)
+            .anchor(egui::Align2::LEFT_TOP, [10., 40.])
+            //.min_width(500.)
+            .show(egui_context.ctx_mut(), |ui| {
+                ui.label(format!("Inactive states: {:#?}", state.inactives()));
+                
+            });
+    }
 }
 fn show_inspector(
     mut inspector_toggle: ResMut<InspectorToggle>,
@@ -167,14 +209,12 @@ fn show_inspector(
     mut state: ResMut<State<GameState>>,
 ) {
     if keys.just_pressed(KeyCode::Slash) || keys.just_pressed(KeyCode::Grave) {
-        inspector_toggle.0 = !inspector_toggle.0;
-    }
-    if keys.just_pressed(KeyCode::Escape) {
-        inspector_toggle.0 = false;
-    }
-    if inspector_toggle.0 {
-        state.push(GameState::Inspector);
-    } else {
-        state.pop();
+        if !inspector_toggle.0{
+            state.push(GameState::Inspector);
+            inspector_toggle.0 = true;
+        } else if state.current() == &GameState::Inspector{
+            state.pop();
+            inspector_toggle.0 = false;
+        } 
     }
 }

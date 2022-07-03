@@ -3,6 +3,7 @@ pub enum OpenTab {
     Debug,
     Heroes,
     Console,
+    Config,
     About,
 }
 
@@ -36,6 +37,7 @@ pub struct Stats {
     pub tick: bool,
     pub state_list: bool,
     pub state: bool,
+    pub net_buffer: bool,
 }
 impl Stats {
     pub fn new() -> Stats {
@@ -44,6 +46,20 @@ impl Stats {
             tick: false,
             state: true,
             state_list: true,
+            net_buffer: false,
         }
     }
 }
+#[derive(PartialEq)]
+pub struct Config {
+    pub exit_on_del: bool,
+
+}
+impl Config {
+    pub fn new() -> Config {
+        Config {
+            exit_on_del: true,
+        }
+    }
+}
+

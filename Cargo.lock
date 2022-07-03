@@ -7,7 +7,6 @@ name = "Griffsort"
 version = "0.0.6"
 dependencies = [
  "bevy",
- "bevy_obj",
  "bincode",
  "corgee",
  "go_character",
@@ -235,6 +234,7 @@ version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4fce306d40a111309ee61d4626efbafccdd46bb80657122c38061fa7264c08e4"
 dependencies = [
+ "bevy_dylib",
  "bevy_internal",
 ]
 
@@ -409,6 +409,15 @@ dependencies = [
  "bevy_ecs",
  "bevy_log",
  "bevy_utils",
+]
+
+[[package]]
+name = "bevy_dylib"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6bf02ce7a578743cd94cb38dc7a9b405d6058a2317011744371eaa56b4d6e786"
+dependencies = [
+ "bevy_internal",
 ]
 
 [[package]]
@@ -592,21 +601,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bevy_obj"
-version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4ec5999eb52b848744af3c58e9ac810a7fbc2fedce412d651d640ba4c352868d"
-dependencies = [
- "anyhow",
- "bevy_app",
- "bevy_asset",
- "bevy_render",
- "bevy_utils",
- "obj-rs",
- "thiserror",
-]
-
-[[package]]
 name = "bevy_pbr"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -629,8 +623,8 @@ dependencies = [
 
 [[package]]
 name = "bevy_prototype_debug_lines"
-version = "0.7.1"
-source = "git+https://github.com/Toqozz/bevy_debug_lines#9066fb8e4da8292cc38349f519108ee68cdc5fe3"
+version = "0.7.2"
+source = "git+https://github.com/Toqozz/bevy_debug_lines#3b513aee308391252a524f25b128cf55e40e5fcf"
 dependencies = [
  "bevy",
 ]
@@ -1405,15 +1399,15 @@ dependencies = [
 
 [[package]]
 name = "crossbeam-epoch"
-version = "0.9.8"
+version = "0.9.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1145cf131a2c6ba0615079ab6a638f7e1973ac9c2634fcbeaaad6114246efe8c"
+checksum = "07db9d94cbd326813772c968ccd25999e5f8ae22f4f8d1b11effa37ef6ce281d"
 dependencies = [
  "autocfg",
  "cfg-if 1.0.0",
  "crossbeam-utils",
- "lazy_static",
  "memoffset",
+ "once_cell",
  "scopeguard",
 ]
 
@@ -2414,7 +2408,7 @@ dependencies = [
  "matrixmultiply",
  "nalgebra-macros",
  "num-complex",
- "num-rational 0.4.0",
+ "num-rational 0.4.1",
  "num-traits",
  "simba",
  "typenum",
@@ -2593,9 +2587,9 @@ dependencies = [
 
 [[package]]
 name = "num-complex"
-version = "0.4.1"
+version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "97fbc387afefefd5e9e39493299f3069e14a140dd34dc19b4c1c1a8fddb6a790"
+checksum = "7ae39348c8bc5fbd7f40c727a9925f03517afd2ab27d46702108b6a7e5414c19"
 dependencies = [
  "num-traits",
 ]
@@ -2645,9 +2639,9 @@ dependencies = [
 
 [[package]]
 name = "num-rational"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d41702bd167c2df5520b384281bc111a4b5efcf7fbc4c9c222c815b07e0a6a6a"
+checksum = "0638a1c9d0a3c0914158145bc76cff373a75a627e6ecbfb71cbe6f453a5a19b0"
 dependencies = [
  "autocfg",
  "num-integer",
@@ -2693,15 +2687,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
-]
-
-[[package]]
-name = "obj-rs"
-version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c90a2f645433dba5c609451d3fa847282b0f23ee8d8fa75491a946af53cb1db4"
-dependencies = [
- "num-traits",
 ]
 
 [[package]]

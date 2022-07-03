@@ -2,7 +2,7 @@ use bevy::{
     diagnostic::{Diagnostics, FrameTimeDiagnosticsPlugin},
     prelude::*,
 };
-use bevy_obj::*;
+
 use bevy::prelude::*;
 use bevy::window::PresentMode;
 //use reactive::*;
@@ -17,7 +17,7 @@ impl Plugin for Stats {
     fn build(&self, app: &mut App) {
         app
 
-            .add_plugin(ObjPlugin)
+       
             // .add_startup_system(fps)
             // .add_startup_system(tick)
             // .add_system(text_update_system)

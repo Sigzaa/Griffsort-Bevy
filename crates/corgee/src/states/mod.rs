@@ -5,5 +5,6 @@ pub enum GameState {
     MainMenu,
     InGame,
     Paused,
-    Inspector
+    Inspector,
+    AltTabbed,
 }

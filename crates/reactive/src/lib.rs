@@ -2,6 +2,7 @@ pub mod shared;
 pub mod client;
 pub mod server;
 pub mod plugin;
+pub mod rooms;
 
 pub use plugin::Reactive;
 pub use serde::{Serialize, Deserialize};

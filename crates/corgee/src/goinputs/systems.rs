@@ -5,6 +5,12 @@ use bevy::{
     prelude::{KeyCode, *},
 };
 
+pub fn null_inputs(mut q_selected: Query<(&mut GoInputs), With<Selected>>){
+    for mut ginp in q_selected.iter_mut(){
+        *ginp = GoInputs::default();
+    }
+}
+
 pub fn collect_inputs(
     input: Res<Input<KeyCode>>,
     buttons: Res<Input<MouseButton>>,
@@ -14,11 +20,11 @@ pub fn collect_inputs(
     time: Res<Time>
 ) {
     for (mut ginp, mut gorot) in q_selected.iter_mut() {
-        for ev in motion_evr.iter() {
-            gorot.y *= Quat::from_rotation_y(-ev.delta.x * sens.0 * time.delta_seconds());
-            gorot.x *= Quat::from_rotation_x(-ev.delta.y * sens.0 * time.delta_seconds());
-            //gorot.z = Quat::from_rotation_z(-ev.delta.x * SENSITIVITY); TODO!
-        }
+        // for ev in motion_evr.iter() {
+        //     gorot.y *= Quat::from_rotation_y(-ev.delta.x * time.delta_seconds() * sens.0);
+        //     gorot.x *= Quat::from_rotation_x(-ev.delta.y * time.delta_seconds() * sens.0);
+        //     //gorot.z = Quat::from_rotation_z(-ev.delta.x * SENSITIVITY); TODO!
+        // }
 
         *ginp = GoInputs::default();
 

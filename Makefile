@@ -3,17 +3,17 @@
 dyn:
 	cargo run --features "bevy/dynamic" client
 
-release:
-	cargo run --release
+release || r:
+	cargo run --release client
 
-trace:
-	cargo run --features "bevy/dynamic, bevy/tracy-trace" client
+tracy || t:
+	cargo run --features "bevy/dynamic, bevy/trace_tracy" client
 
-server:
+server || s:
 	cargo run --features "bevy/dynamic" server
 
-server-trace:
-	cargo run --features "bevy/dynamic, bevy/tracy-trace" server
+server-tracy || st:
+	cargo run --features "bevy/dynamic, bevy/trace_tracy" server
 	
-non-dyn:
-	cargo run c
+classic || c:
+	cargo run client

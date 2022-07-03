@@ -7,7 +7,7 @@ impl Plugin for Config {
         println!("config");
         app.insert_resource(WindowDescriptor {
             title: "griffsort".to_string(),
-            width: 720.,
+            width: 920.,
             height: 500.,
             present_mode: PresentMode::Immediate,
             //mode: bevy::window::WindowMode::Fullscreen,

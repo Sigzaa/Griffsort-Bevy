@@ -90,6 +90,7 @@ impl Plugin for Reactive {
             // })
             // .add_startup_system(add_id_provider)
             .add_system(setup_characters)
+            .add_system(create_room)
             //.add_plugin(GoSnap::<RollbackType>::default())
             // .add_system(snap)
             // .add_plugin(SnapPlugin::<SnapShot>::default())
@@ -118,6 +119,13 @@ impl Plugin for Reactive {
                     .run();
             }
         }
+    }
+}
+use super::rooms::*;
+
+fn create_room(keys: Res<Input<KeyCode>>){
+    if keys.just_pressed(KeyCode::R){
+        init();
     }
 }
 

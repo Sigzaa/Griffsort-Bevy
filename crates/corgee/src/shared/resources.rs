@@ -25,3 +25,6 @@ use std::collections::HashMap;
 pub struct Lobby {
     pub players: HashMap<u64, Option<Entity>>,
 }
+
+#[derive(Default)]
+pub struct CursorIsHided(pub bool);

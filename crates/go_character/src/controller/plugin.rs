@@ -2,6 +2,10 @@ use super::resources::*;
 use crate::shared::resources::*;
 
 use bevy::prelude::{shape::*, *};
+use bevy::{
+    input::mouse::MouseMotion,
+    prelude::{KeyCode, *},
+};
 use bevy::render::camera::Camera3d;
 use bevy::render::camera::{ActiveCamera, CameraTypePlugin};
 use bevy_prototype_debug_lines::*;
@@ -12,13 +16,13 @@ impl<T: Character<T> + Send + Sync + Copy + Component> Plugin for Controller<T> 
     fn build(&self, app: &mut App) {
         app.add_plugin(self.char_type)
             .add_plugin(CameraTypePlugin::<CharacterCamera>::default())
+            .add_system_set(SystemSet::on_update(GameState::InGame).with_system(T::sync_rotation::<T>))
             .add_event::<SpawnChar>()
             .add_system(T::spawn)
             .add_system(T::extend::<T>)
             .add_system(T::sync_components)
             .add_system(T::sync_camera)
             .add_system(T::is_grounded::<T>)
-            .add_system(T::sync_rotation::<T>)
             //.add_system(T::float::<T>)
             .add_system(T::move_player::<T>)
             .add_system(T::jump::<T>)
@@ -252,6 +256,8 @@ pub trait Character<T: Character<T>>: Plugin {
         mut q_head: Query<(&Children, &mut Transform), (With<ZHead>, Without<Selected>)>,
         mut q_sel: Query<(&GoRot, &mut Transform, &Children), With<Selected>>,
         mut q_cam: Query<&mut Transform, (With<CharacterCamera>, Without<Selected>, Without<ZHead>)>,
+        mut motion_evr: EventReader<MouseMotion>,
+        time: Res<Time>
     ) {
         for (gorot, mut body_transform, children) in q_sel.iter_mut() {
             for &child in children.iter() {
@@ -260,8 +266,14 @@ pub trait Character<T: Character<T>>: Plugin {
                 for &child in children.iter() {
                     let mut cam_transform = q_cam.get_mut(child).unwrap();
 
-                    body_transform.rotation = gorot.y;
-                    cam_transform.rotation = gorot.x;
+                    // body_transform.rotation = gorot.y;
+                    // cam_transform.rotation = gorot.x;
+                    for ev in motion_evr.iter() {
+                        body_transform.rotation *= Quat::from_rotation_y(-ev.delta.x * 0.002);
+                        cam_transform.rotation *= Quat::from_rotation_x(-ev.delta.y * 0.002);
+                        //gorot.z = Quat::from_rotation_z(-ev.delta.x * SENSITIVITY); TODO!
+                    }
+
                     //head_transform.rotation = gorot.z;
 
                     //println!("gorot: {}, rb rotation: {}", gorot.x, body_transform.rotation);

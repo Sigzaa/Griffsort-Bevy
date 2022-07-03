@@ -11,7 +11,11 @@ pub fn startup_menu(
     asset_server: Res<AssetServer>, 
     mut windows: ResMut<Windows>
 ){
-    println!("starting");
+
+    commands.spawn_bundle(SpriteBundle {
+        texture: asset_server.load("pepe.png"),
+        ..default()
+    });
     commands.spawn_bundle(UiCameraBundle::default());
     // Text with one section
     commands
