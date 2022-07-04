@@ -2,3 +2,5 @@ target/*
 src/main
 ./server
 ./client
+package
+.xwin-cache

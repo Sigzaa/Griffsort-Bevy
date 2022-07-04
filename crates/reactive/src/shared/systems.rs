@@ -19,7 +19,7 @@ pub fn update_tick(mut tick: ResMut<TickCount>) {
 
 pub fn is_server() -> bool{
     let args: Vec<String> = std::env::args().collect();
-    
+    if args.len() == 1 { return false }
     let exec_type = &args[1];
     return match exec_type.as_str() {
         "server" => true,

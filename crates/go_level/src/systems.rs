@@ -32,7 +32,7 @@ pub(crate) fn load_map(
     //     parent.spawn_scene(handle);
     // });
 
-    let handle = ass.load("../assets/models/weapon1_broken/weapon1_broken.gltf#Scene0");
+    let handle = ass.load("../assets/models/weapon_f/weapon_f.gltf#Scene0");
 
     // to be able to position our 3d model:
     // spawn a parent entity with a TransformBundle
