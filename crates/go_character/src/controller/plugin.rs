@@ -212,12 +212,16 @@ pub trait Character<T: Character<T>>: Plugin {
                                     },
                                     ..Default::default()
                                 })
-                                .insert(CharacterCamera);
+                                .insert(CharacterCamera)
+                                .insert_bundle(bevy_mod_picking::PickingCameraBundle::default())
+                                .insert(bevy_transform_gizmo::GizmoPickSource::default());
                         });
                 });
 
             commands
                 .entity(entity)
+                .insert_bundle(bevy_mod_picking::PickableBundle::default())
+                .insert(bevy_transform_gizmo::GizmoTransformable)
                 .insert(Collider::capsule(
                     Vec3::new(0., -0.4, 0.),
                     Vec3::new(0., 0.4, 0.),

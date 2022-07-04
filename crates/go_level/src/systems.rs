@@ -52,6 +52,7 @@ pub(crate) fn load_map(
     // })
     .insert(Collider::cuboid(0.5, 2.0, 0.5))
     .insert(RigidBody::Dynamic)
+
     // .insert(CollisionGroups {
     //     memberships: CollisionMask::WORLD.bits(),
     //     filters: CollisionMask::all().bits(),

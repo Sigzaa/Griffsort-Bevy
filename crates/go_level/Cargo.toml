@@ -6,6 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+bevy_mod_picking = "0.7.0"
+bevy_transform_gizmo = "0.2.1"
 bevy = { version = "0.7.0" , features = ["jpeg"]}
 bevy_rapier3d = { version = "0.14.1" , features = [ "enhanced-determinism" ] }
 corgee = { path = "../corgee", version = "*" }
