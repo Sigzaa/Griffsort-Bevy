@@ -5,6 +5,7 @@ use bevy_renet::{
 use bevy::{ prelude::*};
 use crate::shared::resources::*;
 use corgee::*;
+use crate::shared::data_structs::go_history::*;
 use crate::prelude::History;
 
 pub(crate) fn connection_handler(
@@ -52,9 +53,9 @@ pub(crate) fn receive_handler(
                     for (mut inp_buf, _id) in q_char.iter_mut(){
                         for i in 0..arr_len{
                             
-                            inp_buf.0.map.insert( tick - (i as i32), inputs[i]);
+                            inp_buf.0.insert( tick - (i as i32), inputs[i]);
                         }
-                        println!("buffe: {}", inp_buf.0.map.len());
+                        println!("buffer: {}", inp_buf.0.map.len());
                     }   
                 }
                 GenericMessages::Chat { tick } => {
@@ -71,12 +72,12 @@ pub(crate) fn pop_buffer( // User should implement this (May be)
     tick: ResMut<TickCount>,
 ) {
     for (inp_buf, mut ginp, mut grot) in q_core.iter_mut(){
-        match inp_buf.0.map.get(&tick.0) {
-            Some(input) => {
+        match inp_buf.0[tick.0] {
+            Bu::Gen(input) => {
                 *ginp = input.ginp;
                 *grot = input.gorot;
             },
-            None => {
+            Bu::Empty => {
                 warn!("Loss packet at {}", tick.0);
             }
         }

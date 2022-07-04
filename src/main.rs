@@ -1,6 +1,6 @@
 mod characters;
 //mod temp;
-
+use bevy_editor_pls::prelude::*;
 use bevy::prelude::*;
 use reactive::*;
 use characters::CharactersImpl;
@@ -20,6 +20,7 @@ fn main() {
         .add_plugin(CharController)
         .add_plugin(CharactersImpl)
         .add_plugin(Level)
+        .add_plugin(EditorPlugin)
         
         .add_plugin(UI)
         .add_plugin(Inspector)

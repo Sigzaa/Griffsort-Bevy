@@ -90,7 +90,7 @@ impl Plugin for Reactive {
             // })
             // .add_startup_system(add_id_provider)
             .add_system(setup_characters)
-            .add_system(create_room)
+            //.add_system(create_room)
             //.add_plugin(GoSnap::<RollbackType>::default())
             // .add_system(snap)
             // .add_plugin(SnapPlugin::<SnapShot>::default())

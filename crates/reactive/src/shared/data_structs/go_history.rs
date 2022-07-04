@@ -6,29 +6,34 @@ use std::ops::Index;
 /*
     Easy Interface on top of the HashMap.
 */
+#[derive(Debug, Clone)]
+pub enum Bu<T: Clone>{
+    Gen(T),
+    Empty
+}
 
 #[derive(Default, Clone, Debug)]
 pub(crate) struct History<T: Clone> {
-    pub map: HashMap<i32, T>,
+    pub map: HashMap<i32, Bu<T>>,
 }
 
-pub trait MapExt<K> {
-    fn max_tick(&self) -> Option<K>;
-}
+// pub trait MapExt<K> {
+//     fn max_tick(&self) -> Option<K>;
+// }
 
-impl<K: Ord + Copy, V: Copy> MapExt<K> for HashMap<K, V>{
-    fn max_tick(&self) -> Option<K>{
+// impl<K: Ord + Copy, V: Copy> MapExt<K> for HashMap<K, V>{
+//     fn max_tick(&self) -> Option<K>{
         
-        let mut vec: Vec<K> = self.clone().into_keys().collect();
-        vec.sort();
-        vec.reverse();
-        if vec.len() != 0{
-            return Some(vec[0]);
-        } else {
-            None
-        }
-    }
-}
+//         let mut vec: Vec<K> = self.clone().into_keys().collect();
+//         vec.sort();
+//         vec.reverse();
+//         if vec.len() != 0{
+//             return Some(vec[0]);
+//         } else {
+//             None
+//         }
+//     }
+// }
 
 impl<T> History<T>
 where
@@ -50,7 +55,21 @@ where
             None
         }
     }
+    pub fn insert(&mut self, tick: i32, gen: T){
+        self.map.insert(tick, Bu::<T>::Gen(gen));
+    }
 }
+
+impl<T: Clone + PartialEq + Copy> Index<i32> for History<T> { // If ur shure, what element exist, use it.
+    type Output = Bu<T>;
+    fn index(&self, tick: i32) -> &Self::Output {
+        return match self.map.get(&tick){
+            Some(cont) => cont,
+            None => &Bu::Empty           
+        }
+    }
+}
+
 // #[derive(PartialEq, Clone, Ord, Eq, PartialOrd, Debug)]
 // pub(crate) struct Box<T> {
 //     content: T,
@@ -138,18 +157,5 @@ where
 //             }
 //         }
 //         Err(Error::new(ErrorKind::Other, "Element on tick {tick} does not exist"))
-//     }
-// }
-// impl<T: Clone + PartialEq + Copy> Index<i32> for History<T> { // If ur shure, what element exist, use it.
-//     type Output = T;
-//     fn index(&self, tick: i32) -> &Self::Output {
-//         return match self.tick_to_index(tick){
-//             Ok(index) => {
-//                 &self.vec[index].content
-//             },
-//             Err(err) => {
-//                 panic!("element not found")
-//             }
-//         }
 //     }
 // }

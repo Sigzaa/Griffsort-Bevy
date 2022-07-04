@@ -10,7 +10,7 @@ use bevy_renet::{
 };
 use corgee::*;
 use renet::RenetError;
-
+use crate::data::*;
 /*
 
     Connection h.: channel 0,
@@ -83,9 +83,9 @@ pub(crate) fn is_desync(external_buf: ResMut<ServerShots>, internal_buf: ResMut<
         None => return,
     };
 
-    match (&external_buf.0.map.get(&tick), &internal_buf.0.map.get(&tick)) {
-        (Some(ext_content), Some(int_content)) => {
-            if ext_content != int_content {
+    match (&external_buf.0[tick], &internal_buf.0[tick]) {
+        (Bu::Gen(ext), Bu::Gen(int)) => {
+            if ext != int {
                 warn!("Desync on {}", tick);
             }
         }

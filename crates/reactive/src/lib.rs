@@ -27,4 +27,6 @@ pub mod prelude{
     };
 
 }
-
+pub(crate) mod data{
+    pub use crate::shared::data_structs::{a_list::*, go_history::*};
+}
