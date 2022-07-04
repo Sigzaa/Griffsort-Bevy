@@ -4,3 +4,4 @@ src/main
 ./client
 package
 .xwin-cache
+.vscode
