@@ -8,11 +8,17 @@ use bevy_egui::{egui, EguiContext, EguiPlugin};
 use corgee::GameState;
 use egui::Ui;
 
-pub struct Inspector;
+#[derive(Default)]
+struct GVersion(&'static str);
+
+pub struct Inspector{
+    pub game_version: &'static str,
+}
 impl Plugin for Inspector {
     fn build(&self, app: &mut App) {
         app.add_plugin(FrameTimeDiagnosticsPlugin::default())
             .insert_resource(OpenTab::Console)
+            .insert_resource(GVersion(self.game_version))
             .insert_resource(Stats::new())
             .insert_resource(Config::new())
             .insert_resource(Console::new())
@@ -33,6 +39,7 @@ fn inspector(
     mut config: ResMut<Config>,
     mut cons: ResMut<Console>,
     keys: Res<Input<KeyCode>>,
+    version: Res<GVersion>,
 ) {
     egui_context.ctx_mut().set_visuals(egui::Visuals {
         dark_mode: false,
@@ -137,7 +144,7 @@ fn inspector(
                     });}
                     OpenTab::About => {
                         ui.separator();
-                        ui.label("Griffsort v0.0.6");
+                        ui.label(format!("Griffsort v{}", version.0));
                         ui.end_row();
                         ui.label("We should think about a license");
                         ui.end_row();

@@ -1,5 +1,6 @@
 use super::resources::*;
 use crate::shared::resources::*;
+use std::time::Duration;
 
 use bevy::prelude::{shape::*, *};
 use bevy::{
@@ -16,7 +17,7 @@ impl<T: Character<T> + Send + Sync + Copy + Component> Plugin for Controller<T> 
     fn build(&self, app: &mut App) {
         app.add_plugin(self.char_type)
             .add_plugin(CameraTypePlugin::<CharacterCamera>::default())
-            .add_system_set(SystemSet::on_update(GameState::InGame).with_system(T::sync_rotation::<T>))
+            // .add_system_set(SystemSet::on_update(GameState::InGame).with_system(T::sync_rotation::<T>))
             .add_event::<SpawnChar>()
             .add_system(T::spawn)
             .add_system(T::extend::<T>)
@@ -24,22 +25,28 @@ impl<T: Character<T> + Send + Sync + Copy + Component> Plugin for Controller<T> 
             .add_system(T::sync_camera)
             .add_system(T::is_grounded::<T>)
             //.add_system(T::float::<T>)
-            .add_system(T::move_player::<T>)
-            .add_system(T::jump::<T>)
-            .add_system(T::shoot::<T>);
+;
     }
 }
 
 pub trait Character<T: Character<T>>: Plugin {
 
     fn shoot<C: Component>(
-        q_sel: Query<(&GoInputs, &Transform), With<C>>,
+        mut q_sel: Query<(&GoInputs, &Transform, &mut ShootTimer, &mut IsReadyShoot), With<C>>,
         mut commands: Commands,
         mut meshes: ResMut<Assets<Mesh>>,
         mut materials: ResMut<Assets<StandardMaterial>>,
+        time: Res<Time>,
     ) {
-        for (ginp, transform) in q_sel.iter(){
-            if ginp.fire == 1{
+        
+
+        for (ginp, transform, mut timer, mut can_shoot) in q_sel.iter_mut(){
+            timer.0.tick(time.delta());
+            if timer.0.finished(){
+                can_shoot.0 = true;
+            }
+            if ginp.fire == 1 && can_shoot.0{
+                can_shoot.0 = false;
                 commands
                 .spawn_bundle(PbrBundle {
                     mesh: meshes.add(Mesh::from(Cube {
@@ -61,6 +68,7 @@ pub trait Character<T: Character<T>>: Plugin {
                     linvel: transform.forward() * 20.,
                     angvel: Vec3::ZERO,
                 })
+                
                 .insert(GravityScale(1.))
                 .insert(Damping {
                     linear_damping: 0.4,
@@ -71,7 +79,8 @@ pub trait Character<T: Character<T>>: Plugin {
                     coefficient: 1.,
                     combine_rule: CoefficientCombineRule::Min,
                 })
-                .insert(RigidBody::Dynamic);
+                .insert(RigidBody::Dynamic)
+                .insert(ActiveEvents::COLLISION_EVENTS);
 
             }
         }
@@ -172,7 +181,7 @@ pub trait Character<T: Character<T>>: Plugin {
         query: Query<(Entity, &Id), Added<C>>,
     ) {
         for (entity, id) in query.iter() {
-            println!("automatic extention has been worked");
+            println!("Automatic extention has been worked");
 
             commands
                 .entity(entity)
@@ -234,7 +243,7 @@ pub trait Character<T: Character<T>>: Plugin {
                 .insert(GravityScale(2.))
                 .insert(LockedAxes::ROTATION_LOCKED)
                 .insert(Damping {
-                    linear_damping: 6.5,
+                    linear_damping: 1.5,
                     angular_damping: 0.,
                 })
                 .insert(ColliderMassProperties::Density(1.0))
@@ -253,7 +262,11 @@ pub trait Character<T: Character<T>>: Plugin {
                     //jump: 1,
                     ..Default::default()
                 })
-                .insert(ChCore);
+                .insert(ChCore)
+                .insert(ShootTimer(
+                    Timer::new(Duration::from_secs(1), true)
+                 ))
+                .insert(IsReadyShoot(true));
         }
     }
     fn sync_rotation<C: Component>(

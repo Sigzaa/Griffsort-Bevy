@@ -9,28 +9,28 @@ pub(crate) fn load_map(
     ass: Res<AssetServer>,
     map: Res<State<Map>>,
 ) {
-    // let handle = ass.load("../assets/models/TestMap/Test_map.gltf#Scene0");
+    let handle = ass.load("../assets/models/TestMap/Test_map.gltf#Scene0");
 
-    // // to be able to position our 3d model:
-    // // spawn a parent entity with a TransformBundle
-    // // and spawn our gltf as a scene under it
-    // let mut scene_commands = commands.spawn_bundle(TransformBundle::default());
+    // to be able to position our 3d model:
+    // spawn a parent entity with a TransformBundle
+    // and spawn our gltf as a scene under it
+    let mut scene_commands = commands.spawn_bundle(TransformBundle::default());
 
-    // scene_commands
-    // .insert(AsyncSceneCollider {
-    //     handle: handle.clone(),
-    //     shape: Some(ComputedColliderShape::TriMesh),
-    //     named_shapes: Default::default(),
+    scene_commands
+    .insert(AsyncSceneCollider {
+        handle: handle.clone(),
+        shape: Some(ComputedColliderShape::TriMesh),
+        named_shapes: Default::default(),
+    })
+    .insert(RigidBody::Fixed)
+    // .insert(CollisionGroups {
+    //     memberships: CollisionMask::WORLD.bits(),
+    //     filters: CollisionMask::all().bits(),
     // })
-    // .insert(RigidBody::Fixed)
-    // // .insert(CollisionGroups {
-    // //     memberships: CollisionMask::WORLD.bits(),
-    // //     filters: CollisionMask::all().bits(),
-    // // })
-    // // .insert(InGameOnly)
-    // .with_children(|parent| {
-    //     parent.spawn_scene(handle);
-    // });
+    // .insert(InGameOnly)
+    .with_children(|parent| {
+        parent.spawn_scene(handle);
+    });
 
     let handle = ass.load("../assets/models/weapon_f/weapon_f.gltf#Scene0");
 
@@ -38,8 +38,8 @@ pub(crate) fn load_map(
     // spawn a parent entity with a TransformBundle
     // and spawn our gltf as a scene under it
     let mut scene_commands = commands.spawn_bundle(TransformBundle{
-        global: GlobalTransform::from_xyz(0., 10., 0.),
-        local: Transform::from_xyz(-1., 10., 0.),
+        global: GlobalTransform::from_xyz(0., 20., 0.),
+        local: Transform::from_xyz(0., 20., 0.),
     });
     //let mut scene_commands = commands.spawn();
 

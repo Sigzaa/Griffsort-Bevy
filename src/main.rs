@@ -20,10 +20,10 @@ fn main() {
         .add_plugin(CharController)
         .add_plugin(CharactersImpl)
         .add_plugin(Level)
-        .add_plugin(EditorPlugin)
+        //.add_plugin(EditorPlugin)
         
         .add_plugin(UI)
-        .add_plugin(Inspector)
+        .add_plugin(Inspector{game_version: env!("CARGO_PKG_VERSION")})
         .add_plugin(Reactive)
 
         
@@ -117,10 +117,11 @@ fn _temp_setup(
         //     transform: Transform::from_xyz(-2.0, 2.5, 5.0).looking_at(Vec3::ZERO, Vec3::Y),
         //     ..default()
         // });
-    spawner.send(SpawnChar("Zero", 1, -1));
+    spawner.send(SpawnChar("Tamara", 1, -1));
     spawner.send(SpawnChar("Zero", 1, 1));
 
     selected.0 = Some(-1);
+
 }
 
 // #[derive(Default, Debug)]

@@ -9,6 +9,7 @@ pub struct CharController;
 impl Plugin for CharController {
     fn build(&self, app: &mut App) {
         app
+            .add_startup_system(setup)
             .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
             //.add_plugin(RapierDebugRenderPlugin::default())
             .add_plugin(DebugLinesPlugin::default())
@@ -16,4 +17,7 @@ impl Plugin for CharController {
             .insert_resource(ShowRay(true))
             .insert_resource(CharList(Vec::new()));
     }
+}
+fn setup(mut commands: Commands){
+    commands.spawn_bundle(OrthographicCameraBundle::new_2d());
 }

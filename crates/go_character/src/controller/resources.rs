@@ -18,3 +18,9 @@ pub struct Grounded;
 #[derive(Component)]
 pub struct RideHeight(pub f32);
 
+#[derive(Component)]
+pub struct ShootTimer(pub Timer);
+#[derive(Component)]
+pub struct IsReadyShoot(pub bool);
+
+

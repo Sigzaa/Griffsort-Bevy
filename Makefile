@@ -1,5 +1,7 @@
 .DEFAULT_GOAL := dyn
 
+VER := $(shell eval cargo pkgid | sed 's/^.*Griffsort://')
+
 dyn:
 	cargo run --features "bevy/dynamic" client
 
@@ -19,19 +21,26 @@ server-tracy || st:
 classic || c:
 	cargo run client
 build || b:
-	cargo build --release
+	cargo build --release	
 
-publish || p:
+publish:
+
 	cargo build --release
 	cargo build --target=x86_64-pc-windows-gnu --release
-	
+
+	mkdir -p package/$(VER)/windows package/$(VER)/linux package/$(VER)/zipped 
+
+	cp target/release/Griffsort package/$(VER)/linux
+	cp -r ./assets package/$(VER)/linux
+	cp -r ./config package/$(VER)/linux
+	zip -r package/$(VER)/zipped/griffsort-$(VER)-linux.zip package/$(VER)/linux
+
+	cp target/x86_64-pc-windows-gnu/release/Griffsort.exe package/$(VER)/windows
+	cp -r ./assets package/$(VER)/windows
+	cp -r ./config package/$(VER)/windows
+	zip -r package/$(VER)/zipped/griffsort-$(VER)-win.zip package/$(VER)/windows
+
+	gh release create $(VER) package/$(VER)/zipped/*
+
+clear:
 	rm -R package
-	mkdir -p package/linux package/windows
-
-	cp target/release/Griffsort package/linux
-	cp -r ./assets package/linux
-	zip -r package/griffsort-lin.zip package/linux
-
-	cp target/x86_64-pc-windows-gnu/release/Griffsort.exe package/windows
-	cp -r ./assets package/windows
-	zip -r package/griffsort-win.zip package/windows
