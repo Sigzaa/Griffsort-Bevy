@@ -232,5 +232,19 @@ fn show_inspector(
     }
 }
 fn update_game(){
+    use std::process::Command;
     
+    if cfg!(target_os = "windows") {
+    Command::new("cmd")
+            .args(["/C", "echo hello"])
+            .output()
+            .expect("failed to execute process")
+    } else {
+        Command::new("sh")
+                .arg("-c")
+                .arg("kitty scripts/update.sh")
+                .output()
+                .expect("failed to execute process")
+    };
+    std::process::exit(0);
 }

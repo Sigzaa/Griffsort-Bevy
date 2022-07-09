@@ -42,5 +42,20 @@ publish:
 
 	gh release create $(VER) package/$(VER)/compressed/*
 
+draft:
+	cargo build --release
+	cargo build --target=x86_64-pc-windows-gnu --release
+
+	mkdir -p package/$(VER)/windows package/$(VER)/linux package/$(VER)/compressed 
+
+	cp target/release/Griffsort package/$(VER)/linux
+	cp -r ./assets package/$(VER)/linux
+	cp -r ./config package/$(VER)/linux
+
+	cp target/x86_64-pc-windows-gnu/release/Griffsort.exe package/$(VER)/windows
+	cp -r ./assets package/$(VER)/windows
+	cp -r ./config package/$(VER)/windows
+
+
 clear:
 	rm -R package

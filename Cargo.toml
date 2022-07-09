@@ -1,6 +1,6 @@
 [package]
 name = "Griffsort"
-version = "0.0.7"
+version = "0.0.10"
 edition = "2021"
 author = "Sigzaa Studio"
 
