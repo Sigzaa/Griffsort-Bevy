@@ -2062,6 +2062,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "go_interface"
+version = "0.0.0"
+
+[[package]]
 name = "go_level"
 version = "0.1.0"
 dependencies = [
@@ -2584,6 +2588,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b9f1c5b025cda876f66ef43a113f91ebc9f4ccef34843000e0adf6ebbab84e21"
 dependencies = [
  "winapi",
+]
+
+[[package]]
+name = "multigo"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "bevy_renet",
+ "bevy_snap",
+ "bincode",
+ "corgee",
+ "renet",
+ "serde",
 ]
 
 [[package]]

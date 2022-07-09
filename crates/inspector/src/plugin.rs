@@ -17,6 +17,7 @@ pub struct Inspector{
 impl Plugin for Inspector {
     fn build(&self, app: &mut App) {
         app.add_plugin(FrameTimeDiagnosticsPlugin::default())
+            .insert_resource(Update::default())
             .insert_resource(OpenTab::Console)
             .insert_resource(GVersion(self.game_version))
             .insert_resource(Stats::new())
@@ -40,6 +41,7 @@ fn inspector(
     mut cons: ResMut<Console>,
     keys: Res<Input<KeyCode>>,
     version: Res<GVersion>,
+    mut update: ResMut<Update>,
 ) {
     egui_context.ctx_mut().set_visuals(egui::Visuals {
         dark_mode: false,
@@ -145,10 +147,14 @@ fn inspector(
                     OpenTab::About => {
                         ui.separator();
                         ui.label(format!("Griffsort v{}", version.0));
-                        ui.end_row();
-                        ui.label("We should think about a license");
-                        ui.end_row();
-                        ui.label("Sigzaa Studio");
+                        if ui.add_enabled(!update.is_update, egui::Button::new("Update")).clicked() {
+                            update.is_update = true;
+                            update_game();
+                        }
+                        if update.is_update{
+                            ui.add(egui::ProgressBar::new(update.progress)
+                            .animate(true));
+                        }
                     },
                     OpenTab::Config => {
                         egui::Grid::new("my_grid")
@@ -224,4 +230,7 @@ fn show_inspector(
             inspector_toggle.0 = false;
         } 
     }
+}
+fn update_game(){
+    
 }

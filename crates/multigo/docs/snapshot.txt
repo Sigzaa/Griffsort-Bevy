@@ -1,0 +1,21 @@
+buffer Snapshot (Vector, bevy bundle):
+    world class:
+        tick,
+        entities (bevy component):
+            ping,
+            position,
+            rotation,
+            velocity,
+            characters stages (stunned, raged, blocked),
+            items (inventory, shop  )
+            inputs,
+        events:
+            spawn,
+            death,
+            disconnect,
+            connect,
+            chat,
+            command,
+        checksum:
+            total of entities: i32
+

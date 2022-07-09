@@ -28,19 +28,19 @@ publish:
 	cargo build --release
 	cargo build --target=x86_64-pc-windows-gnu --release
 
-	mkdir -p package/$(VER)/windows package/$(VER)/linux package/$(VER)/zipped 
+	mkdir -p package/$(VER)/windows package/$(VER)/linux package/$(VER)/compressed 
 
 	cp target/release/Griffsort package/$(VER)/linux
 	cp -r ./assets package/$(VER)/linux
 	cp -r ./config package/$(VER)/linux
-	zip -r package/$(VER)/zipped/griffsort-$(VER)-linux.zip package/$(VER)/linux
+	zip -r package/$(VER)/compressed/griffsort-$(VER)-linux.zip package/$(VER)/linux
 
 	cp target/x86_64-pc-windows-gnu/release/Griffsort.exe package/$(VER)/windows
 	cp -r ./assets package/$(VER)/windows
 	cp -r ./config package/$(VER)/windows
-	zip -r package/$(VER)/zipped/griffsort-$(VER)-win.zip package/$(VER)/windows
+	zip -r package/$(VER)/compressed/griffsort-$(VER)-win.zip package/$(VER)/windows
 
-	gh release create $(VER) package/$(VER)/zipped/*
+	gh release create $(VER) package/$(VER)/compressed/*
 
 clear:
 	rm -R package

@@ -30,6 +30,11 @@ impl Console{
         }
     }
 }
+#[derive(Default)]
+pub struct Update{
+    pub progress: f32,
+    pub is_update: bool,
+}
 
 #[derive(PartialEq)]
 pub struct Stats {
