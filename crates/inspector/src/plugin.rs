@@ -239,7 +239,7 @@ use std::process::Command;
 fn update_game(){
     if cfg!(target_os = "windows") {
     Command::new("cmd")
-            .args(["/C", "echo hello"])
+            .args(["/C", "scripts/update.bat"])
             .output()
             .expect("failed to execute process")
     } else {
