@@ -4,7 +4,7 @@ version = 3
 
 [[package]]
 name = "Griffsort"
-version = "0.0.9"
+version = "0.0.12"
 dependencies = [
  "bevy",
  "bevy_editor_pls",

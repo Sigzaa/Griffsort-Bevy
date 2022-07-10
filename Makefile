@@ -61,4 +61,3 @@ draft:
 
 
 clear:
-	rm -R package
