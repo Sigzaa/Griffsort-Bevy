@@ -151,6 +151,10 @@ fn inspector(
                             update.is_update = true;
                             update_game();
                         }
+                        if ui.add_enabled(!update.is_update, egui::Button::new("Downgrade")).clicked() {
+                            update.is_update = true;
+                            downgrade();
+                        }
                         if update.is_update{
                             ui.add(egui::ProgressBar::new(update.progress)
                             .animate(true));
@@ -231,9 +235,8 @@ fn show_inspector(
         } 
     }
 }
+use std::process::Command;
 fn update_game(){
-    use std::process::Command;
-    
     if cfg!(target_os = "windows") {
     Command::new("cmd")
             .args(["/C", "echo hello"])
@@ -247,4 +250,20 @@ fn update_game(){
                 .expect("failed to execute process")
     };
     std::process::exit(0);
+}
+
+fn downgrade(){
+    if cfg!(target_os = "windows") {
+        Command::new("cmd")
+                .args(["/C", "echo hello"])
+                .output()
+                .expect("failed to execute process")
+        } else {
+            Command::new("sh")
+                    .arg("-c")
+                    .arg("kitty scripts/downgrade.sh")
+                    .output()
+                    .expect("failed to execute process")
+        };
+        std::process::exit(0);
 }

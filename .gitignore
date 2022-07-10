@@ -2,7 +2,7 @@ target/*
 src/main
 ./server
 ./client
-package
+package/*
 .xwin-cache
 .vscode
 ./versions
