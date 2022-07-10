@@ -24,21 +24,22 @@ build || b:
 	cargo build --release	
 
 publish:
-
 	cargo build --release
 	cargo build --target=x86_64-pc-windows-gnu --release
 
-	mkdir -p package/$(VER)/windows package/$(VER)/linux package/$(VER)/compressed 
-
-	cp target/release/Griffsort package/$(VER)/linux
-	cp -r ./assets package/$(VER)/linux
-	cp -r ./config package/$(VER)/linux
-	zip -r package/$(VER)/compressed/griffsort-$(VER)-linux.zip package/$(VER)/linux
+	mkdir -p package/$(VER)/windows package/$(VER)/linux package/$(VER)/compressed package/$(VER)/windows/scripts package/$(VER)/linux/scripts
 
 	cp target/x86_64-pc-windows-gnu/release/Griffsort.exe package/$(VER)/windows
 	cp -r ./assets package/$(VER)/windows
 	cp -r ./config package/$(VER)/windows
-	zip -r package/$(VER)/compressed/griffsort-$(VER)-win.zip package/$(VER)/windows
+	cp -r ./package/scripts/windows/* package/$(VER)/windows/scripts/
+	cd package/$(VER)/windows; zip -r ../compressed/griffsort-$(VER)-win.zip ./
+
+	cp target/release/Griffsort package/$(VER)/linux
+	cp -r ./assets package/$(VER)/linux
+	cp -r ./config package/$(VER)/linux
+	cp -r ./package/scripts/linux/* package/$(VER)/linux/scripts/
+	cd package/$(VER)/linux; zip -r ../compressed/griffsort-$(VER)-linux.zip ./
 
 	gh release create $(VER) package/$(VER)/compressed/*
 
@@ -46,13 +47,15 @@ draft:
 	cargo build --release
 	cargo build --target=x86_64-pc-windows-gnu --release
 
-	mkdir -p package/$(VER)/windows package/$(VER)/linux package/$(VER)/compressed 
+	mkdir -p package/$(VER)/windows package/$(VER)/linux package/$(VER)/compressed package/$(VER)/windows/scripts package/$(VER)/linux/scripts
 
 	cp target/release/Griffsort package/$(VER)/linux
+	cp -r ./package/scripts/linux/* package/$(VER)/linux/scripts/
 	cp -r ./assets package/$(VER)/linux
 	cp -r ./config package/$(VER)/linux
 
 	cp target/x86_64-pc-windows-gnu/release/Griffsort.exe package/$(VER)/windows
+	cp -r ./package/scripts/windows/* package/$(VER)/windows/scripts/
 	cp -r ./assets package/$(VER)/windows
 	cp -r ./config package/$(VER)/windows
 
