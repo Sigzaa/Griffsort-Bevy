@@ -1,5 +1,6 @@
 use super::resources::*;
 use super::widgets::*;
+use std::process::Command;
 use bevy::{
     diagnostic::{Diagnostics, FrameTimeDiagnosticsPlugin},
     prelude::*,
@@ -43,10 +44,10 @@ fn inspector(
     version: Res<GVersion>,
     mut update: ResMut<Update>,
 ) {
-    egui_context.ctx_mut().set_visuals(egui::Visuals {
-        dark_mode: false,
-        ..Default::default()
-    });
+    // egui_context.ctx_mut().set_visuals(egui::Visuals {
+    //     dark_mode: false,
+    //     ..Default::default()
+    // });
     if insp.0 {
         egui::Window::new("Inspector")
             //.fixed_size([150.0, 340.0])
@@ -55,7 +56,6 @@ fn inspector(
             .resizable(false)
             
             .show(egui_context.ctx_mut(), |ui| {
-
                 
                 ui.horizontal(|ui| {
                     ui.selectable_value(&mut *tab, OpenTab::Console, "Console");
@@ -63,6 +63,7 @@ fn inspector(
                     //ui.selectable_value(&mut *tab, OpenTab::Heroes, "Heroes");
                     ui.selectable_value(&mut *tab, OpenTab::Config, "Config");
                     ui.selectable_value(&mut *tab, OpenTab::About, "About");
+                    egui::widgets::global_dark_light_mode_switch(ui);
                 });
                 
                 match &*tab {
@@ -149,7 +150,8 @@ fn inspector(
                         ui.label(format!("Griffsort v{}", version.0));
                         if ui.add_enabled(!update.is_update, egui::Button::new("Update")).clicked() {
                             update.is_update = true;
-                            update_game();
+                            
+                            update_game(&mut update);
                         }
                         if ui.add_enabled(!update.is_update, egui::Button::new("Downgrade")).clicked() {
                             update.is_update = true;
@@ -161,6 +163,7 @@ fn inspector(
                         }
                     },
                     OpenTab::Config => {
+
                         egui::Grid::new("my_grid")
                                 .num_columns(2)
                                 .spacing([130.0, 9.0])
@@ -235,11 +238,11 @@ fn show_inspector(
         } 
     }
 }
-use std::process::Command;
-fn update_game(){
-    if cfg!(target_os = "windows") {
+
+fn update_game(mut update: &mut Update){
+    let output = if cfg!(target_os = "windows") {
     Command::new("cmd")
-            .args(["/C", "scripts/update.bat"])
+            .args(["/C", "update.bat"])
             .output()
             .expect("failed to execute process")
     } else {
@@ -249,7 +252,10 @@ fn update_game(){
                 .output()
                 .expect("failed to execute process")
     };
-    std::process::exit(0);
+    println!("out: {output:?}");
+    update.progress = 0.;
+    update.is_update = false;
+
 }
 
 fn downgrade(){

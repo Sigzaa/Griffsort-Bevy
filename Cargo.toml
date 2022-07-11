@@ -1,6 +1,6 @@
 [package]
 name = "Griffsort"
-version = "0.0.13"
+version = "0.0.1"
 edition = "2021"
 author = "Sigzaa Studio"
 
@@ -16,7 +16,6 @@ go_character = { path = "crates/go_character", version = "0.0.5"}
 go_level = { path = "crates/go_level", version = "0.1.0"}
 inspector = { path = "crates/inspector" }
 ui = { path = "crates/ui" }
-bevy_editor_pls = { git = "https://github.com/jakobhellermann/bevy_editor_pls" }
 bincode = "1.3.1"
 serde = "1.0.137"
 

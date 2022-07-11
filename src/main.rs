@@ -1,6 +1,5 @@
 mod characters;
 //mod temp;
-use bevy_editor_pls::prelude::*;
 use bevy::prelude::*;
 use reactive::*;
 use characters::CharactersImpl;
@@ -26,7 +25,6 @@ fn main() {
         .add_plugin(Inspector{game_version: env!("CARGO_PKG_VERSION")})
         .add_plugin(Reactive)
 
-        
         // .add_plugin(bevy_atmosphere::AtmospherePlugin {
         //     dynamic: false, // Set to false since we aren't changing the sky's appearance
         //     sky_radius: 50.0,
