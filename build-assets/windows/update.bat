@@ -12,4 +12,6 @@ echo Upgrading Griffsort
 
 .\bundle\7z.exe x .buffer/*.zip -aoa -o.\
 
+rmdir /Q /S .buffer
+
 pause

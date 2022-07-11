@@ -1,6 +1,8 @@
 echo Downgrading Griffsort
-unzip -o ./backup/backup.zip -d ./
-rm -R ./backup
+
+.\bundle\7z.exe x ./backup/back.zip -aoa -o.\
+
+rmdir /Q /S backup
 
 echo Press Enter to exit
-read junk
+pause
