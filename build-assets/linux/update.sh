@@ -8,7 +8,7 @@ echo Creating Backup
 zip -r ./backup/backup.zip Griffsort assets config scripts
 
 echo Upgrading Griffsort
-unzip -o .buffer/*linux.zip -d .buffer; rm linux.zip;
+unzip -o .buffer/*linux.zip -d ./; rm linux.zip;
 
 rm -R .buffer
 
