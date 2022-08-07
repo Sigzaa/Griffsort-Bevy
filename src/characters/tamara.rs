@@ -366,12 +366,6 @@ impl Character<Tamara> for Tamara {
                 commands
                     .spawn()
                     .insert(Tamara)
-                    .insert(MassProperties {
-                        local_center_of_mass: Vec3::new(1.0, 2.0, 3.0),
-                        mass: 10.0,
-                        principal_inertia: Vec3::new(0.5, 0.6, 0.7),
-                        ..Default::default()
-                    })
                     .insert_bundle(Config {
                         max_jump_height: MaxJump(1000.),
                         ..Default::default()

@@ -1,7 +1,7 @@
 use super::{resources::*, systems::*};
 use crate::shared::{resources::*, systems::*};
 use bevy::prelude::*;
-use bevy::core::FixedTimestep;
+use bevy::time::FixedTimestep;
 use std::{
     env,
     net::{SocketAddr, UdpSocket},

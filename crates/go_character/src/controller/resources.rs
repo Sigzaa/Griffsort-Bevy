@@ -23,4 +23,16 @@ pub struct ShootTimer(pub Timer);
 #[derive(Component)]
 pub struct IsReadyShoot(pub bool);
 
+#[derive(Component)]
+pub struct ETimer(pub f32);
+
+#[derive(Component)]
+pub struct QTimer(pub f32);
+
+#[derive(Component)]
+pub struct FTimer(pub f32);
+
+#[derive(Component)]
+pub struct ShiftTimer(pub f32);
+
 

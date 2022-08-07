@@ -19,7 +19,7 @@ impl Plugin for CharactersImpl {
     fn build(&self, app: &mut App) {
         app
             .add_plugin(Controller::<Zero>::new(Zero))
-            .add_plugin(Controller::<Tamara>::new(Tamara))
+            //.add_plugin(Controller::<Tamara>::new(Tamara))
             .add_plugin(Controller::<Soul>::new(Soul));
     }
 }

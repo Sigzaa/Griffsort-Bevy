@@ -5,6 +5,15 @@ pub struct _DespawnCharacter(pub i16 /* id */);
 
 use bevy::prelude::*;
 
+#[derive(Default)]
+pub struct LTimer1(pub f32);
+#[derive(Default)]
+pub struct LTimer2(pub f32);
+#[derive(Default)]
+pub struct LTimer3(pub f32);
+#[derive(Default)]
+pub struct LTimer4(pub f32);
+
 //pub struct ConnectedList(pub Vec<std::net::SocketAddr>);
 #[derive(Default)]
 pub struct GrabbedCursor(pub bool);
@@ -28,3 +37,10 @@ pub struct Lobby {
 
 #[derive(Default)]
 pub struct CursorIsHided(pub bool);
+
+
+
+pub enum FpsLimit{
+    Unlimited,
+    Limited(i32)
+}

@@ -5,6 +5,7 @@ mod shared;
 pub mod additional;
 pub mod states;
 
+pub use goconfig::resources::ReloadRequest;
 pub use states::*;
 pub use plugin::Corgee;
 pub use crate::goinputs::{resources::GoInputs, resources::*, *};

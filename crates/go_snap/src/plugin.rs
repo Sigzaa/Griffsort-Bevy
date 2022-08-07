@@ -1,4 +1,4 @@
-use bevy::{ecs::system::Command, prelude::*, reflect::TypeRegistry};
+use bevy::{ecs::system::Command, prelude::*, reflect::TypeRegistry, time::*};
 use serde::{Deserialize, Serialize};
 use std::marker::PhantomData;
 
@@ -18,7 +18,7 @@ impl<T: 'static + SnapType> Plugin for GoSnapPlugin<T> {
         app.add_system(
             save_snap::<T>
                 .exclusive_system()
-                .with_run_criteria(bevy::core::FixedTimestep::step(1.)),
+                .with_run_criteria(bevy::time::FixedTimestep::step(1.)),
         );
     }
 }
@@ -50,15 +50,15 @@ pub fn save_snap<T: SnapType>(world: &mut World) {
     // }
     use bevy::ecs::component::ComponentId;
 
-    let com = registry.type_registry.read()
-    .get_with_name("corgee::shared::character::MaxSpeed")
-    .and_then(
-        |hz| hz.data::<ReflectComponent>()
-        .and_then(|hz| hz.reflect_component(&world, entity)));
+    // let com = registry.type_registry.read()
+    // .get_with_name("corgee::shared::character::MaxSpeed")
+    // .and_then(
+    //     |hz| hz.data::<ReflectComponent>()
+    //     .and_then(|hz| hz.reflect_component(&world, entity)));
         
-    if !com.is_none(){
-        println!("{:?}", com.unwrap());
-    }
+    // if !com.is_none(){
+    //     println!("{:?}", com.unwrap());
+    // }
 
     
     

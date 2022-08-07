@@ -10,55 +10,9 @@ use bevy_renet::{
 
 use corgee::*;
 use go_snap::*;
-use bevy_snap::*;
 
 use std::{marker::PhantomData};
 use go_snap::plugin::SnapType;
-
-
-fn snap(mut commands: Commands, keys: Res<Input<KeyCode>>) {
-
-        info!("Making snap");
-        commands.save::<SnapShot>();
-    
-}
-
-fn store_snapshot(
-    mut save_events: EventReader<SaveEvent<SnapShot>>,
-    mut entity: Query<Entity, With<Selected>>,
-    mut commands: Commands
-
-) {
-    for save_event in save_events.iter() {
-        info!("Writing snapshot to save slot resource");
-
-        // for ent in entity.iter(){
-        //     let com_ent = commands.entity(ent);
-        //     //println!("com_ent: {:?}", com_ent);
-        // }
-
-        // Save the snapshot in a resource so we can restore it later
-        // let snap_diff = snap1 - snap2;
-
-        // snap.get_checksum(id);
-        // let vel = snap.get::<Velocity>(id);
-        //let encoded: Vec<u8> = bincode::serialize(&save_event.snapshot.clone()).unwrap();
-
-        //let des = serde_json::to_string(&save_event.snapshot.clone()).unwrap();
-        //println!("{:?}", &save_event.snapshot.clone());
-    }
-}
-
-
-fn add_id_provider(
-    q: Query<Entity, With<NetSync>>,
-    mut snapshot_id_provider: ResMut<SnapshotIdProvider<SnapShot>>,
-    mut commands: Commands,
-){
-    for ent in q.iter(){
-        commands.entity(ent).insert(snapshot_id_provider.next());
-    }
-}
 
 #[derive(Default, Debug)]
 struct NetworkSnapshot;
@@ -80,10 +34,9 @@ impl Plugin for Reactive {
         app.insert_resource(TickCount(0))
             .insert_resource(Lobby::default())
             .insert_resource(SnapServer{ types: SyncedTypes {}})
-            .add_startup_system(add_id_provider)
-            .add_system(store_snapshot)
+            
             //.add_plugin(GoSnapPlugin::<SnapShot>::default())
-            .add_plugin(SnapPlugin::<SnapShot>::default())
+           
             //.add_system(snap.with_run_criteria(bevy::core::FixedTimestep::step(1.)))
             // .insert_resource(RollbackType{
             //     type_registry: Vec::new()

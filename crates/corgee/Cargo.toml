@@ -9,10 +9,8 @@ description = "Part of Griffsort game"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy = "0.7.0" 
+bevy = {version = "0.8"} 
 serde = "1.0.137"
 serde_json = "1.0.81"
-
-[dev-dependencies]
-bevy = { version = "0.7.0" }
-
+iyes_loopless = "0.7"
+bevy_common_assets = { version = "0.3", features = ["ron","toml"]}

@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 use serde::{Serialize, Deserialize};
 
+
+
 #[derive(Default, Component, Clone, Copy, Serialize, Deserialize, Debug, PartialEq, Reflect)]
 pub struct GoRot {
     pub x: Quat,
@@ -73,6 +75,7 @@ pub struct MyGamepad(pub Gamepad);
 pub struct IsGoInActive(pub bool);
 
 #[derive(Default)]
+
 pub struct Sensitivity(pub f32);
 
 #[derive(Component, Clone, Copy, Serialize, Deserialize, Debug, PartialEq)]

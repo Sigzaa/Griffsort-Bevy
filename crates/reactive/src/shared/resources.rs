@@ -1,7 +1,6 @@
 use corgee::{GoInputs, GoRot, *};
 use serde::{Serialize, Deserialize};
 use bevy::{prelude::*, reflect::TypeRegistry};
-use bevy_snap::*;
 use super::data_structs::go_history::*;
 use go_snap::plugin::SnapType;
 
@@ -109,14 +108,6 @@ impl SnapType for SnapShot {
 #[reflect(Component)]
 struct Player(f32);
 
-impl bevy_snap::SnapType for SnapShot{
-    fn add_types(registry: &mut TypeRegistry) {
-        registry.write().register::<Transform>();
-        registry.write().register::<GoInputs>();
-        registry.write().register::<GoRot>();
-        registry.write().register::<Player>();
-    }
-}
 // pub fn add_id_provider(
 //     q: Query<Entity, Added<NetSync>>,
 //     mut snapshot_id_provider: ResMut<SnapshotIdProvider<SnapShot>>,

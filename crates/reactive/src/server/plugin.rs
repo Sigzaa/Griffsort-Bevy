@@ -1,6 +1,6 @@
 use super::{systems::*, resources::*};
 use crate::shared::{resources::*, systems::*};
-use bevy::{core::FixedTimestep, prelude::*, app::ScheduleRunnerSettings};
+use bevy::{time::FixedTimestep, prelude::*, app::ScheduleRunnerSettings};
 use std::{time::Duration, env, str, net::{ UdpSocket }};
 
 #[derive(Default)]

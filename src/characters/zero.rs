@@ -5,7 +5,11 @@ use corgee::character::*;
 use reactive::shared::resources::NetSync;
 
 impl Plugin for Zero {
-    fn build(&self, _app: &mut App) {}
+    fn build(&self, app: &mut App) {
+        app
+        .add_system(look::<Zero>)
+        .add_system(walk::<Zero>);
+    }
 }
 
 impl Character<Zero> for Zero {

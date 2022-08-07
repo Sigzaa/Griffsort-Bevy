@@ -12,11 +12,10 @@ pub fn startup_menu(
     mut windows: ResMut<Windows>
 ){
 
-    commands.spawn_bundle(SpriteBundle {
-        texture: asset_server.load("pepe.png"),
-        ..default()
-    });
-    commands.spawn_bundle(UiCameraBundle::default());
+    // commands.spawn_bundle(SpriteBundle {
+    //     texture: asset_server.load("pepe.png"),
+    //     ..default()
+    // });
     // Text with one section
     commands
         .spawn_bundle(TextBundle {
@@ -29,7 +28,7 @@ pub fn startup_menu(
                 //     ..default()
                 // },
                 
-                margin: Rect::all(Val::Auto),
+                margin: UiRect::all(Val::Auto),
                 // horizontally center child text
                 justify_content: JustifyContent::Center,
                 // vertically center child text
@@ -37,7 +36,7 @@ pub fn startup_menu(
                 ..default()
             },
             // Use the `Text::with_section` constructor
-            text: Text::with_section(
+            text: Text::from_section(
                 // Accepts a `String` or any type that converts into a `String`, such as `&str`
                 "Griffsort",
                 TextStyle {
@@ -46,10 +45,6 @@ pub fn startup_menu(
                     color: Color::WHITE,
                 },
                 // Note: You can use `Default::default()` in place of the `TextAlignment`
-                TextAlignment {
-                    horizontal: HorizontalAlign::Center,
-                    ..default()
-                },
             ),
             ..default()
         })
@@ -60,7 +55,7 @@ pub fn startup_menu(
             style: Style {
                 size: Size::new(Val::Px(150.0), Val::Px(65.0)),
                 // center button
-                margin: Rect::all(Val::Auto),
+                margin: UiRect::all(Val::Auto),
                 // horizontally center child text
                 justify_content: JustifyContent::Center,
                 // vertically center child text
@@ -74,14 +69,14 @@ pub fn startup_menu(
         .insert(MainMenu)
         .with_children(|parent| {
             parent.spawn_bundle(TextBundle {
-                text: Text::with_section(
+                text: Text::from_section(
                     "Button",
                     TextStyle {
                         font: asset_server.load("fonts/FiraSans-Bold.ttf"),
                         font_size: 40.0,
                         color: Color::rgb(0.9, 0.9, 0.9),
                     },
-                    Default::default(),
+
                 ),
                 ..default()
             });

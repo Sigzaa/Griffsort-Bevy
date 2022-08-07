@@ -3,6 +3,7 @@ use super::{resources::*, data_structs::go_history::History};
 use bevy::ecs::schedule::ShouldRun;
 use bevy_renet::{
     renet::{
+        ClientAuthentication, ServerAuthentication,
         ConnectToken, RenetClient, RenetConnectionConfig, RenetServer, ServerConfig,
         NETCODE_KEY_BYTES,
     },
@@ -45,25 +46,21 @@ pub(crate) fn new_renet_client() -> RenetClient {
     // This connect token should come from another system, NOT generated from the client.
     // Usually from a matchmaking system
     // The client should not have access to the PRIVATE_KEY from the server.
-    let token = ConnectToken::generate(
-        current_time,
-        PROTOCOL_ID,
-        300,
+    let authentication = ClientAuthentication::Unsecure {
         client_id,
-        15,
-        vec![server_addr],
-        None,
-        PRIVATE_KEY,
-    )
-    .unwrap();
-    RenetClient::new(current_time, socket, client_id, token, connection_config).unwrap()
+        protocol_id: PROTOCOL_ID,
+        server_addr,
+        user_data: None,
+    };
+    
+    RenetClient::new(current_time, socket, client_id, connection_config, authentication).unwrap()
 }
 
 pub(crate) fn new_renet_server() -> RenetServer {
     let server_addr = "127.0.0.1:5000".parse().unwrap();
     let socket = UdpSocket::bind(server_addr).unwrap();
     let connection_config = RenetConnectionConfig::default();
-    let server_config = ServerConfig::new(20, PROTOCOL_ID, server_addr, *PRIVATE_KEY);
+    let server_config = ServerConfig::new(20, PROTOCOL_ID, server_addr, ServerAuthentication::Unsecure);
     let current_time = SystemTime::now()
         .duration_since(SystemTime::UNIX_EPOCH)
         .unwrap();

@@ -7,6 +7,7 @@ use bevy::{
 };
 use bevy_egui::{egui, EguiContext, EguiPlugin};
 use corgee::GameState;
+use corgee::ReloadRequest;
 use egui::Ui;
 
 #[derive(Default)]
@@ -43,6 +44,7 @@ fn inspector(
     keys: Res<Input<KeyCode>>,
     version: Res<GVersion>,
     mut update: ResMut<Update>,
+    mut reload_req: EventWriter<ReloadRequest>,
 ) {
     // egui_context.ctx_mut().set_visuals(egui::Visuals {
     //     dark_mode: false,
@@ -169,10 +171,13 @@ fn inspector(
                                 .spacing([130.0, 9.0])
                                 .striped(true)
                                 .show(ui, |ui| {
-                                    
+
                                     ui.label("General:");
                                     ui.end_row();
-                                
+                                    if ui.button("reload config").clicked() {
+                                        reload_req.send(ReloadRequest);
+                                    }
+                                    ui.end_row();
                                     ui.label("Close with Del:");
                                     ui.add(toggle(&mut config.exit_on_del));
                                     ui.end_row();
