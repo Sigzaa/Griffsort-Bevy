@@ -10,14 +10,7 @@ impl Plugin for Config {
     fn build(&self, app: &mut App) {
         app
 
-        .insert_resource(WindowDescriptor {
-            title: "griffsort".to_string(),
-            width: 920.,
-            height: 500.,
-            present_mode: PresentMode::Immediate,
-            //mode: bevy::window::WindowMode::Fullscreen,
-            ..Default::default()
-        })
+
         .insert_resource(ClientConfig::default())
 
         .add_plugin(RonAssetPlugin::<ClientConfig>::new(&["ron"]))

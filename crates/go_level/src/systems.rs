@@ -15,7 +15,8 @@ pub(crate) fn load_map(
         shape: Some(ComputedColliderShape::TriMesh),
         named_shapes: Default::default(),
     })
-    .insert(RigidBody::Fixed);
+    .insert(RigidBody::Fixed)
+    .insert(CollisionGroups::new(0b10001, 0b10000));
 
 }
 pub(crate) fn load_custom_models(   

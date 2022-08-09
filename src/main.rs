@@ -8,10 +8,19 @@ use corgee::{character::*, *};
 use go_level::plugin::Level;
 use inspector::*;
  use ui::*;
+ use bevy::window::PresentMode;
 
 
 fn main() {
     App::new()
+    .insert_resource(WindowDescriptor {
+        title: "griffsort".to_string(),
+        width: 920.,
+        height: 500.,
+        present_mode: PresentMode::Immediate,
+        //mode: bevy::window::WindowMode::Fullscreen,
+        ..Default::default()
+    })
         .add_plugin(Corgee)
         .add_system_set(SystemSet::on_enter(GameState::InGame).with_system(_temp_setup))
         .add_system_set(SystemSet::on_update(GameState::InGame).with_system(switch))
@@ -20,7 +29,7 @@ fn main() {
         .add_plugin(Level)
         .add_plugin(UI)
         .add_plugin(Inspector{game_version: env!("CARGO_PKG_VERSION")})
-        .add_plugin(Reactive)        
+        //.add_plugin(Reactive)        
         .run();
 }
 
@@ -91,8 +100,8 @@ fn _temp_setup(
         //     transform: Transform::from_xyz(-2.0, 2.5, 5.0).looking_at(Vec3::ZERO, Vec3::Y),
         //     ..default()
         // });
-    //spawner.send(SpawnChar("Soul", 1, -1));
-    spawner.send(SpawnChar("Soul", 1, 1));
+    spawner.send(SpawnChar("Soul", 1, -1));
+    spawner.send(SpawnChar("Soul", -1, 1));
 
     selected.0 = Some(1);
 

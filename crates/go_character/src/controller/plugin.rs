@@ -72,6 +72,10 @@ pub trait Character<T: Character<T>>: Plugin {
                         .with_children(|parent| {
                             parent
                                 .spawn_bundle(Camera3dBundle {
+                                    projection: Projection::Perspective(PerspectiveProjection {
+                                        fov: 1.4, // a float of your fov in radians,
+                                        ..default()
+                                      }),
                                     camera: Camera{ 
                                         is_active: true,
                                         priority: id.0 as isize,

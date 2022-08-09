@@ -6,7 +6,7 @@ use bevy::{
     input::mouse::MouseMotion,
     prelude::{KeyCode, *},
 };
-use bevy_prototype_debug_lines::*;
+pub use bevy_prototype_debug_lines::*;
 use super::resources::*;
 pub use bevy_rapier3d::prelude::*;
 use corgee::{additional::*, *, GoInputs, GoRot, GameState};
