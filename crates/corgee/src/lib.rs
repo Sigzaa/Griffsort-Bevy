@@ -5,6 +5,7 @@ mod shared;
 pub mod additional;
 pub mod states;
 
+pub use bevy_rapier3d::prelude::{AsyncSceneCollider, *};
 pub use goconfig::resources::ReloadRequest;
 pub use states::*;
 pub use plugin::Corgee;

@@ -8,7 +8,6 @@ use bevy::{
 };
 pub use bevy_prototype_debug_lines::*;
 use super::resources::*;
-pub use bevy_rapier3d::prelude::*;
 use corgee::{additional::*, *, GoInputs, GoRot, GameState};
 
 pub fn look<C: Component>(
@@ -21,7 +20,11 @@ pub fn look<C: Component>(
 ) {
     for (gorot, mut body_transform, children) in q_sel.iter_mut() {
         for &child in children.iter() {
-            let (children, mut head_transform) = q_head.get_mut(child).unwrap();
+            let child = q_head.get_mut(child);
+            if child.is_ok(){
+                let (children, mut head_transform) = child.unwrap();
+            
+            
 
             for &child in children.iter() {
                 let mut cam_transform = q_cam.get_mut(child).unwrap();
@@ -38,6 +41,7 @@ pub fn look<C: Component>(
 
                 //println!("gorot: {}, rb rotation: {}", gorot.x, body_transform.rotation);
             }
+        }
         }
     }
 }
@@ -149,14 +153,13 @@ pub fn is_grounded<C: Component>(
         let ray_pos = transform.translation;
         let ray_dir = Vec3::new(0., -1., 0.);
         let max_toi = 0.81;
-        let groups = InteractionGroups::new(0b11, 0b1001).into();
+        let groups = InteractionGroups::new(0b00100, 0b10000).into();
 
         if let Some((_entity, toi)) =
             rapier_context.cast_ray(ray_pos, ray_dir, max_toi, false, groups)
         {
             damping.linear_damping = 10.;
             commands.entity(ent).insert(Grounded);
-
             if show_ray.0 {
                 lines.line_colored(
                     ray_pos + ray_dir * toi,

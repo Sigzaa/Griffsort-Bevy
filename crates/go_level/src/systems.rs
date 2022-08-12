@@ -1,4 +1,4 @@
-use bevy_rapier3d::prelude::{AsyncSceneCollider, *};
+use corgee::*;
 use bevy::prelude::*;
 
 pub(crate) fn load_map(
@@ -16,7 +16,8 @@ pub(crate) fn load_map(
         named_shapes: Default::default(),
     })
     .insert(RigidBody::Fixed)
-    .insert(CollisionGroups::new(0b10001, 0b10000));
+    .insert(CollisionGroups::new(0b10000, 0b00100))
+    ;
 
 }
 pub(crate) fn load_custom_models(   

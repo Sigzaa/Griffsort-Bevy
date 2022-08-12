@@ -55,7 +55,7 @@ pub fn collect_inputs(
         if buttons.pressed(MouseButton::Left) {
             ginp.fire = 1;
         }
-        if input.pressed(KeyCode::Q) {
+        if buttons.pressed(MouseButton::Right) {
             ginp.a_1 = 1;
         }
         if input.pressed(KeyCode::E) {

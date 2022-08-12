@@ -4,9 +4,9 @@ use corgee::character::*;
 use corgee::*;
 use bevy::{
     input::mouse::MouseMotion,
-    prelude::{KeyCode, *},
+    prelude::{*},
 };
-use bevy::prelude::{shape::*, *};
+use bevy::prelude::{shape::*};
 use bevy::{asset::LoadState};
 
 #[derive(Component)]
@@ -50,11 +50,11 @@ fn load_textures(mut rpg_sprite_handles: ResMut<ExplSpriteHandles>, asset_server
     rpg_sprite_handles.handles = asset_server.load_folder("sprites/pack1/PNG/Explosion").unwrap();
 }
 fn setup(
-    mut commands: Commands,
-    rpg_sprite_handles: Res<ExplSpriteHandles>,
-    asset_server: Res<AssetServer>,
-    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
-    mut textures: ResMut<Assets<Image>>,
+    _commands: Commands,
+    _rpg_sprite_handles: Res<ExplSpriteHandles>,
+    _asset_server: Res<AssetServer>,
+    _texture_atlases: ResMut<Assets<TextureAtlas>>,
+    _textures: ResMut<Assets<Image>>,
 ) {
     
     // draw the atlas itself
@@ -152,14 +152,14 @@ impl Tamara {
     }
     fn animate_explosion(
         time: Res<Time>,
-        texture_atlases: Res<Assets<TextureAtlas>>,
+        _texture_atlases: Res<Assets<TextureAtlas>>,
         mut query: Query<(
             Entity,
             &mut AnimationTimer,
             &mut ExpLifeTime,
             &mut Transform
         ), Without<Selected>>,
-        sel: Query<(&Transform), With<Selected>>,
+        sel: Query<&Transform, With<Selected>>,
         mut commands: Commands,
     ){
         for (ent, mut timer, mut lifetime, mut transform) in query.iter_mut() {
@@ -184,9 +184,9 @@ impl Tamara {
         mut commands: Commands,
         q: Query<(Entity, &Transform), With<Rocket>>,
         asset_server: Res<AssetServer>,
-        mut texture_atlases: ResMut<Assets<TextureAtlas>>,
-        rpg_sprite_handles: Res<ExplSpriteHandles>,
-        mut textures: ResMut<Assets<Image>>,
+        _texture_atlases: ResMut<Assets<TextureAtlas>>,
+        _rpg_sprite_handles: Res<ExplSpriteHandles>,
+        _textures: ResMut<Assets<Image>>,
         mut materials: ResMut<Assets<StandardMaterial>>,
         mut meshes: ResMut<Assets<Mesh>>,
     ){
@@ -289,9 +289,9 @@ impl Tamara {
         time: Res<Time>,
         mut scroll_evr: EventReader<MouseWheel>,
     ) {
-        for (gorot, mut body, children, ginp, glob) in q_sel.iter_mut() {
+        for (_gorot, mut body, children, ginp, _glob) in q_sel.iter_mut() {
             for &child in children.iter() {
-                let (children, mut head) = q_head.get_mut(child).unwrap();
+                let (children, _head) = q_head.get_mut(child).unwrap();
 
                 for &child in children.iter() {
                     let mut cam_transform = q_cam.get_mut(child).unwrap();
@@ -312,13 +312,13 @@ impl Tamara {
                     //body.rotation *= Quat::from_rotation_y(0.01 );
                     //body.looking_at();
                     //body_transform.rotation = Quat::from_rotation_x(15.) + body_transform.rotation;
-                    let (t, t1) = body.rotation.to_axis_angle();
+                    let (_t, _t1) = body.rotation.to_axis_angle();
                     let (mut z, _e2, _e3) = body.rotation.to_euler(EulerRot::ZYX);
-                    let (mut y, e2, e3) = body.rotation.to_euler(EulerRot::YXZ);
+                    let (y, _e2, _e3) = body.rotation.to_euler(EulerRot::YXZ);
                     //let (e1, e2, e3) = (e1, e2, e3);
                     let  y =  y * 1000./18.;
                     //body.rotation = Quat::from_euler(EulerRot::XYZ, -ev.delta.y * 0.004 + e1, e2, -ev.delta.x * 0.004 + e3);
-                    let rot = body.rotation.xyz()[2];
+                    let _rot = body.rotation.xyz()[2];
                     //println!("euler before: z {z:.3}, y {y:.3}");
                     if (y < -90. && y > -180.) || (y > 90. && y < 180.){
                         if z > 0.{

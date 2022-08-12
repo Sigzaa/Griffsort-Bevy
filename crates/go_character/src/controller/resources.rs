@@ -35,4 +35,6 @@ pub struct FTimer(pub f32);
 #[derive(Component)]
 pub struct ShiftTimer(pub f32);
 
+pub const CHARACTER: u32 = 0b11;
+
 

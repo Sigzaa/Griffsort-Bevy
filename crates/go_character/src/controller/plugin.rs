@@ -11,7 +11,6 @@ use bevy::{
 // use bevy::render::camera::Camera3dBundle;
 // use bevy::render::camera::{ActiveCamera, CameraTypePlugin};
 use bevy_prototype_debug_lines::*;
-pub use bevy_rapier3d::prelude::*;
 use corgee::{additional::*, *, GoInputs, GoRot, GameState};
 
 impl<T: Character<T> + Send + Sync + Copy + Component> Plugin for Controller<T> {
@@ -53,7 +52,7 @@ pub trait Character<T: Character<T>>: Plugin {
                         alpha_mode: AlphaMode::Blend,
                         ..Default::default()
                     }),
-                    transform: Transform::from_xyz(2.0, 30., -id.0 as f32 * 1.5),
+                    transform: Transform::from_xyz(2.0, 15., -id.0 as f32 * 1.5),
                     ..Default::default()
                 })
                 .with_children(|parent| {
@@ -96,7 +95,7 @@ pub trait Character<T: Character<T>>: Plugin {
                     Vec3::new(0., 0.4, 0.),
                     0.4,
                 ))
-                .insert(CollisionGroups::new(0b10, 0b10))
+                .insert(CollisionGroups::new(0b00001, 0b00010))
                 .insert(Velocity::default())
                 .insert(ExternalForce::default())
                 .insert(ExternalImpulse::default())

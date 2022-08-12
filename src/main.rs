@@ -1,7 +1,7 @@
 mod characters;
 //mod temp;
 use bevy::prelude::*;
-use reactive::*;
+
 use characters::CharactersImpl;
 use go_character::*;
 use corgee::{character::*, *};
@@ -30,12 +30,14 @@ fn main() {
         .add_plugin(UI)
         .add_plugin(Inspector{game_version: env!("CARGO_PKG_VERSION")})
         //.add_plugin(Reactive)        
+        //.add_system(masks_debug)
         .run();
+
 }
 
 
 fn switch(buttons: Res<Input<MouseButton>>, mut selected: ResMut<SelectedId>) {
-    if buttons.just_pressed(MouseButton::Right) {
+    if buttons.just_pressed(MouseButton::Middle) {
         let id = -selected.0.unwrap();
         selected.0 = Some(id);
     }
@@ -105,4 +107,12 @@ fn _temp_setup(
 
     selected.0 = Some(1);
 
+}
+
+fn masks_debug(
+    query: Query<(Entity, &mut CollisionGroups)>,
+){
+    for (ent, group) in query.iter(){
+        println!("entity: {:?} with membership: {:3.b}, filter: {:3.b},", ent, group.memberships, group.filters);
+    }
 }
