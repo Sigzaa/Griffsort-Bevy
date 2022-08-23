@@ -10,13 +10,15 @@ pub(crate) fn load_map(
         scene: handle.clone(),
         ..Default::default()
     })
+    .insert(CollisionGroups::new(0b10, 0b11))
     .insert(AsyncSceneCollider {
         handle: handle,
         shape: Some(ComputedColliderShape::TriMesh),
         named_shapes: Default::default(),
     })
+    
     .insert(RigidBody::Fixed)
-    .insert(CollisionGroups::new(0b10000, 0b00100))
+    
     ;
 
 }
@@ -39,15 +41,15 @@ pub(crate) fn load_custom_models(
     
 
 
-    commands.spawn_bundle(SceneBundle {
-        scene: ass.load("models/weapon_1/weapon_1.gltf#Scene0"),
-        transform: Transform{
-            translation: Vec3::new(0.,0.,0.), 
-            //scale: Vec3::new(1.,1.,1.),
-            ..Default::default()
-        },
-        ..Default::default()
-    })
-    .insert(Collider::cuboid(0.5, 2.0, 0.5))
-    .insert(RigidBody::Dynamic);
+    // commands.spawn_bundle(SceneBundle {
+    //     scene: ass.load("models/weapon_1/weapon_1.gltf#Scene0"),
+    //     transform: Transform{
+    //         translation: Vec3::new(0.,0.,0.), 
+    //         //scale: Vec3::new(1.,1.,1.),
+    //         ..Default::default()
+    //     },
+    //     ..Default::default()
+    // })
+    // .insert(Collider::cuboid(0.5, 2.0, 0.5))
+    // .insert(RigidBody::Dynamic);
 }

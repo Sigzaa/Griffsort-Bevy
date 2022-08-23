@@ -1,7 +1,6 @@
 use super::resources::*;
 use super::widgets::*;
-use std::process::Command;
-use bevy::{
+use bevy::{ app::AppExit,
     diagnostic::{Diagnostics, FrameTimeDiagnosticsPlugin},
     prelude::*,
 };
@@ -9,11 +8,12 @@ use bevy_egui::{egui, EguiContext, EguiPlugin};
 use corgee::GameState;
 use corgee::ReloadRequest;
 use egui::Ui;
+use std::process::Command;
 
 #[derive(Default)]
 struct GVersion(&'static str);
 
-pub struct Inspector{
+pub struct Inspector {
     pub game_version: &'static str,
 }
 impl Plugin for Inspector {
@@ -45,6 +45,8 @@ fn inspector(
     version: Res<GVersion>,
     mut update: ResMut<Update>,
     mut reload_req: EventWriter<ReloadRequest>,
+    mut windows: ResMut<Windows>,
+    mut app_exit_events: EventWriter<AppExit>
 ) {
     // egui_context.ctx_mut().set_visuals(egui::Visuals {
     //     dark_mode: false,
@@ -56,9 +58,7 @@ fn inspector(
             .default_pos([200., 200.])
             .collapsible(false)
             .resizable(false)
-            
             .show(egui_context.ctx_mut(), |ui| {
-                
                 ui.horizontal(|ui| {
                     ui.selectable_value(&mut *tab, OpenTab::Console, "Console");
                     ui.selectable_value(&mut *tab, OpenTab::Debug, "Debug");
@@ -67,7 +67,6 @@ fn inspector(
                     ui.selectable_value(&mut *tab, OpenTab::About, "About");
                     egui::widgets::global_dark_light_mode_switch(ui);
                 });
-                
                 match &*tab {
                     OpenTab::Console => {
                         let response = ui.add(egui::TextEdit::singleline(&mut cons.string));
@@ -76,8 +75,8 @@ fn inspector(
                         }
                         if response.lost_focus() && ui.input().key_pressed(egui::Key::Enter) {
                             // …
-                            
-                            if cons.string == String::from("state"){
+
+                            if cons.string == String::from("state") {
                                 println!("Current state is: {:?}", state.current());
                             }
                             let str_buf = cons.string.clone();
@@ -107,87 +106,91 @@ fn inspector(
                     }
                     OpenTab::Debug => {
                         egui::Grid::new("my_grid")
-                                .num_columns(2)
-                                .spacing([130.0, 9.0])
-                                .striped(true)
-                                .show(ui, |ui| {
-                                    
-                                    ui.label("General:");
-                                    ui.end_row();
-                                    
-                                    ui.label("Show FPS");
-                                    ui.add(toggle(&mut stats.fps));
-                                    ui.end_row();
+                            .num_columns(2)
+                            .spacing([130.0, 9.0])
+                            .striped(true)
+                            .show(ui, |ui| {
+                                ui.label("General:");
+                                ui.end_row();
 
-                                    ui.end_row();
-                                    ui.label("Networking:");
-                                    ui.end_row();
+                                ui.label("Show FPS");
+                                ui.add(toggle(&mut stats.fps));
+                                ui.end_row();
 
-                                    ui.label("Show Tickrate");
-                                    ui.add(toggle(&mut stats.tick));
-                                    ui.end_row();
+                                ui.end_row();
+                                ui.label("Networking:");
+                                ui.end_row();
 
-                                    ui.label("Show Buffer Plot");
-                                    ui.add(toggle(&mut stats.net_buffer));
-                                    ui.end_row();
+                                ui.label("Show Tickrate");
+                                ui.add(toggle(&mut stats.tick));
+                                ui.end_row();
 
-                                    // ui.label("Open Networking debug");
-                                    // ui.add(toggle(&mut stats.fps));
-                                    // ui.end_row();
+                                ui.label("Show Buffer Plot");
+                                ui.add(toggle(&mut stats.net_buffer));
+                                ui.end_row();
 
-                                    ui.end_row();
-                                    ui.label("State:");
-                                    ui.end_row();
+                                // ui.label("Open Networking debug");
+                                // ui.add(toggle(&mut stats.fps));
+                                // ui.end_row();
 
-                                    ui.label("Show current state");
-                                    ui.add(toggle(&mut stats.state));
-                                    ui.end_row();
+                                ui.end_row();
+                                ui.label("State:");
+                                ui.end_row();
 
-                                    ui.label("Show state list");
-                                    ui.add(toggle(&mut stats.state_list));
-                                    ui.end_row();
-                    });}
+                                ui.label("Show current state");
+                                ui.add(toggle(&mut stats.state));
+                                ui.end_row();
+
+                                ui.label("Show state list");
+                                ui.add(toggle(&mut stats.state_list));
+                                ui.end_row();
+                            });
+                    }
                     OpenTab::About => {
                         ui.separator();
                         ui.label(format!("Griffsort v{}", version.0));
-                        if ui.add_enabled(!update.is_update, egui::Button::new("Update")).clicked() {
+                        if ui
+                            .add_enabled(!update.is_update, egui::Button::new("Update"))
+                            .clicked()
+                        {
                             update.is_update = true;
-                            
                             update_game(&mut update);
                         }
-                        if ui.add_enabled(!update.is_update, egui::Button::new("Downgrade")).clicked() {
+                        if ui
+                            .add_enabled(!update.is_update, egui::Button::new("Downgrade"))
+                            .clicked()
+                        {
                             update.is_update = true;
                             downgrade();
                         }
-                        if update.is_update{
-                            ui.add(egui::ProgressBar::new(update.progress)
-                            .animate(true));
+                        if update.is_update {
+                            ui.add(egui::ProgressBar::new(update.progress).animate(true));
                         }
-                    },
+                    }
                     OpenTab::Config => {
-
                         egui::Grid::new("my_grid")
-                                .num_columns(2)
-                                .spacing([130.0, 9.0])
-                                .striped(true)
-                                .show(ui, |ui| {
-
-                                    ui.label("General:");
-                                    ui.end_row();
-                                    if ui.button("reload config").clicked() {
-                                        reload_req.send(ReloadRequest);
-                                    }
-                                    ui.end_row();
-                                    ui.label("Close with Del:");
-                                    ui.add(toggle(&mut config.exit_on_del));
-                                    ui.end_row();
-                    });}
+                            .num_columns(2)
+                            .spacing([130.0, 9.0])
+                            .striped(true)
+                            .show(ui, |ui| {
+                                ui.label("General:");
+                                ui.end_row();
+                                if ui.button("reload config").clicked() {
+                                    reload_req.send(ReloadRequest);
+                                }
+                                ui.end_row();
+                                ui.label("Close with Del:");
+                                ui.add(toggle(&mut config.exit_on_del));
+                                ui.end_row();
+                            });
+                    }
                     _ => {}
                 }
             });
     }
-    if config.exit_on_del && keys.pressed(KeyCode::Delete){
-        std::process::exit(0);
+    if config.exit_on_del && keys.pressed(KeyCode::Delete) {
+        info!("Exiting...");
+        app_exit_events.send(AppExit);
     }
     if stats.fps {
         egui::Window::new("fps")
@@ -200,7 +203,6 @@ fn inspector(
                     if let Some(average) = fps.average() {
                         // Update the value of the second section
                         ui.label(format!("fps: {:.0}", average));
-                        
                     }
                 }
             });
@@ -213,7 +215,6 @@ fn inspector(
             //.min_width(500.)
             .show(egui_context.ctx_mut(), |ui| {
                 ui.label(format!("Current state: {:?}", state.current()));
-                
             });
     }
     if stats.state_list {
@@ -224,7 +225,6 @@ fn inspector(
             //.min_width(500.)
             .show(egui_context.ctx_mut(), |ui| {
                 ui.label(format!("Inactive states: {:#?}", state.inactives()));
-                
             });
     }
 }
@@ -234,47 +234,46 @@ fn show_inspector(
     mut state: ResMut<State<GameState>>,
 ) {
     if keys.just_pressed(KeyCode::Slash) || keys.just_pressed(KeyCode::Grave) {
-        if !inspector_toggle.0{
+        if !inspector_toggle.0 {
             state.push(GameState::Inspector);
             inspector_toggle.0 = true;
-        } else if state.current() == &GameState::Inspector{
+        } else if state.current() == &GameState::Inspector {
             state.pop();
             inspector_toggle.0 = false;
-        } 
+        }
     }
 }
 
-fn update_game(mut update: &mut Update){
+fn update_game(mut update: &mut Update) {
     let output = if cfg!(target_os = "windows") {
-    Command::new("cmd")
+        Command::new("cmd")
             .args(["/C", "update.bat"])
             .output()
             .expect("failed to execute process")
     } else {
         Command::new("sh")
-                .arg("-c")
-                .arg("kitty scripts/update.sh")
-                .output()
-                .expect("failed to execute process")
+            .arg("-c")
+            .arg("kitty scripts/update.sh")
+            .output()
+            .expect("failed to execute process")
     };
     println!("out: {output:?}");
     update.progress = 0.;
     update.is_update = false;
-
 }
 
-fn downgrade(){
+fn downgrade() {
     if cfg!(target_os = "windows") {
         Command::new("cmd")
-                .args(["/C", "echo hello"])
-                .output()
-                .expect("failed to execute process")
-        } else {
-            Command::new("sh")
-                    .arg("-c")
-                    .arg("kitty scripts/downgrade.sh")
-                    .output()
-                    .expect("failed to execute process")
-        };
-        std::process::exit(0);
+            .args(["/C", "echo hello"])
+            .output()
+            .expect("failed to execute process")
+    } else {
+        Command::new("sh")
+            .arg("-c")
+            .arg("kitty scripts/downgrade.sh")
+            .output()
+            .expect("failed to execute process")
+    };
+    std::process::exit(0);
 }

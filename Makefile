@@ -5,6 +5,9 @@ VER := $(shell eval cargo pkgid | sed 's/^.*Griffsort://')
 dyn:
 	cargo run --features "bevy/dynamic" client
 
+watch:
+	cargo-watch --exec 'run --features "bevy/dynamic" client'
+
 release || r:
 	cargo run --release client
 

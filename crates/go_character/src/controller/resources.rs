@@ -13,6 +13,12 @@ pub struct Controller<T: 'static> {
 pub struct ZHead;
 
 #[derive(Component)]
+pub struct SelCam;
+
+#[derive(Component)]
+pub struct SelHead;
+
+#[derive(Component)]
 pub struct Grounded;
 
 #[derive(Component)]

@@ -1,5 +1,4 @@
 use super::*;
-
 use bevy::prelude::*;
 use corgee::character::*;
 use corgee::*;
@@ -14,6 +13,8 @@ impl Plugin for Soul {
                 ConditionSet::new()
                     .with_system(walk::<Soul>)
                     .with_system(look::<Soul>)
+                    .with_system(camera_shake::<Soul>)
+                    .with_system(camera_roll::<Soul>)
                     .with_system(is_grounded::<Soul>)
                     .with_system(jump::<Soul>)
                     .with_system(shield_toggler)
@@ -27,13 +28,14 @@ impl Plugin for Soul {
     }
 }
 
-const PLACE_SHIELD: f32 = 4.;
-const GET_SHIELD: f32 = 2.;
-const SHIELD_COOLDOWN: f32 = 4.;
+const PLACE_SHIELD: f32 = 1.;
+const GET_SHIELD: f32 = 1.;
+const SHIELD_COOLDOWN: f32 = 1.;
 
 fn is_pointing(
+    // To dirty. I hate working with parenting :/
     rapier_context: Res<RapierContext>,
-    char: Query<(&Children, &Transform, &Team, &GoInputs, Entity), (With<Soul>, Without<Killed>)>,
+    char: Query<(&Children, &Team, Entity), (With<Soul>, Without<Killed>)>,
     q_head: Query<&Children, With<ZHead>>,
     q_cam: Query<(&Camera, &GlobalTransform)>,
     mut enemy: Query<&Team, (With<ChCore>, Without<Killed>)>,
@@ -41,7 +43,7 @@ fn is_pointing(
     mut lines: ResMut<DebugLines>,
     mut commands: Commands,
 ) {
-    for (children, _transform, team, _ginp, ch_entity) in char.iter() {
+    for (children, team, ch_entity) in char.iter() {
         for &child in children.iter() {
             let head_children = q_head.get(child);
             if head_children.is_ok() {
@@ -59,7 +61,8 @@ fn is_pointing(
                     let shape_rot = c_rotation;
                     let shape_vel = cam_transform.forward() * 5.;
                     let max_toi = 10.;
-                    let groups = InteractionGroups::new(0b10000, 0b10000).into();
+                    //let groups = InteractionGroups::new(0b100, 0b10).exclude_sensors().into();
+                    let groups = QueryFilter::exclude_fixed();
 
                     commands.entity(ch_entity).remove::<PointingOn>();
 
@@ -103,28 +106,33 @@ fn is_pointing(
 }
 
 fn crosshair(
-    mut is_pointing: Query<
-        (Option<&PointingOn>, &GoInputs, &mut Crosshair),
-        (With<Selected>, Without<Killed>),
-    >,
+    is_pointing: Query<(Option<&PointingOn>, &GoInputs), (With<Selected>, Without<Killed>)>,
+    mut crosshair_val: Query<&mut CrosshairValue>,
 ) {
-    for (pointing_on, ginp, mut crosshair) in is_pointing.iter_mut() {
-        crosshair.0 = 100.;
-        if let Some(_pointing_on) = pointing_on {
-            println!("pointing");
-            if ginp.fire == 1 {
-                crosshair.0 = 70.;
+    for (pointing_on, ginp) in is_pointing.iter() {
+        for mut crosshair in crosshair_val.iter_mut() {
+            crosshair.0 = 100.;
+            if let Some(_pointing_on) = pointing_on {
+                //println!("pointing");
+                if ginp.fire == 1 {
+                    crosshair.0 = 70.;
+                } else {
+                    crosshair.0 = 120.;
+                }
             } else {
-                crosshair.0 = 120.;
+                //println!();
             }
         }
     }
 }
-fn crosshair_2(mut crosshair_box: Query<&mut Style, With<Crosshair>>, q_val: Query<&Crosshair>) {
+fn crosshair_2(
+    mut crosshair_box: Query<&mut Style, With<Crosshair>>,
+    q_val: Query<&CrosshairValue>,
+) {
     for val in q_val.iter() {
         for mut style in crosshair_box.iter_mut() {
             style.size = Size::new(Val::Px(val.0), Val::Px(val.0));
-            //println!("cross val: {}", val.0);
+            println!("cross val: {}", val.0);
             if val.0 > 200. {}
         }
     }
@@ -177,13 +185,15 @@ fn place_n_get_shield(
                     })
                     .insert(RigidBody::Fixed)
                     .insert(ShieldFather(entity));
-                
             }
             None => {
                 println!("get");
-                for (ent, shield_father) in shield_q.iter(){
-                    println!("entity: {entity:?}, father: {:?}, ent: {ent:?}", shield_father.0);
-                    if entity == shield_father.0{
+                for (ent, shield_father) in shield_q.iter() {
+                    println!(
+                        "entity: {entity:?}, father: {:?}, ent: {ent:?}",
+                        shield_father.0
+                    );
+                    if entity == shield_father.0 {
                         commands.entity(ent).despawn_recursive();
                     }
                 }
@@ -259,7 +269,7 @@ fn shield_toggler(
                 pre_q_timer.0 -= time.delta_seconds();
 
                 if pre_q_timer.0 <= 0. {
-                    q_timer.0 = SHIELD_COOLDOWN; 
+                    q_timer.0 = SHIELD_COOLDOWN;
                     if !shield_up.0 {
                         println!("shield up");
                         // cooldown time
@@ -371,7 +381,8 @@ fn crosshair_setup(mut commands: Commands) {
                 ..default()
             });
         })
-        .insert(Crosshair(100.));
+        .insert(Crosshair)
+        .insert(CrosshairValue(100.));
 }
 
 impl Character<Soul> for Soul {
@@ -385,7 +396,9 @@ impl Character<Soul> for Soul {
                     .insert(ShieldPos(None))
                     .insert(PreQTimer(PLACE_SHIELD))
                     .insert(QLimiter(true))
+                    .insert(CollisionGroups::new(0b01, 0b110))
                     .insert_bundle(Config {
+                        max_velocity: MaxSpeed(0.1),
                         ..Default::default()
                     })
                     .insert_bundle(States {
@@ -415,7 +428,7 @@ struct QLimiter(bool);
 struct ShieldFather(Entity);
 
 #[derive(Component)]
-struct Crosshair(f32);
+struct CrosshairValue(f32);
 
 #[derive(Component)]
 struct PointingOn {

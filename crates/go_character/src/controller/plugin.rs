@@ -52,7 +52,7 @@ pub trait Character<T: Character<T>>: Plugin {
                         alpha_mode: AlphaMode::Blend,
                         ..Default::default()
                     }),
-                    transform: Transform::from_xyz(2.0, 15., -id.0 as f32 * 1.5),
+                    transform: Transform::from_xyz(-24.0, 21., (-id.0 as f32 * 1.5) + 50.),
                     ..Default::default()
                 })
                 .with_children(|parent| {
@@ -90,12 +90,12 @@ pub trait Character<T: Character<T>>: Plugin {
             commands
                 .entity(entity)
                 .insert_bundle(bevy_mod_picking::PickableBundle::default())
+                
                 .insert(Collider::capsule(
                     Vec3::new(0., -0.4, 0.),
                     Vec3::new(0., 0.4, 0.),
                     0.4,
                 ))
-                .insert(CollisionGroups::new(0b00001, 0b00010))
                 .insert(Velocity::default())
                 .insert(ExternalForce::default())
                 .insert(ExternalImpulse::default())

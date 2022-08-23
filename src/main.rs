@@ -15,8 +15,8 @@ fn main() {
     App::new()
     .insert_resource(WindowDescriptor {
         title: "griffsort".to_string(),
-        width: 920.,
-        height: 500.,
+        width: 1320.,
+        height: 600.,
         present_mode: PresentMode::Immediate,
         //mode: bevy::window::WindowMode::Fullscreen,
         ..Default::default()
