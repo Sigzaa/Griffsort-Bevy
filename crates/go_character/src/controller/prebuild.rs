@@ -205,7 +205,7 @@ pub fn camera_roll<C: Component>(
                     let max_roll = 0.02;
 
                     func_input.0 = func_input.0.clamped(-1., 1.);
-                    let out = easeOutQuad(func_input.0);
+                    let out = ease_out_quad(func_input.0);
 
                     for ev in motion_evr.iter() {
                         

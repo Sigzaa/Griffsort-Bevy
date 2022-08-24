@@ -1,8 +1,11 @@
+use std::default;
+
 use super::*;
 use bevy::prelude::*;
 use corgee::character::*;
 use corgee::*;
 use go_character::*;
+use go_character::controller::ease_out_quad;
 use iyes_loopless::prelude::*;
 
 impl Plugin for Soul {
@@ -21,7 +24,6 @@ impl Plugin for Soul {
                     .with_system(place_n_get_shield)
                     .with_system(is_pointing)
                     .with_system(crosshair)
-                    .with_system(crosshair_2)
                     .with_system(attack)
                     .into(),
             );
@@ -105,35 +107,40 @@ fn is_pointing(
     }
 }
 
+#[derive(Default)]
+struct T(f32);
+
 fn crosshair(
     is_pointing: Query<(Option<&PointingOn>, &GoInputs), (With<Selected>, Without<Killed>)>,
     mut crosshair_val: Query<&mut CrosshairValue>,
+    mut crosshair_box: Query<&mut Style, With<Crosshair>>,
+    mut loc: Local<T>,
+    time: Res<Time>,
 ) {
+    let step = time.delta_seconds();
+
+    let to_attack = 5.;
+    let to_pointing = 4.;
+    let to_not_pointing = 1.;
+
     for (pointing_on, ginp) in is_pointing.iter() {
         for mut crosshair in crosshair_val.iter_mut() {
-            crosshair.0 = 100.;
             if let Some(_pointing_on) = pointing_on {
-                //println!("pointing");
-                if ginp.fire == 1 {
-                    crosshair.0 = 70.;
-                } else {
-                    crosshair.0 = 120.;
+                if ginp.fire == 1 { // Attacking
+                    val_to(&mut loc.0, 1., step * to_attack);
+                } 
+                else { // Pointing
+                    val_to(&mut loc.0, 0.8, step * to_pointing);
                 }
-            } else {
-                //println!();
+            } else { // Not Pointing
+                val_to(&mut loc.0, 0.95, step * to_not_pointing);
             }
-        }
-    }
-}
-fn crosshair_2(
-    mut crosshair_box: Query<&mut Style, With<Crosshair>>,
-    q_val: Query<&CrosshairValue>,
-) {
-    for val in q_val.iter() {
-        for mut style in crosshair_box.iter_mut() {
-            style.size = Size::new(Val::Px(val.0), Val::Px(val.0));
-            println!("cross val: {}", val.0);
-            if val.0 > 200. {}
+            crosshair.0 = ease_in_quart(loc.0) * 120.;
+
+            for mut style in crosshair_box.iter_mut() {
+                style.size = Size::new(Val::Px(crosshair.0), Val::Px(crosshair.0));
+                if crosshair.0 > 200. {}
+            }
         }
     }
 }
@@ -299,7 +306,10 @@ fn shield_toggler(
         // );
     }
 }
-fn crosshair_setup(mut commands: Commands) {
+fn crosshair_setup(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>
+) {
     commands
         .spawn_bundle(NodeBundle {
             style: Style {
@@ -314,70 +324,76 @@ fn crosshair_setup(mut commands: Commands) {
             ..default()
         })
         .with_children(|parent| {
-            parent.spawn_bundle(NodeBundle {
+            parent.spawn_bundle(ImageBundle {
                 style: Style {
+                    size: Size::new(Val::Px(70.0/3.), Val::Px(40.0/3.)),
                     position_type: PositionType::Absolute,
                     position: UiRect {
-                        //left: Val::Px(0.),
-                        bottom: Val::Percent(100.0),
+                        //left: Val::Px(10.),
+                        left: Val::Percent(100.),
                         ..default()
                     },
-                    size: Size::new(Val::Percent(10.0), Val::Percent(10.0)),
-
                     ..default()
                 },
-                color: Color::BISQUE.into(),
+                image: asset_server.load("sprites/soul-crosshair.png").into(),
+                transform: Transform::from_rotation(Quat::from_rotation_z(-std::f32::consts::PI/2.)),
+                //transform: Transform::from_xyz(100., 10., 10.),
                 ..default()
             });
         })
         .with_children(|parent| {
-            parent.spawn_bundle(NodeBundle {
+            parent.spawn_bundle(ImageBundle {
                 style: Style {
+                    size: Size::new(Val::Px(70.0/3.), Val::Px(40.0/3.)),
                     position_type: PositionType::Absolute,
                     position: UiRect {
-                        //left: Val::Px(0.),
-                        left: Val::Percent(100.0),
+                        //left: Val::Px(10.),
+                        bottom: Val::Percent(100.),
+
                         ..default()
                     },
-                    size: Size::new(Val::Percent(10.0), Val::Percent(10.0)),
-
                     ..default()
                 },
-                color: Color::BISQUE.into(),
+                image: asset_server.load("sprites/soul-crosshair.png").into(),
+                //transform: Transform::from_rotation(Quat::from_rotation_z(-std::f32::consts::PI/2.)),
+                //transform: Transform::from_xyz(100., 10., 10.),
+                ..default()
+            });
+            
+        })
+        .with_children(|parent| {
+            parent.spawn_bundle(ImageBundle {
+                style: Style {
+                    size: Size::new(Val::Px(70.0/3.), Val::Px(40.0/3.)),
+                    position_type: PositionType::Absolute,
+                    position: UiRect {
+                        //left: Val::Px(10.),
+                        right: Val::Percent(100.),
+                        ..default()
+                    },
+                    ..default()
+                },
+                image: asset_server.load("sprites/soul-crosshair.png").into(),
+                transform: Transform::from_rotation(Quat::from_rotation_z(std::f32::consts::PI/2.)),
+                //transform: Transform::from_xyz(100., 10., 10.),
                 ..default()
             });
         })
         .with_children(|parent| {
-            parent.spawn_bundle(NodeBundle {
+            parent.spawn_bundle(ImageBundle {
                 style: Style {
+                    size: Size::new(Val::Px(70.0/3.), Val::Px(40.0/3.)),
                     position_type: PositionType::Absolute,
                     position: UiRect {
-                        //left: Val::Px(0.),
-                        right: Val::Percent(100.0),
+                        //left: Val::Px(10.),
+                        top: Val::Percent(100.),
                         ..default()
                     },
-                    size: Size::new(Val::Percent(10.0), Val::Percent(10.0)),
-
                     ..default()
                 },
-                color: Color::BISQUE.into(),
-                ..default()
-            });
-        })
-        .with_children(|parent| {
-            parent.spawn_bundle(NodeBundle {
-                style: Style {
-                    position_type: PositionType::Absolute,
-                    position: UiRect {
-                        //left: Val::Px(0.),
-                        top: Val::Percent(100.0),
-                        ..default()
-                    },
-                    size: Size::new(Val::Percent(10.0), Val::Percent(10.0)),
-
-                    ..default()
-                },
-                color: Color::BISQUE.into(),
+                image: asset_server.load("sprites/soul-crosshair.png").into(),
+                transform: Transform::from_rotation(Quat::from_rotation_z(-std::f32::consts::PI)),
+                //transform: Transform::from_xyz(100., 10., 10.),
                 ..default()
             });
         })

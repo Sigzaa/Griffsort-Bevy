@@ -6,7 +6,7 @@ dyn:
 	cargo run --features "bevy/dynamic" client
 
 watch:
-	cargo-watch --exec 'run --features "bevy/dynamic" client'
+	cargo-watch -c --exec 'run --features "bevy/dynamic" client'
 
 release || r:
 	cargo run --release client
