@@ -1,15 +1,10 @@
 use corgee::*;
 use bevy::prelude::*;
-use bevy_atmosphere::prelude::*;
 
 pub(crate) fn load_map(
     mut commands: Commands, 
     ass: Res<AssetServer>,
 ) {
-    commands
-    .spawn_bundle(Camera3dBundle::default())
-    .insert(AtmosphereCamera(None));
-
     let handle = ass.load("models/TestMap/Test_map.gltf#Scene0");
     commands.spawn_bundle(SceneBundle {
         scene: handle.clone(),

@@ -1934,6 +1934,7 @@ name = "go_character"
 version = "0.0.5"
 dependencies = [
  "bevy",
+ "bevy_atmosphere",
  "bevy_mod_picking",
  "bevy_prototype_debug_lines",
  "clamped",
@@ -1952,7 +1953,6 @@ name = "go_level"
 version = "0.1.0"
 dependencies = [
  "bevy",
- "bevy_atmosphere",
  "bevy_mod_picking",
  "corgee",
 ]

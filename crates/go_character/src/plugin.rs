@@ -3,6 +3,7 @@ use bevy::prelude::*;
 use corgee::*;
 use bevy_prototype_debug_lines::{DebugLines, DebugLinesPlugin};
 
+
 pub struct CharController;
 impl Plugin for CharController {
     fn build(&self, app: &mut App) {
@@ -13,7 +14,9 @@ impl Plugin for CharController {
             .add_plugin(DebugLinesPlugin::default())
             .insert_resource(SelectedId(None))
             .insert_resource(ShowRay(true))
-            .insert_resource(CharList(Vec::new()));
+            .insert_resource(CharList(Vec::new()))
+            
+            ;
     }
 }
 fn setup(mut commands: Commands){

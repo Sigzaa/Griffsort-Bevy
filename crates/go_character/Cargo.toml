@@ -16,6 +16,7 @@ bevy_prototype_debug_lines = { version = "0.8", features = ["3d"] }
 corgee = { path = "../corgee", version = "*" }
 clamped = "1.0.0"
 round = "0.1.2"
+bevy_atmosphere = "0.4.0"
 
 
 

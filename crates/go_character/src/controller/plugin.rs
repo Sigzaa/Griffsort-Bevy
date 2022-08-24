@@ -1,7 +1,7 @@
 use super::resources::*;
 use crate::shared::resources::*;
 use std::time::Duration;
-
+use bevy_atmosphere::prelude::*;
 use bevy::prelude::{shape::*, *};
 use bevy::render::camera::Projection;
 use bevy::{
@@ -83,7 +83,8 @@ pub trait Character<T: Character<T>>: Plugin {
                                     
                                     ..Default::default()
                                 })
-                                .insert(CharacterCamera);
+                                .insert(CharacterCamera)
+                                .insert(AtmosphereCamera(None));
                         });
                 });
 

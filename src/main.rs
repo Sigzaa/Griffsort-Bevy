@@ -29,6 +29,7 @@ fn main() {
         .add_plugin(Level)
         .add_plugin(UI)
         .add_plugin(Inspector{game_version: env!("CARGO_PKG_VERSION")})
+        .add_plugin(AtmospherePlugin)
         //.add_plugin(Reactive)        
         //.add_system(masks_debug)
         .run();
@@ -51,7 +52,7 @@ fn _temp_setup(
 ) {
 
     println!("setup");
-    const HALF_SIZE: f32 = 10.0;
+    const HALF_SIZE: f32 = 100.0;
 
     commands.insert_resource(AmbientLight {
         color: Color::WHITE,
