@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := dyn
 
-VER := $(shell eval cargo pkgid | sed 's/^.*Griffsort://')
+VER := $(shell eval cargo pkgid | sed 's/^.*Griffsort@//')
 
 dyn:
 	cargo run --features "bevy/dynamic" client
