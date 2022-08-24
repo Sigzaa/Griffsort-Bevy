@@ -9,3 +9,4 @@ edition = "2021"
 bevy_mod_picking = "0.8.0"
 bevy = { version = "0.8.0" , features = ["jpeg"]}
 corgee = { path = "../corgee", version = "*" }
+bevy_atmosphere = "0.4.0"

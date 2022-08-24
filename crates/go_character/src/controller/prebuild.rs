@@ -197,7 +197,7 @@ pub fn camera_roll<C: Component>(
                 let (children, mut head_transform) = child.unwrap();
 
                 for &child in children.iter() {
-                    let mut cam_transform = q_cam.get_mut(child).unwrap();
+
                     let mut flag = true;
 
                     let out_time = 5.0;
@@ -214,8 +214,7 @@ pub fn camera_roll<C: Component>(
                     } 
                     if flag && func_input.0 != 0.{
 
-                        func_input.0 -= time.delta_seconds() * out_time * func_input.0.signum();
-                        func_input.0 = round(func_input.0 as f64, 2) as f32;
+                        val_to(&mut func_input.0, 0., time.delta_seconds() * out_time);
                     }
                     head_transform.rotation = Quat::from_rotation_z(out * max_roll);
 
