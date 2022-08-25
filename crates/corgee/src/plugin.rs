@@ -10,7 +10,7 @@ pub struct Corgee;
 impl Plugin for Corgee {
     fn build(&self, app: &mut App) {
         app
-        .add_plugins(DefaultPlugins)
+
         //
         .add_plugin(Config)
         //.add_startup_system(load_assets)

@@ -6,7 +6,7 @@ use go_character::*;
 use bevy::prelude::*;
 
 #[derive(Copy, Clone, Component)]
-struct Soul;
+pub struct Soul;
 
 #[derive(Copy, Clone, Component)]
 struct Tamara;

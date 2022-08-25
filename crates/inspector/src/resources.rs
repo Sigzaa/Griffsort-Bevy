@@ -49,8 +49,8 @@ impl Stats {
         Stats {
             fps: true,
             tick: false,
-            state: true,
-            state_list: true,
+            state: false,
+            state_list: false,
             net_buffer: false,
         }
     }
