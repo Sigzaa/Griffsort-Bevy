@@ -1,4 +1,4 @@
-use crate::shared::{resources::*, systems::*};
+use super::controller::resources::*;
 use bevy::prelude::*;
 use corgee::*;
 use bevy_prototype_debug_lines::{DebugLines, DebugLinesPlugin};
@@ -14,7 +14,6 @@ impl Plugin for CharController {
             .add_plugin(DebugLinesPlugin::default())
             .insert_resource(SelectedId(None))
             .insert_resource(ShowRay(true))
-            .insert_resource(CharList(Vec::new()))
             
             ;
     }

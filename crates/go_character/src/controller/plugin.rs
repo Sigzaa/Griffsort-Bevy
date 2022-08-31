@@ -1,36 +1,30 @@
 use super::resources::*;
-use crate::shared::resources::*;
-use std::time::Duration;
-use bevy_atmosphere::prelude::*;
 use bevy::prelude::{shape::*, *};
+use bevy::reflect::TypeUuid;
 use bevy::render::camera::Projection;
 use bevy::{
     input::mouse::MouseMotion,
     prelude::{KeyCode, *},
 };
+use bevy_atmosphere::prelude::*;
+use std::time::Duration;
 // use bevy::render::camera::Camera3dBundle;
 // use bevy::render::camera::{ActiveCamera, CameraTypePlugin};
 use bevy_prototype_debug_lines::*;
-use corgee::{additional::*, *, GoInputs, GoRot, GameState};
+use corgee::{additional::*, GameState, GoInputs, GoRot, *};
 
 impl<T: Character<T> + Send + Sync + Copy + Component> Plugin for Controller<T> {
     fn build(&self, app: &mut App) {
         app.add_plugin(self.char_type)
-            //.add_plugin(CameraTypePlugin::<CharacterCamera>::default())
-            // .add_system_set(SystemSet::on_update(GameState::InGame).with_system(T::sync_rotation::<T>))
             .add_event::<SpawnChar>()
             .add_system(T::spawn)
             .add_system(T::extend::<T>)
             .add_system(T::sync_components)
-            .add_system(T::sync_camera)
-            //.add_system(T::float::<T>)
-;
+            .add_system(T::sync_camera);
     }
 }
 
 pub trait Character<T: Character<T>>: Plugin {
-
-   
     fn extend<C: Component>(
         mut meshes: ResMut<Assets<Mesh>>,
         mut materials: ResMut<Assets<StandardMaterial>>,
@@ -74,13 +68,14 @@ pub trait Character<T: Character<T>>: Plugin {
                                     projection: Projection::Perspective(PerspectiveProjection {
                                         fov: 1.4, // a float of your fov in radians,
                                         ..default()
-                                      }),
-                                    camera: Camera{ 
+                                    }),
+                                    camera: Camera {
                                         is_active: true,
                                         priority: id.0 as isize,
-                                         ..Default::default()},
+                                        ..Default::default()
+                                    },
                                     transform: Transform::from_xyz(0., 0., 0.),
-                                    
+
                                     ..Default::default()
                                 })
                                 .insert(CharacterCamera)
@@ -91,7 +86,6 @@ pub trait Character<T: Character<T>>: Plugin {
             commands
                 .entity(entity)
                 .insert_bundle(bevy_mod_picking::PickableBundle::default())
-                
                 .insert(Collider::capsule(
                     Vec3::new(0., -0.4, 0.),
                     Vec3::new(0., 0.4, 0.),
@@ -123,9 +117,7 @@ pub trait Character<T: Character<T>>: Plugin {
                     ..Default::default()
                 })
                 .insert(ChCore)
-                .insert(ShootTimer(
-                    Timer::new(Duration::from_secs(1), true)
-                 ))
+                .insert(ShootTimer(Timer::new(Duration::from_secs(1), true)))
                 .insert(IsReadyShoot(true))
                 .insert(QTimer(0.))
                 .insert(ETimer(0.))
@@ -133,7 +125,7 @@ pub trait Character<T: Character<T>>: Plugin {
                 .insert(ShiftTimer(0.));
         }
     }
-    
+
     fn sync_camera(
         selected_id: Res<SelectedId>,
         //q_camera: Query<Camera>,
@@ -169,14 +161,13 @@ pub trait Character<T: Character<T>>: Plugin {
                 commands.entity(ent).insert(Selected);
             }
         }
-        for ent in q_camera.iter(){
+        for ent in q_camera.iter() {
             commands.entity(ent).remove::<SelectedCamera>();
         }
         // let cam_ent = active_camera.get();
         // if  cam_ent != None{
         //     commands.entity(cam_ent.unwrap()).insert(SelectedCamera);
         // }
-        
     }
     fn spawn(spawn_request: EventReader<SpawnChar>, commands: Commands);
 }

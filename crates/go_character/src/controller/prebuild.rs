@@ -1,6 +1,5 @@
-use super::easing::*;
+
 use super::resources::*;
-use crate::shared::resources::*;
 use bevy::prelude::{shape::*, *};
 use bevy::{
     input::mouse::MouseMotion,
@@ -18,7 +17,6 @@ pub fn look<C: Component>(
     mut q_cam: Query<&mut Transform, (With<CharacterCamera>, Without<Selected>, Without<ZHead>)>,
     mut motion_evr: EventReader<MouseMotion>,
     sens: Res<Sensitivity>,
-    time: Res<Time>,
 ) {
     for (gorot, mut body_transform, children) in q_sel.iter_mut() {
         for &child in children.iter() {
@@ -29,24 +27,64 @@ pub fn look<C: Component>(
                 for &child in children.iter() {
                     let mut cam_transform = q_cam.get_mut(child).unwrap();
 
-                    // body_transform.rotation = gorot.y;
-                    // cam_transform.rotation = gorot.x;
                     for ev in motion_evr.iter() {
+
                         body_transform.rotation *=
                             Quat::from_rotation_y(-ev.delta.x * sens.0 * 0.001);
                         cam_transform.rotation *=
                             Quat::from_rotation_x(-ev.delta.y * sens.0 * 0.001);
-                        //gorot.z = Quat::from_rotation_z(-ev.delta.x * SENSITIVITY); TODO!
+
+                        //println!("rotation: {}", sens.0);
                     }
-
-                    //head_transform.rotation = gorot.z;
-
-                    //println!("gorot: {}, rb rotation: {}", gorot.x, body_transform.rotation);
                 }
             }
         }
     }
 }
+
+pub fn fly<C: Component>(mut q_sel: Query<
+    (
+        &GoInputs,
+        &mut ExternalForce,
+        &mut Velocity,
+        &Transform,
+        &MaxSpeed,
+        &Acceleration,
+        &NoClip
+    ),
+    With<C>,
+>,
+time: Res<Time>,){
+    for (ginp, mut force, mut velocity, transform, max_speed, acceleration, noclip) in q_sel.iter_mut()
+    {
+        let mut coef = 0.;
+        if ginp.jump() && noclip.0{
+            coef = time.delta_seconds() * acceleration.0 * 10.;
+        }
+        if ginp.esc() && noclip.0{
+            coef = -time.delta_seconds() * acceleration.0 * 10.;
+        }
+
+        velocity.linvel += Vec3::new(0., coef, 0.) * 0.01;
+    }
+
+}
+pub fn noclip_handler(mut q: Query<(&mut GravityScale, &NoClip, &mut MaxSpeed), Changed<NoClip>>){
+    for (mut grav_scale, is_noclip, mut max_speed) in q.iter_mut() {
+        if is_noclip.0
+        {
+            grav_scale.0 = 0.;
+            //max_speed.0 += 44.;
+        } 
+        else 
+        {
+            grav_scale.0 = 2.;
+            //max_speed.0 -= 44.;
+        }
+        
+    }
+}
+
 
 pub fn shoot<C: Component>(
     mut q_sel: Query<(&GoInputs, &Transform, &mut ShootTimer, &mut IsReadyShoot), With<C>>,
@@ -60,7 +98,7 @@ pub fn shoot<C: Component>(
         if timer.0.finished() {
             can_shoot.0 = true;
         }
-        if ginp.fire == 1 && can_shoot.0 {
+        if ginp.shoot == 1 && can_shoot.0 {
             can_shoot.0 = false;
             commands
                 .spawn_bundle(PbrBundle {
@@ -237,7 +275,7 @@ pub fn is_grounded<C: Component>(
 
         let ray_pos = transform.translation;
         let ray_dir = Vec3::new(0., -1., 0.);
-        let max_toi = 0.81;
+        let max_toi = 0.80;
         let groups = InteractionGroups::new(0b00100, 0b10000).into();
 
         if let Some((_entity, toi)) =
@@ -263,8 +301,8 @@ pub fn jump<C: Component>(
     mut q_sel: Query<(&GoInputs, &mut Velocity, &MaxJump), (With<C>, With<Grounded>)>,
 ) {
     for (inputs, mut vel, max_jump) in q_sel.iter_mut() {
-        if inputs.jump == 1 {
-            vel.linvel += Vec3::new(0., max_jump.0, 0.);
+        if inputs.jump() {
+            vel.linvel += Vec3::new(0., max_jump.0 / 1.5, 0.);
         }
     }
 }
