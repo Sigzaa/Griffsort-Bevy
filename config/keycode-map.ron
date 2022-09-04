@@ -1,0 +1,14 @@
+( 
+    jump: Space,
+    shoot: Left,
+    forward: W,
+    left: A,
+    right: D,
+    back: S,
+    a_1: Right,
+    a_2: Q,
+    a_3: F,
+    ult: E,
+    esc: LShift,
+    crouch: LControl,
+)

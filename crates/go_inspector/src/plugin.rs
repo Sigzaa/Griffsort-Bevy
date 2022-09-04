@@ -25,16 +25,16 @@ impl Plugin for Inspector {
             .insert_resource(Stats::new())
             .insert_resource(Config::new())
             .insert_resource(Console::new())
-            .insert_resource(InspectorToggle::default())
+            .insert_resource(go_inspectorToggle::default())
             .add_plugin(EguiPlugin)
-            .add_system(show_inspector)
-            .add_system(inspector);
+            .add_system(show_go_inspector)
+            .add_system(go_inspector);
     }
 }
 
-fn inspector(
+fn go_inspector(
     mut egui_context: ResMut<EguiContext>,
-    mut insp: ResMut<InspectorToggle>,
+    mut insp: ResMut<go_inspectorToggle>,
     diagnostics: Res<Diagnostics>,
     mut tab: ResMut<OpenTab>,
     state: Res<State<GameState>>,
@@ -53,7 +53,7 @@ fn inspector(
     //     ..Default::default()
     // });
     if insp.0 {
-        egui::Window::new("Inspector")
+        egui::Window::new("go_inspector")
             //.fixed_size([150.0, 340.0])
             .default_pos([200., 200.])
             .collapsible(false)
@@ -228,18 +228,18 @@ fn inspector(
             });
     }
 }
-fn show_inspector(
-    mut inspector_toggle: ResMut<InspectorToggle>,
+fn show_go_inspector(
+    mut go_inspector_toggle: ResMut<go_inspectorToggle>,
     keys: Res<Input<KeyCode>>,
     mut state: ResMut<State<GameState>>,
 ) {
     if keys.just_pressed(KeyCode::Slash) || keys.just_pressed(KeyCode::Grave) {
-        if !inspector_toggle.0 {
+        if !go_inspector_toggle.0 {
             state.push(GameState::Inspector);
-            inspector_toggle.0 = true;
+            go_inspector_toggle.0 = true;
         } else if state.current() == &GameState::Inspector {
             state.pop();
-            inspector_toggle.0 = false;
+            go_inspector_toggle.0 = false;
         }
     }
 }

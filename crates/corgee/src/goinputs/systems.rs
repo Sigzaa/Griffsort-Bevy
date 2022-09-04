@@ -1,36 +1,26 @@
 use super::resources::MyGamepad;
 use crate::*;
 use bevy::{
-    input::mouse::MouseMotion,
+    input::{mouse::MouseMotion, keyboard},
     prelude::{KeyCode, *},
 };
+use crate::goconfig::resources::InputMap;
 
-pub fn null_inputs(mut q_selected: Query<(&mut GoInputs), With<Selected>>){
-    for mut ginp in q_selected.iter_mut(){
-        *ginp = GoInputs::default();
-    }
-}
-
-pub fn collect_inputs(
+pub fn collect_inputs( // Collecting Keyboard inputs
     input: Res<Input<KeyCode>>,
     buttons: Res<Input<MouseButton>>,
-    mut q_selected: Query<(&mut GoInputs, &mut GoRot), With<Selected>>,
-    sens: Res<Sensitivity>,
-    mut motion_evr: EventReader<MouseMotion>,
-    time: Res<Time>
+    mut q_selected: Query<&mut GoInputs, With<Selected>>,
+    key_map: Res<InputMap>,
 ) {
-    for (mut ginp, mut gorot) in q_selected.iter_mut() {
-        // for ev in motion_evr.iter() {
-        //     gorot.y *= Quat::from_rotation_y(-ev.delta.x * time.delta_seconds() * sens.0);
-        //     gorot.x *= Quat::from_rotation_x(-ev.delta.y * time.delta_seconds() * sens.0);
-        //     //gorot.z = Quat::from_rotation_z(-ev.delta.x * SENSITIVITY); TODO!
-        // }
-
+    for mut ginp in &mut q_selected
+    {
+        // Cleaning previous inputs
         *ginp = GoInputs::default();
 
-        let w = input.pressed(KeyCode::W);
-        let s = input.pressed(KeyCode::S);
+        let w = input.pressed(key_map.forward);
+        let s = input.pressed(key_map.back);
 
+        
         if !(s && w) {
             if s {
                 ginp.movement[1] = -1.;
@@ -40,8 +30,8 @@ pub fn collect_inputs(
             }
         }
 
-        let a = input.pressed(KeyCode::A);
-        let d = input.pressed(KeyCode::D);
+        let a = input.pressed(key_map.left);
+        let d = input.pressed(key_map.right);
 
         if !(a && d) {
             if a {
@@ -52,31 +42,67 @@ pub fn collect_inputs(
             }
         }
 
-        if buttons.pressed(MouseButton::Left) {
-            ginp.fire = 1;
+        if buttons.pressed(key_map.shoot) {
+            ginp.shoot = 1;
         }
-        if buttons.pressed(MouseButton::Right) {
+        if buttons.pressed(key_map.a_1) {
             ginp.a_1 = 1;
         }
-        if input.pressed(KeyCode::E) {
+        if input.pressed(key_map.a_2) {
             ginp.a_2 = 1;
         }
-        if input.pressed(KeyCode::LShift) {
-            ginp.sprint = 1;
+        if input.pressed(key_map.esc) {
+            ginp.esc = 1;
         }
-        if input.pressed(KeyCode::Space) {
+        if input.pressed(key_map.jump) {
             ginp.jump = 1;
         }
     }
 }
-pub fn camera_motion(
-    mut motion_evr: EventReader<MouseMotion>,
-    mut q_core: Query<&mut GoRot, With<Selected>>,
-    sens: Res<Sensitivity>,
-    time: Res<Time>,
-) {
+
+pub fn new_collect_inputs<S: Component>( // Works always
+    keyboard: Res<Input<KeyCode>>,
+    mouse: Res<Input<MouseButton>>,
+    mut q_selected: Query<(&mut GoInputsNew<KeyCode>, &mut GoInputsNew<MouseButton>), With<S>>,
+){
+    for (mut ginp_keyboard, mut ginp_mouse) in &mut q_selected
+    {
+        for i in keyboard.get_just_pressed()
+        {
+            ginp_keyboard.extend_just_pressed(*i);
+            ginp_keyboard.extend_pressed(*i);
+        }
+        for i in mouse.get_just_pressed()
+        {
+            ginp_mouse.extend_just_pressed(*i);
+            ginp_mouse.extend_pressed(*i);
+        }
+    }
 }
 
+
+pub fn update_inputs<S: Component>( // Execute once at the start of the tick before collect_inputs system!!!
+    keyboard: Res<Input<KeyCode>>,
+    mouse: Res<Input<MouseButton>>,
+    mut q_selected: Query<(&mut GoInputsNew<KeyCode>, &mut GoInputsNew<MouseButton>), With<S>>,
+){
+    for (mut ginp_keyboard, mut ginp_mouse) in &mut q_selected
+    {
+        ginp_keyboard.clear_just_pressed();
+        ginp_mouse.clear_just_pressed();
+
+        for i in keyboard.get_just_released()
+        {
+            ginp_keyboard.extend_just_released(*i);
+            ginp_keyboard.reset(*i);
+        }
+        for i in mouse.get_just_released()
+        {
+            ginp_mouse.extend_just_released(*i);
+            ginp_mouse.reset(*i);
+        }
+    }
+}
 use bevy::ecs::schedule::ShouldRun;
 
 pub fn if_not_server() -> ShouldRun{

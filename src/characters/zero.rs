@@ -1,6 +1,6 @@
 use super::*;
 use bevy::prelude::*;
-use go_character::*;
+use heroes::*;
 use corgee::character::*;
 use reactive::shared::resources::NetSync;
 

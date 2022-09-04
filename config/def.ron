@@ -1,0 +1,12 @@
+(
+    mouse_bindings: {
+        Left: 'shoot',
+        Middle: 'shoot',
+        Right: 'shoot'
+    },
+    keyboard_bindings: {
+        W: 'shoot',
+        A: 'shoot',
+        F11: 'custom command'
+    }
+)

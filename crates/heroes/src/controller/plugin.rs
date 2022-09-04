@@ -32,9 +32,42 @@ pub trait Character<T: Character<T>>: Plugin {
         query: Query<(Entity, &Id), Added<C>>,
     ) {
         for (entity, id) in query.iter() {
-            println!("Automatic extention has been worked");
 
-            commands
+            let head = commands
+                .spawn_bundle(PbrBundle {
+                    mesh: meshes.add(Mesh::from(Cube { size: 0.2 })),
+                    material: materials.add(StandardMaterial {
+                        base_color: Color::DARK_GRAY,
+                        metallic: 0.1,
+                        ..Default::default()
+                    }),
+                    transform: Transform::from_xyz(0., 0.4, 0.),
+                    ..Default::default()
+                })
+                .insert(ZHead)
+                .id();
+
+            let camera = commands
+                .spawn_bundle(Camera3dBundle {
+                    projection: Projection::Perspective(PerspectiveProjection {
+                        fov: 1.4, // a float of your fov in radians,
+                        ..default()
+                    }),
+                    camera: Camera {
+                        is_active: true,
+                        priority: id.0 as isize,
+                        ..Default::default()
+                    },
+                    transform: Transform::from_xyz(0., 0., 0.),
+
+                    ..Default::default()
+                })
+                .insert(CharacterCamera)
+                .insert(AtmosphereCamera(None))
+                .id();
+
+
+                let body = commands
                 .entity(entity)
                 .insert_bundle(PbrBundle {
                     mesh: meshes.add(Mesh::from(Capsule {
@@ -49,39 +82,12 @@ pub trait Character<T: Character<T>>: Plugin {
                     transform: Transform::from_xyz(-24.0, 21., (-id.0 as f32 * 1.5) + 50.),
                     ..Default::default()
                 })
-                .with_children(|parent| {
-                    parent
-                        .spawn_bundle(PbrBundle {
-                            mesh: meshes.add(Mesh::from(Cube { size: 0.2 })),
-                            material: materials.add(StandardMaterial {
-                                base_color: Color::DARK_GRAY,
-                                metallic: 0.1,
-                                ..Default::default()
-                            }),
-                            transform: Transform::from_xyz(0., 0.4, 0.),
-                            ..Default::default()
-                        })
-                        .insert(ZHead)
-                        .with_children(|parent| {
-                            parent
-                                .spawn_bundle(Camera3dBundle {
-                                    projection: Projection::Perspective(PerspectiveProjection {
-                                        fov: 1.4, // a float of your fov in radians,
-                                        ..default()
-                                    }),
-                                    camera: Camera {
-                                        is_active: true,
-                                        priority: id.0 as isize,
-                                        ..Default::default()
-                                    },
-                                    transform: Transform::from_xyz(0., 0., 0.),
-
-                                    ..Default::default()
-                                })
-                                .insert(CharacterCamera)
-                                .insert(AtmosphereCamera(None));
-                        });
-                });
+                .insert(HeadEntity(head))
+                .insert(CameraEntity(camera))
+                .id();
+            
+            commands.entity(body).push_children(&[head]);
+            commands.entity(head).push_children(&[camera]);
 
             commands
                 .entity(entity)

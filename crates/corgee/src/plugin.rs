@@ -15,7 +15,7 @@ impl Plugin for Corgee {
         .add_plugin(Config)
         //.add_startup_system(load_assets)
         .add_state(GameState::MainMenu)
-        .insert_resource(Sensitivity(0.))
+        .insert_resource(Sensitivity(1.))
         .insert_resource(CursorIsHided(false))
         .add_system(alt_switch_cursor)
         .add_system(handle_cursor)
@@ -25,6 +25,8 @@ impl Plugin for Corgee {
             SystemSet::on_update(GameState::InGame)
                 //.with_system(camera_motion)
                 .with_system(collect_inputs)
+                .with_system(update_inputs::<Selected>)
+                .with_system(new_collect_inputs::<Selected>)
         )
         .add_system_set(
             SystemSet::on_resume(GameState::InGame)

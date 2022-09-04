@@ -2,7 +2,7 @@ mod zero;
 mod soul;
 mod tamara;
 
-use go_character::*;
+use heroes::*;
 use bevy::prelude::*;
 
 #[derive(Copy, Clone, Component)]

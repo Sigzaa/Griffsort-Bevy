@@ -4,10 +4,17 @@ pub(crate) mod goconfig;
 mod shared;
 pub mod additional;
 pub mod states;
+pub mod hot_config;
+mod easing;
+
+pub use easing::*;
+pub use hot_config::*;
 pub use bevy_rapier3d::prelude::*;
 pub use goconfig::resources::ReloadRequest;
 pub use states::*;
 pub use plugin::Corgee;
+pub use goconfig::resources::*;
 pub use crate::goinputs::{resources::GoInputs, resources::*, *};
 pub use crate::shared::{resources::*, character::*, level::*,  *};
+pub use bevy_common_assets::ron::RonAssetPlugin;
 pub use additional::*;

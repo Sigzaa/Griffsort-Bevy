@@ -8,10 +8,10 @@ pub enum OpenTab {
 }
 
 
-pub struct InspectorToggle(pub bool);
-impl Default for InspectorToggle{
-    fn default() -> InspectorToggle{
-        InspectorToggle(false)
+pub struct go_inspectorToggle(pub bool);
+impl Default for go_inspectorToggle{
+    fn default() -> go_inspectorToggle{
+        go_inspectorToggle(false)
     }
 }
 

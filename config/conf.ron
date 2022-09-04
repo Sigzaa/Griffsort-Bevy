@@ -1,0 +1,19 @@
+(
+    mouse_bindings: {
+        Left: Shoot,
+        Right: Abil1
+
+    },
+    keyboard_bindings: {
+        W: Forward,
+        A: Left,
+        S: Back,
+        D: Right,
+
+        LShift: Sprint,
+        Q: Abil2,
+        F: Abil3,
+        E: Ult,
+        Space: Jump,
+    }
+)

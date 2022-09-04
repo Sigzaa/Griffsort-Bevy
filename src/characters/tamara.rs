@@ -1,5 +1,5 @@
 use super::*;
-use go_character::*;
+use heroes::*;
 use corgee::character::*;
 use corgee::*;
 use bevy::{
@@ -107,7 +107,7 @@ impl Tamara {
             if timer.0.finished(){
                 can_shoot.0 = true;
             }
-            if ginp.fire == 1 && can_shoot.0{
+            if ginp.shoot == 1 && can_shoot.0{
                 can_shoot.0 = false;
                 commands
                 .spawn_bundle(PbrBundle {

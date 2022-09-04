@@ -1,20 +1,22 @@
-use bevy::prelude::*;
-use corgee::*;
 use super::super::*;
 use super::resources::*;
+use actions::Actions;
+use bevy::prelude::*;
+use corgee::*;
+use crate::Action;
 
 pub(crate) fn attack(
-    char: Query<(&PointingOn, &Team, &GoInputs), (With<Soul>, Without<Killed>)>,
+    char: Query<(&PointingOn, &Team, &Actions<Action>), (With<Soul>, Without<Killed>)>,
     mut enemy: Query<(&mut Hp, &Team), (With<ChCore>, Without<Killed>)>,
     _time: Res<Time>,
 ) {
-    for (pointing_on, team, ginp) in char.iter() {
+    for (pointing_on, team, act) in char.iter() {
         let en = enemy.get_mut(pointing_on.target);
 
         if en.is_ok() {
             let (mut hp, en_team) = en.unwrap();
 
-            if ginp.fire == 1 && team.0 != en_team.0 {
+            if act.pressed(Action::Shoot) && team.0 != en_team.0 {
                 hp.0 -= 10;
             }
             //println!("enemy hp: {:?}", hp.0);
@@ -157,10 +159,33 @@ pub(crate) fn shield_toggler(
                 pre_q_timer.0 = PLACE_SHIELD; // Time to place shield
             }
         }
+    }
+}
+pub fn sprint(mut q: Query<(&GoInputs, &mut EscCD, &mut ExternalForce, &Transform), With<Soul>>, time: Res<Time>) 
+{
+    for (ginp, mut cd, mut force, transform) in &mut q {
 
-        // println!(
-        //     "q_time: {:.1}, pre_q: {:.1}, is up: {}",
-        //     q_timer.0, pre_q_timer.0, shield_up.0
-        // );
+        cd.step(time.delta_seconds());
+        if cd.is_ready() && ginp.esc()
+        {
+
+            if !cd.is_locked() {
+                println!("Sprint");
+
+                let (right, forward) = (ginp.movement[0], ginp.movement[1]);
+
+                let direction = transform.forward() * forward + transform.right() * right + Vec3::new(0., 0.01, 0.);
+    
+                force.force += direction * 50000.;
+            }
+
+            cd.used();
+            cd.lock();
+
+        } else {
+            cd.unlock();
+        }
+
+        //println!("Props: {:?}", cd.0);
     }
 }

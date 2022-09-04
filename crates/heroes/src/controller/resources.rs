@@ -3,6 +3,11 @@ use bevy::prelude::*;
 use corgee::*;
 pub use components::*;
 pub struct SpawnChar(pub &'static str, pub i32, pub i32); // Character code, team code, id.
+impl SpawnChar{
+    pub fn new(code: &'static str, team: i32, id: i32) -> Self{
+        Self(code, team, id)
+    }
+}
 
 #[derive(Debug)]
 pub struct CDProps {
@@ -23,12 +28,21 @@ impl CDProps {
             
         }
     }
-    pub fn new(ab_amount: f32) -> Self {
-        todo!();
+    pub fn new(charges_available: i8, cd_time: f32) -> Self {
+        Self {
+            charges_available,
+            charges_left: charges_available,
+            cd_time,
+            timer: 0.,
+            is_locked: false,
+        }
     }
 }
 
 pub trait CooldownManager {
+    fn iter(&mut self, should_activate: bool, step: f32){
+
+    }
     fn is_ready(&mut self) -> bool 
     {
         let charges_left = self.charges_left();
@@ -127,6 +141,12 @@ mod components {
 
     #[derive(Component)]
     pub struct ZHead;
+
+    #[derive(Component)]
+    pub struct HeadEntity(pub Entity);
+
+    #[derive(Component)]
+    pub struct CameraEntity(pub Entity);
 
     #[derive(Component)]
     pub struct SelCam;

@@ -2,6 +2,7 @@ use bevy::prelude::*;
 use corgee::*;
 use super::super::*;
 use super::resources::*;
+use anime::*;
 
 pub(crate) fn crosshair(
     is_pointing: Query<(Option<&PointingOn>, &GoInputs), (With<Selected>, Without<Killed>)>,
@@ -18,9 +19,11 @@ pub(crate) fn crosshair(
 
     for (pointing_on, ginp) in is_pointing.iter() {
         for mut crosshair in crosshair_val.iter_mut() {
-            if let Some(_pointing_on) = pointing_on {
-                if ginp.fire == 1 { // Attacking
+            if let Some(_pointing_on) = pointing_on 
+            {
+                if ginp.shoot() { // Attacking
                     val_to(&mut loc.0, 1., step * to_attack);
+                    
                 } 
                 else { // Pointing
                     val_to(&mut loc.0, 0.8, step * to_pointing);
