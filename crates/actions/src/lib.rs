@@ -5,7 +5,7 @@ mod example;
 
 pub use plugin::ActionsPlugin;
 pub use systems::{update_inputs, collect_actions};
-pub use resources::Actions;
+pub use resources::{Actions, Keybindings};
 
 pub(crate) use resources::*;
 
@@ -27,7 +27,21 @@ mod tests {
         let mut app = App::new();
         app.add_startup_system(setup);
 
+        
+        
+
+        // let mut bindings = Keybindings::<Action>::default();
+        // bindings.keybindings.insert(Inp::Keyboard(KeyCode::Space), Action::Jump);
+        // bindings.keybindings.insert(Inp::Mouse(MouseButton::Left), Action::Left);
+
+
+
+
         app.add_plugin(ActionsPlugin::<Action, Selected>::new("./bindings.ron", "./bindings.default.ron"));
+
+        
+        //app.add_system(update_actions);
+        //app.add_system(collect_actions::<Selected, Action>);
 
         app.update();
 

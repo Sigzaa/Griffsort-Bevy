@@ -1,3 +1,4 @@
+use crate::systems::{load_bindings, watch_for_changes};
 use crate::update_inputs;
 
 use super::example::example_ron;
@@ -5,7 +6,7 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 use std::path::Path;
 use bevy::prelude::*;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use super::resources::*;
 use super::systems::collect_actions;
 use std::fs;
@@ -13,54 +14,22 @@ use std::fs;
 
 impl<Keys, Sel> Plugin for ActionsPlugin <Keys, Sel>
 
-where for<'de> Keys: Eq + std::hash::Hash + Send + Deserialize<'de> + Sync + Clone + Debug + 'static, Sel: Component
+where for<'de> Keys: Eq + std::hash::Hash + Send + Deserialize<'de> + Serialize + Sync + Clone + Debug + 'static, Sel: Component
 {
     fn build(&self, app: &mut App) 
     {
-        let mut bindings = Keybindings::<Keys>::default();
+        let bindings = Keybindings::<Keys>::new();
+        let bindings_path = KeybindingsPath::new(self.config_path, self.default_path);
 
-        let is_config_exist = Path::new(self.config_path).is_file();
-        let is_default_exist = Path::new(self.default_path).is_file();
-
-        match (is_config_exist, is_default_exist)
-        {
-            // There is no config and default
-            (false, false) =>
-            {
-                // Creating default file if not exists.
-                fs::write(self.default_path, example_ron()).unwrap();
-                panic!("You have to fill default config file ({}) first", self.default_path);
-            },
-
-            //There is default, but there is no config
-            (false, true) => 
-            {
-                fs::copy(self.default_path, self.config_path).unwrap();
-            }
-
-            // There is config and default
-            (true, true) =>
-            {
-                let config_str = fs::read_to_string(self.config_path).unwrap();
-                bindings = ron::from_str(&config_str).unwrap();
-            }
-
-            // Else
-            _ => 
-            {
-                fs::remove_file(self.default_path).unwrap();
-                fs::remove_file(self.config_path).unwrap();
-
-                panic!("Keybindings files error, just run programm again");
-            }
-        }
+        
 
         app
         .insert_resource(bindings)
+        .insert_resource(bindings_path)
+        .add_startup_system(load_bindings::<Keys>)
+        .add_system(watch_for_changes::<Keys>)
         .add_system(collect_actions::<Sel, Keys>.after(update_inputs::<Sel, Keys>));
         
-
-
     }
 }
 

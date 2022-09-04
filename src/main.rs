@@ -30,7 +30,7 @@ async fn main() {
         .add_plugin(ActionsPlugin::<Action, Selected>::new("./config/conf.ron", "./config/def.ron"))
         .add_system(update_inputs::<Selected, Action>)
         //.add_system(collect_actions::<Selected, Action>)
-        .add_system(detect_action::<Selected, Action>)
+        .add_system(detect_action)
 
         .add_system_set(SystemSet::on_enter(GameState::InGame).with_system(_temp_setup))
         .add_system_set(SystemSet::on_update(GameState::InGame).with_system(switch))
@@ -55,17 +55,23 @@ async fn main() {
         .run();
 }
 
-fn detect_action<Sel: Component, Keys: Hash + Eq + Sync + Send + Clone + 'static>(
-    q: Query<&Actions<Action>, With<Sel>>
+fn detect_action(
+    q: Query<&Actions<Action>, With<Selected>>,
+    mut bindings: ResMut<Keybindings<Action>>
 ){
     for act in &q{
 
         act.debug();
+
+        if act.pressed(Action::Jump){
+            bindings.mouse_bindings.insert(MouseButton::Middle, Action::KickMyAss);
+        }
     }
 }
 
 #[derive(Serialize, Deserialize, Clone, Hash, PartialEq, Eq, Debug)]
 pub enum Action{
+    Cross,
     Shoot,
     Jump,
     Sprint,
@@ -76,7 +82,8 @@ pub enum Action{
     Abil2,
     Abil1,
     Abil3,
-    Ult
+    Ult,
+    KickMyAss
 }
 
 fn switch(buttons: Res<Input<MouseButton>>, mut selected: ResMut<SelectedId>, input: Res<Input<KeyCode>>, mut sel_ent: Query<&mut NoClip, With<Selected>>) {

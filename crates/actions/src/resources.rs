@@ -16,15 +16,31 @@ pub struct Keybindings<Value>{
     pub keyboard_bindings: HashMap<KeyCode, Value>,
 }
 
-impl<Value> Default for Keybindings<Value>{
-    fn default() -> Self {
+impl<Value> Keybindings<Value>{
+    pub fn new() -> Self {
     Self { keyboard_bindings: HashMap::new(), mouse_bindings: HashMap::new() }
+    }
+    
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub(crate) struct KeybindingsPath{
+    pub(crate) path: &'static str,
+    pub(crate) default_path: &'static str,
+}
+impl KeybindingsPath{
+    pub(crate) fn new(path: &'static str, default_path: &'static str) -> Self {
+        Self { path, default_path }
     }
 }
 
 #[derive(Component)]
 pub struct Actions<A: Eq + Hash + Debug>
 {
+    // Todo 
+    // Add feature
+    pub(crate) cross: Vec2,
+
     pub(crate) pressed: HashSet<A>,
     pub(crate) just_pressed: HashSet<A>,
     pub(crate) just_released: HashSet<A>,
@@ -33,7 +49,7 @@ pub struct Actions<A: Eq + Hash + Debug>
 impl<A: Eq + Hash + Clone + Debug> Actions<A>
 {
     pub fn new() -> Self{
-        Self { pressed: HashSet::new(), just_pressed: HashSet::new(), just_released: HashSet::new() }
+        Self { pressed: HashSet::new(), just_pressed: HashSet::new(), just_released: HashSet::new(), cross: Vec2 { x: 0., y: 0. } }
     }
     pub fn pressed(&self, key: A) -> bool{
         self.pressed.contains(&key)
