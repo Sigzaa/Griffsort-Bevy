@@ -19,12 +19,22 @@ use sfx::*;
 use vfx::*;
 use actions::Actions;
 
+
+
+
 impl Plugin for Soul {
     fn build(&self, app: &mut App) {
-        app.add_system_set(SystemSet::on_enter(GameState::InGame).with_system(crosshair_setup))
+        app
+        
+        .add_system_set(SystemSet::on_enter(GameState::InGame).with_system(crosshair_setup))
             .add_event::<ShieldEvent>()
-            .add_plugin(HotResource::<SoulConfig>::new("hee"))
-
+            //.add_plugin(HotResource::<SoulConfig>::new("hee"))
+            // .insert_resource(SoulConfig{
+            //     should_render: true,
+            //     ..Default::default()
+            // })
+            //.add_plugin(InspectorPlugin::<SoulConfig>::new())
+            
             .add_system_set(
                 ConditionSet::new()
                     .with_system(walk::<Soul>)

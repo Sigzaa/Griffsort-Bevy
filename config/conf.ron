@@ -1,17 +1,21 @@
 (
     mouse_bindings: {
-        Right: Abil1,
+        Middle: Command("ha-ha its my perfect win, L"),
         Left: Shoot,
+        Right: Abil1,
     },
     keyboard_bindings: {
+        S: Back,
         A: Left,
+        F: Abil3,
+        P: Command("sayto SinzAnn I know who you are, little gay"),
+        W: Forward,
+        Q: Abil2,
+        E: Ult,
         Space: Jump,
         LShift: Sprint,
-        F: Abil3,
-        E: Ult,
+        T: Command("sayall I can do everything what i want!!!!"),
+        Tab: ToggleInspector,
         D: Right,
-        Q: Abil2,
-        S: Back,
-        W: Forward,
     },
 )

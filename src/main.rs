@@ -6,14 +6,22 @@ use characters::CharactersImpl;
 use corgee::{character::*, *};
 use heroes::*;
 use go_level::plugin::Level;
-use go_inspector::*;
+// use go_inspector::*;
 use serde::{Serialize, Deserialize};
 use ui::*;
 use tokio::*;
 use actions::*;
+use bevy_inspector_egui::{widgets::ResourceInspector, Inspectable, InspectorPlugin, WorldInspectorPlugin, plugin::InspectorWindows};
 
-#[tokio::main]
-async fn main() {
+
+#[derive(Inspectable, Default)]
+struct Data {
+    clear_color: ResourceInspector<ClearColor>,
+    ambient_light: ResourceInspector<AmbientLight>,
+}
+
+
+fn main() {
     App::new()
         .insert_resource(WindowDescriptor {
             title: "griffsort".to_string(),
@@ -24,7 +32,8 @@ async fn main() {
             ..Default::default()
         })
         .add_plugins(DefaultPlugins)
-
+        .add_plugin(WorldInspectorPlugin::new())
+        .add_plugin(InspectorPlugin::<Data>::new())
         .add_plugin(Corgee)
 
         .add_plugin(ActionsPlugin::<Action, Selected>::new("./config/conf.ron", "./config/def.ron"))
@@ -43,15 +52,15 @@ async fn main() {
 
         .add_plugin(UI)
 
-        .add_plugin(Inspector {
-            game_version: env!("CARGO_PKG_VERSION"),
-        })
+        // .add_plugin(Inspector {
+        //     game_version: env!("CARGO_PKG_VERSION"),
+        // })
         
         .add_plugin(AtmospherePlugin)
 
         .add_system(test_new_inputs_system)
         //.add_plugin(Reactive)
-        //.add_system(masks_debug)
+        .add_system(toggle_inspector)
         .run();
 }
 
@@ -61,11 +70,11 @@ fn detect_action(
 ){
     for act in &q{
 
-        act.debug();
+        // act.debug();
 
-        if act.pressed(Action::Jump){
-            bindings.mouse_bindings.insert(MouseButton::Middle, Action::KickMyAss);
-        }
+        // if act.pressed(Action::Jump){
+        //     bindings.mouse_bindings.insert(MouseButton::Middle, Action::Command(String::from("ha-ha its my perfect win, L")));
+        // }
     }
 }
 
@@ -83,7 +92,20 @@ pub enum Action{
     Abil1,
     Abil3,
     Ult,
-    KickMyAss
+    ToggleInspector,
+    Command(String),
+}
+
+fn toggle_inspector(
+    q: Query<&Actions<Action>>,
+    mut inspector_windows: ResMut<InspectorWindows>,
+) {
+    for act in &q{
+        if act.just_pressed(Action::ToggleInspector){
+            let mut inspector_window_data = inspector_windows.window_data_mut::<Data>();
+            inspector_window_data.visible = !inspector_window_data.visible;
+        }
+    }
 }
 
 fn switch(buttons: Res<Input<MouseButton>>, mut selected: ResMut<SelectedId>, input: Res<Input<KeyCode>>, mut sel_ent: Query<&mut NoClip, With<Selected>>) {

@@ -1,15 +1,12 @@
 use crate::systems::{load_bindings, watch_for_changes};
 use crate::update_inputs;
-
-use super::example::example_ron;
 use std::fmt::Debug;
 use std::marker::PhantomData;
-use std::path::Path;
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
 use super::resources::*;
 use super::systems::collect_actions;
-use std::fs;
+
 
 
 impl<Keys, Sel> Plugin for ActionsPlugin <Keys, Sel>
@@ -20,8 +17,6 @@ where for<'de> Keys: Eq + std::hash::Hash + Send + Deserialize<'de> + Serialize 
     {
         let bindings = Keybindings::<Keys>::new();
         let bindings_path = KeybindingsPath::new(self.config_path, self.default_path);
-
-        
 
         app
         .insert_resource(bindings)

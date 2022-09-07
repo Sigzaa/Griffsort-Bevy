@@ -1,4 +1,4 @@
-use std::{hash::Hash, collections::{HashSet, HashMap}, marker::PhantomData, fmt::Debug};
+use std::{hash::Hash, collections::{HashSet, HashMap}, fmt::Debug};
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
 use colored::*;
@@ -39,7 +39,7 @@ pub struct Actions<A: Eq + Hash + Debug>
 {
     // Todo 
     // Add feature
-    pub(crate) cross: Vec2,
+    pub(crate) _cross: Vec2,
 
     pub(crate) pressed: HashSet<A>,
     pub(crate) just_pressed: HashSet<A>,
@@ -49,7 +49,7 @@ pub struct Actions<A: Eq + Hash + Debug>
 impl<A: Eq + Hash + Clone + Debug> Actions<A>
 {
     pub fn new() -> Self{
-        Self { pressed: HashSet::new(), just_pressed: HashSet::new(), just_released: HashSet::new(), cross: Vec2 { x: 0., y: 0. } }
+        Self { pressed: HashSet::new(), just_pressed: HashSet::new(), just_released: HashSet::new(), _cross: Vec2 { x: 0., y: 0. } }
     }
     pub fn pressed(&self, key: A) -> bool{
         self.pressed.contains(&key)
@@ -92,10 +92,7 @@ impl<A: Eq + Hash + Clone + Debug> Actions<A>
             true => format!("{just_released}").green()
         };
 
-        
-
         let formatted = format!("is: pressed {pressed}, just pressed {just_pressed}, just released {just_released}");
-
         println!("{formatted}");
     }
 }

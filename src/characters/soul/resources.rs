@@ -4,6 +4,7 @@ pub use components::*;
 use corgee::*;
 use heroes::{CooldownManager, CDProps};
 
+
 #[derive(Component)]
 pub struct ShieldCD(pub CDProps);
 
@@ -26,14 +27,17 @@ pub const PLACE_SHIELD: f32 = 1.;
 pub const GET_SHIELD: f32 = 1.;
 pub const SHIELD_COOLDOWN: f32 = 1.;
 
-#[derive(serde::Deserialize, TypeUuid, Default, Bundle, Clone)]
+#[derive(serde::Deserialize, TypeUuid, Default,  Clone)]
 #[uuid = "013be529-bfeb-48b3-1db0-4b8b381a2c46"]
 pub struct SoulConfig {
     // Const values
-    time_to_place_shield: PlaceShield,
-    time_to_get_shield: GetShield,
-    shield_cooldown: ShieldCooldown,
-    config: Config,
+    pub should_render: bool,
+
+   // #[inspectable(min = 42.0, max = 100.0)]
+    pub time_to_place_shield: f32,
+    pub time_to_get_shield: f32,
+    pub shield_cooldown: f32,
+    // config: Config,
 }
 mod components {
     use bevy::prelude::*;

@@ -1,0 +1,37 @@
+help
+
+conf soul
+
+~> bind "config soul" U
+
+~> conf list
+
+    <-> is synced two-ways
+    -> only write to config file
+    <- only read from file
+    - not synced at all
+
+    soul (SoulConfig) -> "./config/soul.ron"
+    zero (ZeroConfig) <- "./config/soul.ron"
+    bindings (Keybindings) <-> "./config/soul.ron"
+
+~> chsync -q zero +rw
+
+~> chsync soul rw
+
+~> conf reset zero
+
+~> conf path zero ./config/extern_conf.ron
+
+~> conf path zero
+
+
+app.add_plugin(
+Inspector::new()
+
+.with_tabs(["Heroes", "About"])
+.with_config::<Config>("command name", "./config/config.ron", with_default: true, Sync::Full, "tab_name"),
+)
+
+
+
