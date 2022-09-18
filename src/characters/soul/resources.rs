@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 use bevy::reflect::TypeUuid;
+use bevy_inspector_egui::Inspectable;
 pub use components::*;
-use corgee::*;
-use heroes::{CooldownManager, CDProps};
-
+use heroes::{CDProps, ConfigProps, CooldownManager};
+use serde::Serialize;
 
 #[derive(Component)]
 pub struct ShieldCD(pub CDProps);
@@ -23,34 +23,70 @@ impl CooldownManager for EscCD {
     }
 }
 
-pub const PLACE_SHIELD: f32 = 1.;
-pub const GET_SHIELD: f32 = 1.;
-pub const SHIELD_COOLDOWN: f32 = 1.;
-
-#[derive(serde::Deserialize, TypeUuid, Default,  Clone)]
-#[uuid = "013be529-bfeb-48b3-1db0-4b8b381a2c46"]
+#[derive(serde::Deserialize, Serialize, Clone, Inspectable)]
 pub struct SoulConfig {
-    // Const values
     pub should_render: bool,
 
-   // #[inspectable(min = 42.0, max = 100.0)]
+    #[inspectable(min = 42.0, max = 100.0)]
     pub time_to_place_shield: f32,
     pub time_to_get_shield: f32,
-    pub shield_cooldown: f32,
-    // config: Config,
+    pub sprint_duration: f32,
+
+    #[inspectable(label = "Cooldown")]
+    pub shield_cd: f32,
+    pub sprint_cd: f32,
+    pub reload: f32,
+
+    #[inspectable(collapse)]
+    pub crosshair: CrosshairConfig,
+
+    pub config: heroes::Config,
 }
+
+impl ConfigProps for SoulConfig {
+    fn props(&self) -> &heroes::Config {
+        &self.config
+    }
+}
+
+impl Default for SoulConfig {
+    fn default() -> Self {
+        Self {
+            should_render: false,
+            time_to_place_shield: 2.,
+            time_to_get_shield: 2.,
+            sprint_duration: 2.,
+            shield_cd: 3.,
+            sprint_cd: 3.,
+            reload: 2.,
+            crosshair: CrosshairConfig {
+                to_attack_duration: 0.6,
+                to_idle_duration: 0.5,
+                to_pointing_duration: 0.6,
+            },
+            config: Default::default(),
+        }
+    }
+}
+
 mod components {
     use bevy::prelude::*;
-    use corgee::*;
+    use bevy_inspector_egui::Inspectable;
+    use bevy_rapier3d::prelude::Toi;
+    use serde::Serialize;
+
+    #[derive(serde::Deserialize, Serialize, Clone, Inspectable)]
+    pub struct CrosshairConfig {
+        pub to_attack_duration: f32,
+        pub to_idle_duration: f32,
+        pub to_pointing_duration: f32,
+    }
 
     #[derive(Component, Default, serde::Deserialize, Clone)]
     pub struct PlaceShield(pub f32);
     #[derive(Component, Default, serde::Deserialize, Clone)]
     pub struct GetShield(pub f32);
-    #[derive(Component, Default, serde::Deserialize, Clone)]
-    pub struct ShieldCooldown(pub f32);
-    #[derive(Component, Default)]
-    pub struct PreQTimer(pub f32);
+
     #[derive(Component, Default)]
     pub struct ShieldUp(pub bool);
     #[derive(Component, Default)]
@@ -61,16 +97,11 @@ mod components {
     }
 
     #[derive(Component)]
-    pub struct QLimiter(pub bool);
-    #[derive(Component)]
     pub struct ShieldFather(pub Entity);
+
     #[derive(Component)]
     pub struct CrosshairValue(pub f32);
-    #[derive(Component)]
-    pub struct PointingOn {
-        pub target: Entity,
-        pub hit: Toi,
-    }
+
     #[derive(Default)]
     pub struct T(pub f32);
 

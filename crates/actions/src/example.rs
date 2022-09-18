@@ -1,6 +1,5 @@
-pub fn example_ron() -> &'static str
-{
-"(
+pub fn example_ron() -> &'static str {
+    "(
     mouse_bindings: {
         Left: Shoot,
         Middle: Take,
@@ -12,4 +11,4 @@ pub fn example_ron() -> &'static str
         F11: 'custom command'
     }
 )"
-}   
+}

@@ -2,6 +2,9 @@
 
 VER := $(shell eval cargo pkgid | sed 's/^.*Griffsort@//')
 
+fmt:
+	cargo +nightly fmt
+
 dyn:
 	cargo run --features "bevy/dynamic" client
 

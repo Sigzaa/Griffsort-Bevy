@@ -1,5 +1,5 @@
 [package]
-name = "go_inspector"
+name = "gs_inspector"
 version = "0.1.1"
 edition = "2021"
 
@@ -8,4 +8,3 @@ edition = "2021"
 [dependencies]
 bevy = "0.8.0"
 bevy_egui = "0.15"
-corgee = { path = "../corgee", version = "*" }

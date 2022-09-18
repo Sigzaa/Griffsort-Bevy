@@ -4,13 +4,12 @@ use bevy_renet::{
 
 use bevy::{ prelude::*};
 use crate::shared::resources::*;
-use corgee::*;
 use crate::shared::data_structs::go_history::*;
 use crate::prelude::History;
 
 pub(crate) fn connection_handler(
     mut server_events: EventReader<ServerEvent>,
-    mut lobby: ResMut<Lobby>,
+   // mut lobby: ResMut<Lobby>,
     mut server: ResMut<RenetServer>,
 ) {
     for event in server_events.iter() {
@@ -95,7 +94,7 @@ pub(crate) fn pop_buffer( // User should implement this (May be)
 
 
 // pub(crate) fn connection_handler(
-//     mut q_core: Query<(&mut InputsBuffer, &Id), With<ChCore>>,
+//     mut q_core: Query<(&mut InputsBuffer, &Id), With<Hero>>,
 //     mut events: EventReader<NetworkEvent>,
 //     mut transport: ResMut<Transport>,
 //     mut con: ResMut<ConnectedList>,

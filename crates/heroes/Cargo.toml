@@ -8,17 +8,14 @@ edition = "2021"
 [dependencies]
 bevy_mod_picking = "0.8.0"
 
-
+bevy_rapier3d = { version = "0.16.2" , features = [ "enhanced-determinism" ] }
 bevy = { version = "0.8.0" }
 serde = "1.0.137"
 serde_json = "1.0.81"
+bevy-inspector-egui = "0.12.1"
 bevy_prototype_debug_lines = { version = "0.8", features = ["3d"] }
-corgee = { path = "../corgee", version = "*" }
+bevy_debug_shapes = { path = "../bevy_debug_shapes" }
 clamped = "1.0.0"
 round = "0.1.2"
 bevy_atmosphere = "0.4.0"
-
-
-
-[dev-dependencies]
-bevy = { version = "0.8.0" , features = ["dynamic"]}
+actions = { path = "../actions"}

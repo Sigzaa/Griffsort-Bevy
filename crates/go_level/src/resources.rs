@@ -1,10 +1,8 @@
-use bevy::prelude::*;   
+use bevy::prelude::*;
 
-#[derive(Debug, Clone, Eq, PartialEq, Hash)]
-
-#[derive(Default)]
-pub struct LoadedMap{
-    scene_handle: Handle<Scene>
+#[derive(Debug, Clone, Eq, PartialEq, Hash, Default)]
+pub struct LoadedMap {
+    scene_handle: Handle<Scene>,
 }
 
 // impl AssociatedAsset for Map {

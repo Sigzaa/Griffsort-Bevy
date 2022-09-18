@@ -26,7 +26,8 @@ impl<T: 'static + SnapType> Plugin for GoSnapPlugin<T> {
 use bevy::ecs::schedule::ShouldRun;
 
 fn run_if_pressed(keys: Res<Input<KeyCode>>) -> ShouldRun {
-    if keys.just_pressed(KeyCode::S) {
+    if keys.just_pressed(KeyCode::S)
+    {
         return ShouldRun::Yes;
     }
     return ShouldRun::No;
@@ -34,7 +35,11 @@ fn run_if_pressed(keys: Res<Input<KeyCode>>) -> ShouldRun {
 
 pub fn save_snap<T: SnapType>(world: &mut World) {
     info!("Making snapshot");
-    let entity = world.spawn().insert(Transform::from_xyz(0.,1.,51.)).insert(Transform::from_xyz(0.,1.,1.)).id();
+    let entity = world
+        .spawn()
+        .insert(Transform::from_xyz(0., 1., 51.))
+        .insert(Transform::from_xyz(0., 1., 1.))
+        .id();
     let registry = world
         .get_resource::<SnapRegistry<T>>()
         .expect("No type registry found, did you forget to initialize the save plugin?");
@@ -55,13 +60,10 @@ pub fn save_snap<T: SnapType>(world: &mut World) {
     // .and_then(
     //     |hz| hz.data::<ReflectComponent>()
     //     .and_then(|hz| hz.reflect_component(&world, entity)));
-        
+
     // if !com.is_none(){
     //     println!("{:?}", com.unwrap());
     // }
-
-    
-    
 
     // let type_registry = registry.type_registry.read();
     // let reflect_component = world

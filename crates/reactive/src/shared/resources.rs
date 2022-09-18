@@ -1,4 +1,3 @@
-use corgee::{GoInputs, GoRot, *};
 use serde::{Serialize, Deserialize};
 use bevy::{prelude::*, reflect::TypeRegistry};
 use super::data_structs::go_history::*;
@@ -95,13 +94,13 @@ pub struct SyncedTypes{
 #[derive(Default, Clone, Copy, Serialize, Deserialize, Debug, PartialEq)]
 pub struct SnapShot;
 
-impl SnapType for SnapShot {
-    fn add_types(registry: &mut TypeRegistry) {
-        registry.write().register::<Transform>();
-        registry.write().register::<GoInputs>();
-        registry.write().register::<GoRot>();
-    }
-}
+// impl SnapType for SnapShot {
+//     fn add_types(registry: &mut TypeRegistry) {
+//         registry.write().register::<Transform>();
+//         registry.write().register::<GoInputs>();
+//         registry.write().register::<GoRot>();
+//     }
+// }
 
 #[derive(Component, Reflect, Default)]
 // And be marked as components
@@ -154,8 +153,8 @@ pub enum GenericMessages {
 
 #[derive(Default, Clone, Copy, Serialize, Deserialize, Debug, PartialEq)]
 pub struct Inputs{
-    pub ginp: GoInputs,
-    pub gorot: GoRot,
+    pub ginp: f32,
+    pub gorot: f32,
 }
 #[derive(Default)]
 pub(crate) struct SnapBuffer(pub History<SnapShot>);

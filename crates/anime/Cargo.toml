@@ -7,3 +7,5 @@ edition = "2021"
 
 [dependencies]
 async-std = "1.12.0"
+bevy = "0.8.1"
+keyframe = "1.1.1"

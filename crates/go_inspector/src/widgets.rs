@@ -18,7 +18,8 @@ pub fn toggle_ui(ui: &mut egui::Ui, on: &mut bool) -> egui::Response {
     let (rect, mut response) = ui.allocate_exact_size(desired_size, egui::Sense::click());
 
     // 3. Interact: Time to check for clicks!
-    if response.clicked() {
+    if response.clicked()
+    {
         *on = !*on;
         response.mark_changed(); // report back that the value changed
     }
@@ -28,7 +29,8 @@ pub fn toggle_ui(ui: &mut egui::Ui, on: &mut bool) -> egui::Response {
 
     // 4. Paint!
     // Make sure we need to paint:
-    if ui.is_rect_visible(rect) {
+    if ui.is_rect_visible(rect)
+    {
         // Let's ask for a simple animation from egui.
         // egui keeps track of changes in the boolean associated with the id and
         // returns an animated value in the 0-1 range for how much "on" we are.

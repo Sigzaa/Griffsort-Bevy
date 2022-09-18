@@ -7,11 +7,17 @@ use bevy::{
     prelude::{KeyCode, *},
 };
 use bevy_atmosphere::prelude::*;
+use bevy_rapier3d::prelude::*;
 use std::time::Duration;
 // use bevy::render::camera::Camera3dBundle;
 // use bevy::render::camera::{ActiveCamera, CameraTypePlugin};
+use actions::*;
 use bevy_prototype_debug_lines::*;
-use corgee::{additional::*, GameState, GoInputs, GoRot, *};
+
+#[derive(Default)]
+pub struct Controller<T: 'static> {
+    pub char_type: T,
+}
 
 impl<T: Character<T> + Send + Sync + Copy + Component> Plugin for Controller<T> {
     fn build(&self, app: &mut App) {
@@ -31,8 +37,8 @@ pub trait Character<T: Character<T>>: Plugin {
         mut commands: Commands,
         query: Query<(Entity, &Id), Added<C>>,
     ) {
-        for (entity, id) in query.iter() {
-
+        for (entity, id) in query.iter()
+        {
             let head = commands
                 .spawn_bundle(PbrBundle {
                     mesh: meshes.add(Mesh::from(Cube { size: 0.2 })),
@@ -44,7 +50,6 @@ pub trait Character<T: Character<T>>: Plugin {
                     transform: Transform::from_xyz(0., 0.4, 0.),
                     ..Default::default()
                 })
-                .insert(ZHead)
                 .id();
 
             let camera = commands
@@ -62,12 +67,11 @@ pub trait Character<T: Character<T>>: Plugin {
 
                     ..Default::default()
                 })
-                .insert(CharacterCamera)
+                .insert(HeroCam)
                 .insert(AtmosphereCamera(None))
                 .id();
 
-
-                let body = commands
+            let body = commands
                 .entity(entity)
                 .insert_bundle(PbrBundle {
                     mesh: meshes.add(Mesh::from(Capsule {
@@ -82,10 +86,10 @@ pub trait Character<T: Character<T>>: Plugin {
                     transform: Transform::from_xyz(-24.0, 21., (-id.0 as f32 * 1.5) + 50.),
                     ..Default::default()
                 })
-                .insert(HeadEntity(head))
-                .insert(CameraEntity(camera))
+                .insert(HeadLink(head))
+                .insert(CameraLink(camera))
                 .id();
-            
+
             commands.entity(body).push_children(&[head]);
             commands.entity(head).push_children(&[camera]);
 
@@ -115,59 +119,52 @@ pub trait Character<T: Character<T>>: Plugin {
 
             commands
                 .entity(entity)
-                .insert(RideHeight(0.4))
-                .insert_bundle(Config::default())
-                .insert(GoRot::default())
-                .insert(GoInputs {
-                    //jump: 1,
-                    ..Default::default()
-                })
-                .insert(ChCore)
-                .insert(ShootTimer(Timer::new(Duration::from_secs(1), true)))
-                .insert(IsReadyShoot(true))
-                .insert(QTimer(0.))
-                .insert(ETimer(0.))
-                .insert(FTimer(0.))
-                .insert(ShiftTimer(0.));
+                .insert(Hero)
+                .insert(PointingOn::default());
         }
     }
 
     fn sync_camera(
         selected_id: Res<SelectedId>,
-        //q_camera: Query<Camera>,
-        q_head: Query<&Children, With<ZHead>>,
-        q_core: Query<(&Id, &Children), (With<ChCore>, Without<Killed>, Without<Selected>)>,
-        //mut active_camera: ResMut<ActiveCamera<Camera3d>>,
+        mut q_camera: Query<&mut Camera>,
+        q_core: Query<(&Id, &CameraLink), (With<Hero>, Without<Dead>)>,
     ) {
-        for (id, children) in q_core.iter() {
-            if Some(id.0) == selected_id.0 {
-                for &child in children.iter() {
-                    let children = q_head.get(child).unwrap();
+        if selected_id.is_changed()
+        {
+            for (id, cam_link) in q_core.iter()
+            {
+                let mut camera = q_camera.get_mut(cam_link.0).unwrap();
 
-                    // for &child in children.iter() {
-                    //     let cam_ent = q_camera.get(child).unwrap();
-                    //     //active_camera.set(cam_ent);
-                    // }
+                camera.is_active = false;
+
+                if Some(id.0) == selected_id.0
+                {
+                    camera.is_active = true;
                 }
             }
         }
     }
 
     fn sync_components(
-        q_core: Query<(&Id, Entity), (With<ChCore>, Without<Killed>)>,
+        q_core: Query<(&Id, Entity), (With<Hero>, Without<Dead>)>,
         selected_id: Res<SelectedId>,
         mut commands: Commands,
         //active_camera: Res<ActiveCamera<Camera3d>>,
-        q_camera: Query<Entity, With<CharacterCamera>>,
+        q_camera: Query<Entity, With<HeroCam>>,
     ) {
-        for (id, ent) in q_core.iter() {
-            if Some(id.0) != selected_id.0 {
+        for (id, ent) in q_core.iter()
+        {
+            if Some(id.0) != selected_id.0
+            {
                 commands.entity(ent).remove::<Selected>();
-            } else {
+            }
+            else
+            {
                 commands.entity(ent).insert(Selected);
             }
         }
-        for ent in q_camera.iter() {
+        for ent in q_camera.iter()
+        {
             commands.entity(ent).remove::<SelectedCamera>();
         }
         // let cam_ent = active_camera.get();

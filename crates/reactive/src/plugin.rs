@@ -8,7 +8,6 @@ use bevy_renet::{
      RenetClientPlugin, RenetServerPlugin,
 };
 
-use corgee::*;
 use go_snap::*;
 
 use std::{marker::PhantomData};
@@ -16,13 +15,13 @@ use go_snap::plugin::SnapType;
 
 #[derive(Default, Debug)]
 struct NetworkSnapshot;
-impl SnapType for NetworkSnapshot {
-    fn add_types(registry: &mut TypeRegistry) {
-        registry.write().register::<Transform>();
-        registry.write().register::<Id>();
-        registry.write().register::<Selected>();
-    }
-}
+// impl SnapType for NetworkSnapshot {
+//     fn add_types(registry: &mut TypeRegistry) {
+//         registry.write().register::<Transform>();
+//         registry.write().register::<Id>();
+//         registry.write().register::<Selected>();
+//     }
+// }
 
 
 #[derive(Default)]
@@ -32,7 +31,7 @@ impl Plugin for Reactive {
     fn build(&self, mut app: &mut App) {
         //app.add_plugin(RapierPhysicsPlugin::<NoUserData>::default().with_default_system_setup(false));
         app.insert_resource(TickCount(0))
-            .insert_resource(Lobby::default())
+            //.insert_resource(Lobby::default())
             .insert_resource(SnapServer{ types: SyncedTypes {}})
             
             //.add_plugin(GoSnapPlugin::<SnapShot>::default())

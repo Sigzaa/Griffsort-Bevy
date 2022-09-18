@@ -7,23 +7,22 @@ pub enum OpenTab {
     About,
 }
 
-
-pub struct go_inspectorToggle(pub bool);
-impl Default for go_inspectorToggle{
-    fn default() -> go_inspectorToggle{
-        go_inspectorToggle(false)
+pub struct gs_inspectorToggle(pub bool);
+impl Default for gs_inspectorToggle {
+    fn default() -> gs_inspectorToggle {
+        gs_inspectorToggle(false)
     }
 }
 
 #[derive(PartialEq)]
-pub struct Console{
+pub struct Console {
     pub string: String,
     pub history: Vec<String>,
     pub iter: usize,
 }
-impl Console{
+impl Console {
     pub fn new() -> Console {
-        Console{
+        Console {
             string: String::from(""),
             history: Vec::new(),
             iter: 0,
@@ -31,7 +30,7 @@ impl Console{
     }
 }
 #[derive(Default)]
-pub struct Update{
+pub struct Update {
     pub progress: f32,
     pub is_update: bool,
 }
@@ -58,13 +57,9 @@ impl Stats {
 #[derive(PartialEq)]
 pub struct Config {
     pub exit_on_del: bool,
-
 }
 impl Config {
     pub fn new() -> Config {
-        Config {
-            exit_on_del: true,
-        }
+        Config { exit_on_del: true }
     }
 }
-
