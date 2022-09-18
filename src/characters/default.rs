@@ -251,7 +251,7 @@ pub fn camera_roll<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
         {
             // Mouse is moving
 
-            // cam_transform.rotation = ease(cam_transform.rotation.wrap(), Quat::from_rotation_z(out * max_roll).wrap());
+            // cam_transform.rotation = ease(cam_transform.rotation.wrap(), Quat::from_rotation_z(out * max_roll).wrap()); 
 
             is_idle = false;
         }
