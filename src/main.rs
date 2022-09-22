@@ -1,12 +1,15 @@
-mod characters;
+mod characters_impl;
+mod commands_impl;
+
 use bevy::prelude::*;
 use bevy::window::PresentMode;
-use characters::CharactersImpl;
+use characters_impl::Characters;
+use commands_impl::ConsoleCommands;
 use go_level::plugin::Level;
 use heroes::*;
 use iyes_loopless::prelude::AppLooplessStateExt;
 use std::hash::Hash;
-// use gs_inspector::*;
+use gs_inspector::*;
 use actions::*;
 use bevy_inspector_egui::{
     plugin::InspectorWindows, widgets::ResourceInspector, Inspectable, InspectorPlugin,
@@ -31,6 +34,7 @@ struct Acel(f32);
 fn main() {
     App::new()
         .add_plugin(StatesPlugin)
+
         .insert_resource(WindowDescriptor {
             title: "griffsort".to_string(),
             width: 1320.,
@@ -40,7 +44,11 @@ fn main() {
             ..Default::default()
         })
         .add_plugins(DefaultPlugins)
-        //.add_plugin(InspectorPlugin::<Keybindings<Action>>::new())
+
+        .add_plugin(Inspector {
+            game_version: env!("CARGO_PKG_VERSION"),
+        })
+        .add_plugin(ConsoleCommands)
         .add_plugin(ActionsPlugin::<Action, Selected>::new(
             "./config/conf.ron",
             "./config/def.ron",
@@ -52,12 +60,10 @@ fn main() {
         // .add_system_set(SystemSet::on_enter(GameState::InGame).with_system(_temp_setup))
         .add_system(switch.run_in_state(GameState::InGame))
         .add_plugin(CharController)
-        .add_plugin(CharactersImpl)
+        .add_plugin(Characters)
         .add_plugin(Level)
         .add_plugin(UI)
-        // .add_plugin(Inspector {
-        //     game_version: env!("CARGO_PKG_VERSION"),
-        // })
+
         // .add_plugin(AtmospherePlugin)
         //.add_system(test_new_inputs_system)
         //.add_plugin(Reactive)
@@ -189,7 +195,7 @@ fn _temp_setup(
     //     ..default()
     // });
     //spawner.send(SpawnChar::new("Soul", Team::Light, -1));
-    spawner.send(SpawnChar::new("Soul", Team::Light, 1));
+    spawner.send(SpawnChar::new("Jacqueline", Team::Light, 1));
 
     selected.0 = Some(1);
 }

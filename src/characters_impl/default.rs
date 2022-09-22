@@ -243,9 +243,9 @@ pub fn camera_roll<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
 
         let mut is_idle = true;
 
-        cam_transform.rotation = Quat::from_rotation_z(15.);
+        // cam_transform.rotation = Quat::from_rotation_z(15.);
 
-        println!("camera transform: {:?}", cam_transform.rotation.to_scaled_axis());
+        // println!("camera transform: {:?}", cam_transform.rotation.to_scaled_axis());
 
         for ev in motion_evr.iter()
         {

@@ -160,9 +160,13 @@ pub fn sprint(
 ) {
     for (ginp, mut cd, mut force, transform) in &mut q
     {
-        cd.step(time.delta_seconds());
-        if ginp.just_pressed(Action::Sprint) && cd.try_to_use()
+        cd.tick_timers(time.delta_seconds());
+
+        if ginp.just_pressed(Action::Sprint) && cd.is_ready(0)
         {
+            cd.cooldown(0, 0.5);
+            cd.cooldown(1, 1.5);
+            cd.add(-1);
 
             // let (right, forward) = (ginp.movement[0], ginp.movement[1]);
 
@@ -170,10 +174,9 @@ pub fn sprint(
 
             // force.force += direction * 50000.;
         }
-        else
-        {
+        if !cd.is_cooldown(1) && cd.left() < 15{
+            cd.add(1);
+            cd.cooldown(1, 2.5);
         }
-
-        //println!("Props: {:?}", cd.0);
     }
 }

@@ -2,7 +2,7 @@ mod abilities;
 mod animation;
 mod crosshair;
 mod general;
-mod resources;
+pub mod resources;
 mod sfx;
 mod vfx;
 
@@ -16,7 +16,7 @@ use crosshair::*;
 use general::*;
 use gs_states::{cursor_showed, GameState};
 use iyes_loopless::prelude::*;
-use resources::*;
+pub use resources::*;
 use sfx::*;
 use synx::Synx;
 use vfx::*;
@@ -26,6 +26,7 @@ impl Plugin for Soul {
         app.add_enter_system(GameState::InGame, crosshair_setup)
             .add_event::<ShieldEvent>()
             .add_plugin(InspectorPlugin::<SoulConfig>::new())
+            //.insert_resource(SoulConfig::default())
             .add_plugin(Synx::<SoulConfig>::new("./config/soul.ron"))
             .add_system_set(
                 ConditionSet::new()
@@ -58,7 +59,7 @@ impl Character<Soul> for Soul {
                 commands
                     .spawn()
                     .insert(ShieldCD(CDProps::default()))
-                    .insert(EscCD(CDProps::new(3, 1.)))
+                    .insert(EscCD(CDProps::new(3)))
                     .insert(Soul)
                     .insert(ShieldUp(false))
                     .insert(ShieldPos(None))

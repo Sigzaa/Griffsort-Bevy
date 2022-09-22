@@ -1,34 +1,47 @@
-// use super::resources::*;
-// use super::widgets::*;
-// use bevy::{ app::AppExit,
-//     diagnostic::{Diagnostics, FrameTimeDiagnosticsPlugin},
-//     prelude::*,
-// };
-// use bevy_egui::{egui, EguiContext, EguiPlugin};
-// use egui::Ui;
-// use std::process::Command;
+use super::resources::*;
+use super::widgets::*;
+use super::commands::*;
+use bevy::{ app::AppExit,
+    diagnostic::{Diagnostics, FrameTimeDiagnosticsPlugin},
+    prelude::*,
+};
+use bevy_console::AddConsoleCommand;
+use bevy_egui::{egui, EguiContext, EguiPlugin};
+use egui::Ui;
+use std::process::Command;
+use bevy_console::{ConsoleConfiguration, ConsolePlugin};
 
-// #[derive(Default)]
-// struct GVersion(&'static str);
+#[derive(Default)]
+struct GSVersion(&'static str);
 
-// pub struct Inspector {
-//     pub game_version: &'static str,
-// }
-// impl Plugin for Inspector {
-//     fn build(&self, app: &mut App) {
-//         app.add_plugin(FrameTimeDiagnosticsPlugin::default())
-//             .insert_resource(Update::default())
-//             .insert_resource(OpenTab::Console)
-//             .insert_resource(GVersion(self.game_version))
-//             .insert_resource(Stats::new())
-//             .insert_resource(Config::new())
-//             .insert_resource(Console::new())
-//             .insert_resource(gs_inspectorToggle::default())
-//             .add_plugin(EguiPlugin)
-//             .add_system(show_gs_inspector)
-//             .add_system(gs_inspector);
-//     }
-// }
+pub struct Inspector {
+    pub game_version: &'static str,
+}
+impl Plugin for Inspector {
+    fn build(&self, app: &mut App) {
+        app
+            .add_plugin(FrameTimeDiagnosticsPlugin::default())
+            .add_plugin(ConsolePlugin)
+            .insert_resource(ConsoleConfiguration {
+                // override config here
+                ..Default::default()
+            })
+            
+            .add_console_command::<ExampleCommand, _, _>(example_command)
+            .insert_resource(Update::default())
+            .insert_resource(OpenTab::Console)
+            .insert_resource(GSVersion(self.game_version))
+            .insert_resource(Stats::new())
+            .insert_resource(Config::new())
+            .insert_resource(Console::new())
+            .insert_resource(gs_inspectorToggle::default())
+            
+            //.add_plugin(EguiPlugin)
+            // .add_system(show_gs_inspector)
+            // .add_system(gs_inspector)
+            ;
+    }
+}
 
 // fn gs_inspector(
 //     mut egui_context: ResMut<EguiContext>,

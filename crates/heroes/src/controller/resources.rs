@@ -176,4 +176,7 @@ mod components {
 
     #[derive(Component)]
     pub struct Grounded;
+
+    #[derive(Component)]
+    pub struct Crosshair;
 }

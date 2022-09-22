@@ -17,7 +17,7 @@ bevy-inspector-egui = "0.12.1"
 reactive = { path = "crates/reactive" , version = "0.1.0"}
 heroes = { path = "crates/heroes", version = "0.0.5"}
 go_level = { path = "crates/go_level", version = "0.1.0"}
-# gs_inspector = { path = "crates/gs_inspector" }
+gs_inspector = { path = "crates/gs_inspector" }
 anime = { path = "crates/anime" }
 gs_ui = { path = "crates/gs_ui" }
 gs_states = { path = "crates/gs_states"}
@@ -27,6 +27,7 @@ iyes_loopless = "0.7"
 bevy_hanabi = "0.3"
 tokio =  { version = "1.21.0", features = ["full"]}
 keyframe = "1.1.1"
+bevy_console = "0.4.0"
 
 [profile.dev.package."*"]
 opt-level = 3

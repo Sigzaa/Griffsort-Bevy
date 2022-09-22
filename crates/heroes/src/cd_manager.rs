@@ -1,49 +1,29 @@
 #[derive(Debug)]
 pub struct CDProps {
-    charges_available: i8,
-    cd_time: f32,
-    timer: f32,
-    is_locked: bool,
-    charges_left: i8,
+    pub charges: i8,
+    timers: [f32; 5],
+
 }
 impl CDProps {
     pub fn default() -> Self {
         Self {
-            charges_available: 4,
-            charges_left: 2,
-            cd_time: 4.,
-            timer: 4.,
-            is_locked: false,
+            charges: 1,
+            timers: [0.; 5],
         }
     }
-    pub fn new(charges_available: i8, cd_time: f32) -> Self {
+    pub fn new(charges: i8) -> Self {
         Self {
-            charges_available,
-            charges_left: charges_available,
-            cd_time,
-            timer: 0.,
-            is_locked: false,
+            charges,
+            timers: [0.; 5],
         }
     }
 }
 
 pub trait CooldownManager {
-    fn try_to_use(&mut self) -> bool {
-        return if self.is_ready()
-        {
-            self.used();
-            true
-        }
-        else
-        {
-            false
-        };
-    }
-    fn is_ready(&mut self) -> bool {
-        let charges_left = self.charges_left();
-        let props = self.pull_props();
+    fn is_ready(&mut self, timer_index: usize) -> bool {
+        let mut props = self.pull_props();
 
-        if charges_left >= 1
+        if props.charges > 0 && !self.is_cooldown(timer_index)
         {
             return true;
         }
@@ -52,56 +32,43 @@ pub trait CooldownManager {
             return false;
         }
     }
-    fn charges_left(&mut self) -> i8 {
-        self.pull_props().charges_left.clone()
+    fn left(&mut self) -> i8 {
+        self.pull_props().charges
     }
-    fn step(&mut self, time: f32) {
-        if self.pull_props().timer > 0.
-        {
-            self.pull_props().timer -= time;
+    fn is_cooldown(&mut self, timer_index: usize) -> bool{
+        if self.pull_props().timers[timer_index] > 0.{
+            return true;
         }
-        if self.pull_props().timer <= 0.
-        {
-            self.add_charge(1);
+        false
+    }
+    fn is_empty(&mut self) -> bool{
+        if self.pull_props().charges == 0{
+            return true;
+        }
+        false
+    }
+    fn tick_timers(&mut self, time: f32){
+        let mut props = self.pull_props();
 
-            if self.charges_in_cd() >= 1
+        for i in 0..props.timers.len(){
+            if props.timers[i] >= 0. 
             {
-                self.pull_props().timer = self.pull_props().cd_time;
+                props.timers[i] -= time;
             }
         }
-    }
-    fn used(&mut self) {
-        let is_ready = self.is_ready().clone();
-        let is_locked = self.is_locked().clone();
-        let props = self.pull_props();
 
-        if is_ready && !is_locked
-        {
-            props.timer = props.cd_time;
-            props.charges_left -= 1;
-        }
+
     }
-    fn lock(&mut self) {
-        self.pull_props().is_locked = true;
+    fn add(&mut self, amount: i8) 
+    {
+        self.pull_props().charges += amount;
     }
-    fn unlock(&mut self) {
-        self.pull_props().is_locked = false;
+    fn full(&mut self, amount: i8){
+        self.pull_props().charges = amount;
     }
-    fn lock_for(&mut self, time: f32) {
-        todo!();
-    }
-    fn is_locked(&mut self) -> bool {
-        self.pull_props().is_locked
-    }
-    fn add_charge(&mut self, amount: i8) {
-        if self.charges_in_cd() >= 1
-        {
-            self.pull_props().charges_left += amount;
-        }
-    }
-    fn charges_in_cd(&mut self) -> i8 {
-        let props = self.pull_props();
-        props.charges_available - props.charges_left
+    fn cooldown(&mut self, timer_index: usize, time: f32){
+        let mut props = self.pull_props();
+        props.timers[timer_index] = time;
     }
     fn pull_props(&mut self) -> &mut CDProps;
 }
