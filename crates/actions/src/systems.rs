@@ -14,9 +14,19 @@ pub fn collect_actions<
     mouse: Res<Input<MouseButton>>,
     mut q_selected: Query<&mut Actions<Keys>, With<Sel>>,
     bindings: Res<Keybindings<Keys>>,
+    is_locked: Res<IsLocked>
 ) {
     for mut actions in &mut q_selected
     {
+
+        if is_locked.0
+        {
+            actions.just_released.clear();
+            actions.just_pressed.clear();
+            actions.pressed.clear();
+            return;
+        }
+
         for key in bindings.keyboard_bindings.keys()
         {
             if keyboard.just_pressed(*key)

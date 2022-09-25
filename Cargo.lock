@@ -11,6 +11,7 @@ dependencies = [
  "bevy",
  "bevy-inspector-egui",
  "bevy_console",
+ "bevy_console_parser",
  "bevy_hanabi",
  "bevy_rapier3d",
  "bincode",
@@ -45,7 +46,7 @@ checksum = "a13739d7177fbd22bb0ed28badfff9f372f8bef46c863db4e1c6248f6b223b6e"
 
 [[package]]
 name = "actions"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "bevy",
  "colored",
@@ -2410,6 +2411,7 @@ dependencies = [
  "round",
  "serde",
  "serde_json",
+ "synx",
 ]
 
 [[package]]

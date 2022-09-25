@@ -367,21 +367,3 @@ impl Tamara {
     //     }
     // }
 }
-
-impl Character<Tamara> for Tamara {
-    fn spawn(mut spawn_request: EventReader<SpawnChar>, mut commands: Commands) {
-        for spawn_request in spawn_request.iter()
-        {
-            if spawn_request.0 == "Tamara"
-            {
-                println!("Spawning Tamara");
-
-                commands.spawn().insert(Tamara).insert_bundle(States {
-                    id: Id(spawn_request.2),
-
-                    ..Default::default()
-                });
-            }
-        }
-    }
-}

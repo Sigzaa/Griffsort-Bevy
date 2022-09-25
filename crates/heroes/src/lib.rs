@@ -3,6 +3,10 @@ pub mod controller;
 mod debug;
 pub mod plugin;
 mod toolchain;
+mod hud;
+mod systems;
+mod resources;
+mod id_manager;
 
 pub use bevy_debug_shapes::*;
 pub use bevy_prototype_debug_lines::*;
@@ -13,3 +17,4 @@ pub use controller::{plugin::*, resources::*};
 pub use plugin::CharController;
 pub use round::{round, round_down, round_up};
 pub use toolchain::{maths::*, ray_casting::*};
+pub use id_manager::IdManager;

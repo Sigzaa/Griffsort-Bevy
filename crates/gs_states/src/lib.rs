@@ -10,6 +10,7 @@ impl Plugin for StatesPlugin {
     fn build(&self, app: &mut App) {
         app.add_loopless_state(GameState::MainMenu)
             .add_loopless_state(CursorState::Showed)
+            .add_loopless_state(KeyboardState::Unlocked)
             .add_enter_system(GameState::InGame, hide_cursor)
             .add_system(handle_cursor)
             .add_system(alt_switch_cursor);
@@ -33,3 +34,10 @@ pub enum CursorState {
     Hided,
     Showed,
 }
+
+#[derive(Clone, Eq, PartialEq, Debug, Hash)]
+pub enum KeyboardState {
+    Locked,
+    Unlocked,
+}
+

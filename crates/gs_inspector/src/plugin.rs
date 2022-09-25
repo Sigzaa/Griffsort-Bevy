@@ -17,6 +17,12 @@ struct GSVersion(&'static str);
 pub struct Inspector {
     pub game_version: &'static str,
 }
+impl Inspector{
+    pub fn new(game_version: &'static str) -> Self{
+        Self { game_version }
+    }
+}
+
 impl Plugin for Inspector {
     fn build(&self, app: &mut App) {
         app

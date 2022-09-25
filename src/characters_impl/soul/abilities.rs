@@ -5,7 +5,7 @@ use actions::Actions;
 use bevy::prelude::*;
 
 pub(crate) fn attack(
-    char: Query<(&PointingOn, &Team, &Actions<Action>), (With<Soul>, Without<Dead>)>,
+    char: Query<(&ShapeIntersections, &Team, &Actions<Action>), (With<Soul>, Without<Dead>)>,
     mut enemy: Query<(&mut Hp, &Team), (With<Hero>, Without<Dead>)>,
     _time: Res<Time>,
 ) {

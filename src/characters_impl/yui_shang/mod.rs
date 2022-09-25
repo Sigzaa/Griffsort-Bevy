@@ -19,10 +19,10 @@ impl Plugin for YuiShang{
     fn build(&self, app: &mut App) {
         app
         //.insert_resource(ShangConfig::default())
-        .add_plugin(InspectorPlugin::<ShangConfig>::new())
-        .add_plugin(Synx::<ShangConfig>::new("./config/yui_shang.ron"))
+
         .add_system_set(
             ConditionSet::new()
+            .with_system(insert_other)
             .with_system(shoot)
             .with_system(walk::<YuiShang, ShangConfig>)
             .with_system(look::<YuiShang>.run_if(cursor_showed))
@@ -31,25 +31,15 @@ impl Plugin for YuiShang{
     }
 }
 
-impl Character<YuiShang> for YuiShang{
-    fn spawn(mut spawn_request: EventReader<heroes::SpawnChar>, mut commands: Commands) {
-        for spawn_request in spawn_request.iter()
-        {
-            if spawn_request.0 == "Yui Shang"
-            {
-                commands
-                    .spawn()
-                    .insert(YuiShang)
-                    .insert(CollisionGroups::new(0b01, 0b110))
-                    .insert(Actions::<Action>::new())
-                    .insert(PointingOn(Vec::new()))
-                    .insert(ShootCD(CDProps::new(14)))
-                    .insert_bundle(States {
-                        id: Id(spawn_request.2),
-                        team: Team::Dark,
-                        ..Default::default()
-                    });
-            }
-        }
+pub fn insert_other(
+    mut commands: Commands,
+    query: Query<Entity, Added<YuiShang>>,
+) {
+    for entity in query.iter() {
+
+        commands
+        .entity(entity)
+        .insert(ShootCD(CDProps::new(14)));
     }
 }
+

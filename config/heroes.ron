@@ -1,0 +1,11 @@
+(
+    showray: false,
+    sensitivity: 1.0,
+    ray_color: Rgba(
+        red: 1.0,
+        green: 0.0,
+        blue: 0.0,
+        alpha: 1.0,
+    ),
+    debug_rapier: true,
+)

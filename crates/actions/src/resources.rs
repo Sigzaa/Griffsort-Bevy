@@ -14,7 +14,8 @@ use std::{
 // Watch changes in resource
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct Keybindings<Value> {
+pub struct Keybindings<Value> 
+{
     pub mouse_bindings: HashMap<MouseButton, Value>,
     pub keyboard_bindings: HashMap<KeyCode, Value>,
 }
@@ -39,15 +40,18 @@ impl KeybindingsPath {
     }
 }
 
+#[derive(Debug)]
+pub struct IsLocked(pub bool);
+
 #[derive(Component)]
 pub struct Actions<A: Eq + Hash + Debug> {
     // Todo
     // Add feature
     pub(crate) _cross: Vec2,
 
-    pub(crate) pressed: HashSet<A>,
-    pub(crate) just_pressed: HashSet<A>,
-    pub(crate) just_released: HashSet<A>,
+    pub pressed: HashSet<A>,
+    pub just_pressed: HashSet<A>,
+    pub just_released: HashSet<A>,
 }
 
 impl<A: Eq + Hash + Clone + Debug> Actions<A> {

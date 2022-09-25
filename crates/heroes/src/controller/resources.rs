@@ -1,25 +1,20 @@
-use super::plugin::Character;
 use bevy::prelude::*;
 use bevy_inspector_egui::*;
-use bevy_rapier3d::prelude::Collider;
 pub use components::*;
 use serde::{Deserialize, Serialize};
-pub struct SpawnChar(pub &'static str, pub Team, pub i32);
-impl SpawnChar {
-    pub fn new(code: &'static str, team: Team, id: i32) -> Self {
-        Self(code, team, id)
-    }
-}
 
+#[derive(serde::Deserialize, Serialize, Clone, Inspectable)]
 pub struct HeroesConfig {
     pub showray: bool,
     pub sensitivity: f32,
     pub ray_color: Color,
+    pub debug_rapier: bool,
 }
 
 impl Default for HeroesConfig {
     fn default() -> Self {
         Self {
+            debug_rapier: false,
             showray: false,
             sensitivity: 1.,
             ray_color: Default::default(),
@@ -31,7 +26,7 @@ pub trait ConfigProps {
     fn props(&self) -> &Config;
 }
 
-#[derive(Inspectable, Reflect, Clone, Deserialize, Serialize, Default)]
+#[derive(Inspectable, Reflect, Clone, Deserialize, Serialize, Default, Component)]
 pub struct CameraConfig {
     pub shake_ampl: f32,
     pub shake_rate: f32,
@@ -40,17 +35,17 @@ pub struct CameraConfig {
     pub roll_out_time: f32,
 }
 
-#[derive(Inspectable, Reflect, Clone, Deserialize, Serialize)]
+#[derive(Inspectable, Reflect, Clone, Deserialize, Serialize, Component, Default)]
 pub struct IntersectionShape {
     pub radius: f32,
     pub toi: f32,
     pub source_distance: f32,
 }
 
-#[derive(Inspectable, Reflect, Clone, Deserialize, Serialize)]
+#[derive(Inspectable, Reflect, Clone, Deserialize, Serialize, Component)]
 pub struct Config {
     pub character_name: String,
-    pub max_hp: f32,
+    pub max_hp: i32,
     pub max_jump_height: f32,
     pub max_velocity: f32,
     pub weight: f32,
@@ -60,6 +55,8 @@ pub struct Config {
     pub intersections_shape: IntersectionShape,
     #[inspectable(collapse)]
     pub pointing_shape: IntersectionShape,
+    #[inspectable(collapse)]
+    pub pointing_ray_toi: f32,
 
     #[inspectable(collapse)]
     pub camera: CameraConfig,
@@ -68,8 +65,8 @@ pub struct Config {
 impl Default for Config {
     fn default() -> Self {
         Self {
-            character_name: "Zero".to_string(),
-            max_hp: 500.,
+            character_name: "".to_string(),
+            max_hp: 500,
             max_jump_height: 3.,
             max_velocity: 15.,
             weight: 2.,
@@ -90,40 +87,32 @@ impl Default for Config {
                 toi: 5.,
                 source_distance: 1.,
             },
+            pointing_ray_toi: 10.,
         }
     }
 }
 
-#[derive(Bundle, Component, Reflect)]
-pub struct States {
+#[derive(Bundle, Component, Reflect, Default)]
+pub struct HeroComponentsBundle {
     pub id: Id,
     pub team: Team,
     pub hp: Hp,
+    pub max_hp: MaxHp,
+    pub max_jump_height: MaxJumpHeight,
+    pub max_velocity: MaxVelocity,
+    pub weight: Weight,
+    pub walk_acceleration: WalkAcceleration,
+    pub intersections_shape: IntersectionShape,
+    pub poinging_ray_toi: RayToi,
     pub noclip: NoClip,
 }
-impl Default for States {
-    fn default() -> Self {
-        Self {
-            id: Id(-1),
-            team: Team::Dark,
-            hp: Hp(500),
-            noclip: NoClip(false),
-        }
-    }
-}
-impl States {
-    pub fn new_with_id(id: i32) -> Self {
-        Self {
-            id: Id(id),
-            ..States::default()
-        }
-    }
-}
+
 
 mod components {
     use bevy::prelude::*;
+    use bevy_inspector_egui::Inspectable;
     use bevy_rapier3d::prelude::Toi;
-    use serde::Deserialize;
+    use serde::{Deserialize, Serialize};
 
     #[derive(Component)]
     pub struct Hero;
@@ -137,7 +126,7 @@ mod components {
     #[derive(Component)]
     pub struct Dead;
 
-    #[derive(Component, Reflect, Default, Clone, PartialEq)]
+    #[derive(Component, Reflect, Default, Clone, PartialEq, Debug)]
     pub enum Team {
         #[default]
         Dark,
@@ -145,13 +134,34 @@ mod components {
     }
 
     #[derive(Component, Default)]
-    pub struct PointingOn(pub Vec<Entity>);
+    pub struct ShapeIntersections(pub Vec<Entity>);
+
+    #[derive(Component, Default)]
+    pub struct RayPointingOn(pub Option<(Entity, f32)>);
 
     #[derive(Component, Reflect, Default, Clone)]
     pub struct NoClip(pub bool);
 
-    #[derive(Component, Reflect, Default, Copy, Clone, Debug)]
+    #[derive(Component, Reflect, Default, Copy, Clone, Debug,  Inspectable)]
     pub struct Hp(pub i32);
+
+    #[derive(Component, Reflect, Default, Copy, Clone, Debug,  Inspectable)]
+    pub struct MaxHp(pub i32);
+
+    #[derive(Component, Reflect, Default, Copy, Clone, Debug,  Inspectable)]
+    pub struct MaxJumpHeight(pub f32);
+
+    #[derive(Component, Reflect, Default, Copy, Clone, Debug,  Inspectable)]
+    pub struct MaxVelocity(pub f32);
+
+    #[derive(Component, Reflect, Default, Copy, Clone, Debug,  Inspectable)]
+    pub struct Weight(pub f32);
+
+    #[derive(Component, Reflect, Default, Copy, Clone, Debug,  Inspectable)]
+    pub struct WalkAcceleration(pub f32);
+
+    #[derive(Component, Reflect, Default, Copy, Clone, Debug,  Inspectable)]
+    pub struct RayToi(pub f32);
 
     #[derive(Component, Debug, Reflect, Default, Copy, Clone, Deserialize)]
     pub struct Id(pub i32);

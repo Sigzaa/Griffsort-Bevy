@@ -25,11 +25,9 @@ impl Plugin for Soul {
     fn build(&self, app: &mut App) {
         app.add_enter_system(GameState::InGame, crosshair_setup)
             .add_event::<ShieldEvent>()
-            .add_plugin(InspectorPlugin::<SoulConfig>::new())
-            //.insert_resource(SoulConfig::default())
-            .add_plugin(Synx::<SoulConfig>::new("./config/soul.ron"))
             .add_system_set(
                 ConditionSet::new()
+                    .with_system(insert_other)
                     .with_system(walk::<Soul, SoulConfig>)
                     .with_system(look::<Soul>.run_if(cursor_showed))
                     .with_system(camera_shake::<Soul, SoulConfig>)
@@ -39,7 +37,7 @@ impl Plugin for Soul {
                     .with_system(jump::<Soul, SoulConfig>)
                     .with_system(shield_toggler)
                     .with_system(place_n_get_shield)
-                    .with_system(pointing_on::<Soul, SoulConfig>)
+                    .with_system(pointing_on_shape::<Soul, SoulConfig>)
                     .with_system(crosshair)
                     .with_system(attack)
                     // .with_system(noclip_handler)
@@ -50,28 +48,13 @@ impl Plugin for Soul {
     }
 }
 
-impl Character<Soul> for Soul {
-    fn spawn(mut spawn_request: EventReader<SpawnChar>, mut commands: Commands) {
-        for spawn_request in spawn_request.iter()
-        {
-            if spawn_request.0 == "Soul"
-            {
-                commands
-                    .spawn()
-                    .insert(ShieldCD(CDProps::default()))
-                    .insert(EscCD(CDProps::new(3)))
-                    .insert(Soul)
-                    .insert(ShieldUp(false))
-                    .insert(ShieldPos(None))
-                    .insert(CollisionGroups::new(0b01, 0b110))
-                    .insert(Actions::<Action>::new())
-                    .insert(PointingOn(Vec::new()))
-                    .insert_bundle(States {
-                        id: Id(spawn_request.2),
-                        team: Team::Dark,
-                        ..Default::default()
-                    });
-            }
-        }
+pub fn insert_other(mut commands: Commands, query: Query<Entity, Added<Soul>>) {
+    for entity in query.iter() {
+        commands
+            .entity(entity)
+            .insert(ShieldCD(CDProps::default()))
+            .insert(EscCD(CDProps::new(3)))
+            .insert(ShieldUp(false))
+            .insert(ShieldPos(None));
     }
 }

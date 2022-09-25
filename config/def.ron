@@ -1,12 +1,12 @@
 (
     mouse_bindings: {
-        Left: 'shoot',
-        Middle: 'shoot',
-        Right: 'shoot'
+        Left: Shoot,
+        Middle: Take,
+        Right: Abil1
     },
     keyboard_bindings: {
-        W: 'shoot',
-        A: 'shoot',
+        W: Jump,
+        A: Left,
         F11: 'custom command'
     }
 )

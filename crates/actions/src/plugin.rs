@@ -19,6 +19,7 @@ where
 
         app.insert_resource(bindings)
             .insert_resource(bindings_path)
+            .insert_resource(IsLocked(false))
             .add_startup_system(load_bindings::<Keys>)
             .add_system(watch_for_changes::<Keys>)
             .add_system(collect_actions::<Sel, Keys>.after(update_inputs::<Sel, Keys>));
@@ -30,6 +31,7 @@ pub struct ActionsPlugin<Keys: Eq + std::hash::Hash, Sel: Component> {
     _phantom_data2: PhantomData<Sel>,
     config_path: &'static str,
     default_path: &'static str,
+
 }
 
 impl<Keys: Eq + std::hash::Hash, Sel: Component> ActionsPlugin<Keys, Sel> {

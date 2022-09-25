@@ -15,6 +15,7 @@ serde_json = "1.0.81"
 bevy-inspector-egui = "0.12.1"
 bevy_prototype_debug_lines = { version = "0.8", features = ["3d"] }
 bevy_debug_shapes = { path = "../bevy_debug_shapes" }
+synx = { path = "../synx" }
 clamped = "1.0.0"
 round = "0.1.2"
 bevy_atmosphere = "0.4.0"

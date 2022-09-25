@@ -1,9 +1,0 @@
-Keybindings({
-        W: Forward,
-        A: Left,
-        S: Back,
-        D: Right,
-        Space: Jump,
-        Shift: Sprint,
-        1: Command("speed change +1000.")
-})

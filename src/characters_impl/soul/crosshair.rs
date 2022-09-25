@@ -9,7 +9,7 @@ use super::resources::*;
 use anime::*;
 
 pub(crate) fn crosshair(
-    is_pointing: Query<(&PointingOn, &Actions<Action>), (With<Selected>, Without<Dead>)>,
+    is_pointing: Query<(&ShapeIntersections, &Actions<Action>), (With<Selected>, Without<Dead>)>,
     mut crosshair_val: Query<&mut CrosshairValue>,
     mut crosshair_box: Query<&mut Style, With<Crosshair>>,
     conf: Res<SoulConfig>,

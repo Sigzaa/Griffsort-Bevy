@@ -1,12 +1,16 @@
-use bevy_inspector_egui::Inspectable;
-use heroes::ConfigProps;
+use bevy::prelude::{*};
+use bevy_inspector_egui::{Inspectable, widgets::InspectorQuery};
+use heroes::{ConfigProps, Velocity, Hp, Hero, Config};
 use serde::Serialize;
 
 use self::components::CrosshairConfig;
 
+#[derive(Inspectable, Default)]
+pub struct QueryT{
+    query: InspectorQuery<Entity, With<Hero>>,
+}
 
-
-#[derive(serde::Deserialize, Serialize, Clone, Inspectable)]
+#[derive(serde::Deserialize, Serialize,  Inspectable)]
 pub struct JacquelineConfig {
     pub should_render: bool,
 

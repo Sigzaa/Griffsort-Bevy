@@ -10,6 +10,14 @@ use std::time::Duration;
 
 use crate::Action;
 
+
+pub fn sync_configs(){
+    // We have Config in components and the same Config in resources
+    // We can read both, but we can onl
+    // Syncing Heroes::Config
+
+}
+
 pub fn look<C: Component>(
     mut hero_q: Query<(&CameraLink, &mut Transform), (With<C>, With<Selected>)>,
     mut q_cam: Query<&mut Transform, Without<C>>,
@@ -18,6 +26,7 @@ pub fn look<C: Component>(
 ) {
     for (cam_link, mut body_transform) in hero_q.iter_mut()
     {
+        //println!("pos: {}", body_transform.translation);
         let mut cam_transform = q_cam.get_mut(cam_link.0).unwrap();
 
         for ev in motion_evr.iter()
@@ -29,11 +38,11 @@ pub fn look<C: Component>(
     }
 }
 
-pub fn pointing_on<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
+pub fn pointing_on_shape<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
     global_conf: Res<HeroesConfig>,
     conf: Res<Conf>,
     rapier_context: Res<RapierContext>,
-    mut hero_q: Query<(&CameraLink, &mut PointingOn), With<C>>,
+    mut hero_q: Query<(&CameraLink, &mut ShapeIntersections), With<C>>,
     q_cam: Query<&GlobalTransform>,
     mut commands: Commands,
 ) {
@@ -62,6 +71,35 @@ pub fn pointing_on<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
         // println!("pointing: {:?}", pointing_on.0);
         // println!();
     }
+}
+
+pub fn pointing_on<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
+    global_conf: Res<HeroesConfig>,
+    conf: Res<Conf>,
+    rapier_context: Res<RapierContext>,
+    mut hero_q: Query<(&CameraLink, &mut RayPointingOn), With<C>>,
+    q_cam: Query<&GlobalTransform>,
+    mut commands: Commands,
+) {
+    for (camera_entity, mut pointing_on) in &mut hero_q
+    {
+
+        let cam_transform = q_cam.get(camera_entity.0).unwrap();
+
+        if let Some((entity, toi)) = rapier_context.cast_ray(
+            cam_transform.translation() + cam_transform.forward() * 1.5, 
+            cam_transform.forward(), 
+            conf.props().pointing_ray_toi, 
+            true, 
+            QueryFilter::only_dynamic()
+        ) {
+            // The first collider hit has the entity `entity` and it hit after
+            // the ray travelled a distance equal to `ray_dir * toi`.
+
+            pointing_on.0 = Some((entity, toi));
+        }
+
+        }
 }
 
 // pub fn fly<C: Component>(mut q_sel: Query<
