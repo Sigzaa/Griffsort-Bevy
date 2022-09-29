@@ -31,7 +31,6 @@ pub struct ActionsPlugin<Keys: Eq + std::hash::Hash, Sel: Component> {
     _phantom_data2: PhantomData<Sel>,
     config_path: &'static str,
     default_path: &'static str,
-
 }
 
 impl<Keys: Eq + std::hash::Hash, Sel: Component> ActionsPlugin<Keys, Sel> {

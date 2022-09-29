@@ -4,7 +4,7 @@ mod resources;
 mod systems;
 
 pub use plugin::ActionsPlugin;
-pub use resources::{Actions, Keybindings, IsLocked};
+pub use resources::{Actions, IsLocked, Keybindings};
 pub use systems::{collect_actions, update_inputs};
 
 #[cfg(test)]

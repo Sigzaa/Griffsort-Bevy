@@ -14,8 +14,7 @@ use std::{
 // Watch changes in resource
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct Keybindings<Value> 
-{
+pub struct Keybindings<Value> {
     pub mouse_bindings: HashMap<MouseButton, Value>,
     pub keyboard_bindings: HashMap<KeyCode, Value>,
 }

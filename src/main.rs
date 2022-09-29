@@ -2,27 +2,30 @@ mod characters_impl;
 mod commands_impl;
 pub mod heroes_mapping;
 
+use actions::*;
 use bevy::prelude::*;
 use bevy::window::PresentMode;
-use characters_impl::{Characters, SpawnHeroEv};
-use commands_impl::ConsoleCommands;
-use go_level::plugin::Level;
-use heroes::*;
-use iyes_loopless::prelude::AppLooplessStateExt;
-use std::hash::Hash;
-use gs_inspector::*;
-use actions::*;
 use bevy_inspector_egui::{
     plugin::InspectorWindows, widgets::ResourceInspector, Inspectable, InspectorPlugin,
     WorldInspectorPlugin,
 };
 use bevy_rapier3d::prelude::*;
-use gs_states::{GameState, IntoConditionalSystem, StatesPlugin, CurrentState, KeyboardState, NextState, CursorState};
+use characters_impl::{Characters, SpawnHeroEv};
+use commands_impl::ConsoleCommands;
+use go_level::plugin::Level;
+use gs_inspector::*;
+use gs_states::{
+    CurrentState, CursorState, GameState, IntoConditionalSystem, KeyboardState, NextState,
+    StatesPlugin,
+};
 use gs_ui::*;
+use heroes::*;
+use iyes_loopless::prelude::AppLooplessStateExt;
 use serde::{Deserialize, Serialize};
+use std::hash::Hash;
 use tokio::*;
 
-use crate::characters_impl::{Soul, Jacqueline};
+use crate::characters_impl::{Jacqueline, Soul};
 
 #[derive(Inspectable, Default)]
 struct Data {
@@ -37,7 +40,6 @@ struct Acel(f32);
 fn main() {
     App::new()
         .add_plugin(StatesPlugin)
-
         .insert_resource(WindowDescriptor {
             title: "griffsort".to_string(),
             width: 1320.,
@@ -47,15 +49,13 @@ fn main() {
             ..Default::default()
         })
         .add_plugins(DefaultPlugins)
-
         .add_plugin(Inspector::new(env!("CARGO_PKG_VERSION")))
         .add_plugin(ConsoleCommands)
         .add_plugin(ActionsPlugin::<Action, Selected>::new(
             "./config/conf.ron",
             "./config/def.ron",
         ))
-        .add_system(update_inputs::<Selected, Action>)
-
+        .add_system(update_inputs::<Selected, Action>.before(collect_actions::<Selected, Action>))
         .add_enter_system(GameState::InGame, _temp_setup)
         .add_system(switch.run_in_state(GameState::InGame))
         .add_system(open_console)
@@ -99,20 +99,23 @@ pub enum Action {
 }
 
 pub fn open_console(
-    mut is_locked_actions: ResMut<IsLocked> ,
+    mut is_locked_actions: ResMut<IsLocked>,
     console: Res<ConsoleOpen>,
-    mut commands: Commands
+    mut commands: Commands,
 ) {
     if !console.is_changed()
     {
         return;
     }
 
-    if console.open{
+    if console.open
+    {
         commands.insert_resource(NextState(KeyboardState::Locked));
         commands.insert_resource(NextState(CursorState::Showed));
         is_locked_actions.0 = true;
-    } else {
+    }
+    else
+    {
         commands.insert_resource(NextState(KeyboardState::Unlocked));
         commands.insert_resource(NextState(CursorState::Hided));
         is_locked_actions.0 = false;
@@ -213,7 +216,11 @@ fn _temp_setup(
     //spawner.send(SpawnHeroEv::new("Soul", Team::Light, -1));
     //spawner.send(SpawnHeroEv::new(String::from("jacqueline"), Team::Light, Vec3::new(15., 15., 15.,), 1));
 
-    commands.spawn_bundle(TransformBundle::from_transform(Transform::from_translation(Vec3::new(15., 15., 15.,)))).insert(Jacqueline);
+    commands
+        .spawn_bundle(TransformBundle::from_transform(
+            Transform::from_translation(Vec3::new(15., 15., 15.)),
+        ))
+        .insert(Jacqueline);
 
     selected.0 = Some(0);
 }

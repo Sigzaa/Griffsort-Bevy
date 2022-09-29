@@ -1,7 +1,0 @@
-( 
-    resolution: (800, 500),
-    fullscreen: false,
-    vsync: false,
-    mouse_sensitivity: 1.4,
-    fov: 1.9,
-)

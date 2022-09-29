@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_inspector_egui::widgets::{InspectorQuery, InspectorQuerySingle};
 use bevy_inspector_egui::*;
 pub use components::*;
 use serde::{Deserialize, Serialize};
@@ -9,17 +10,25 @@ pub struct HeroesConfig {
     pub sensitivity: f32,
     pub ray_color: Color,
     pub debug_rapier: bool,
+    pub hp_bar_size: [f32; 2],
 }
 
 impl Default for HeroesConfig {
     fn default() -> Self {
         Self {
+            hp_bar_size: [150., 20.],
             debug_rapier: false,
             showray: false,
             sensitivity: 1.,
             ray_color: Default::default(),
         }
     }
+}
+
+#[derive(Inspectable, Default)]
+pub struct DebugAbils {
+    hp: InspectorQuerySingle<&'static mut Hp, With<Selected>>,
+    ammo: InspectorQuerySingle<&'static mut AmmoCapacity, With<Selected>>,
 }
 
 pub trait ConfigProps {
@@ -50,6 +59,8 @@ pub struct Config {
     pub max_velocity: f32,
     pub weight: f32,
     pub acceleration: f32,
+    pub fire_rate: f32,
+    pub ammo_capacity: i32,
 
     #[inspectable(collapse)]
     pub intersections_shape: IntersectionShape,
@@ -88,6 +99,8 @@ impl Default for Config {
                 source_distance: 1.,
             },
             pointing_ray_toi: 10.,
+            fire_rate: 1.4,
+            ammo_capacity: 20,
         }
     }
 }
@@ -105,14 +118,21 @@ pub struct HeroComponentsBundle {
     pub intersections_shape: IntersectionShape,
     pub poinging_ray_toi: RayToi,
     pub noclip: NoClip,
+    pub fire_rate: FireRate,
+    pub ammo_capacity: AmmoCapacity,
 }
-
 
 mod components {
     use bevy::prelude::*;
     use bevy_inspector_egui::Inspectable;
     use bevy_rapier3d::prelude::Toi;
     use serde::{Deserialize, Serialize};
+
+    #[derive(Component, Default, Reflect, Inspectable)]
+    pub struct FireRate(pub f32);
+
+    #[derive(Component, Default, Reflect, Inspectable)]
+    pub struct AmmoCapacity(pub i32);
 
     #[derive(Component)]
     pub struct Hero;
@@ -142,25 +162,25 @@ mod components {
     #[derive(Component, Reflect, Default, Clone)]
     pub struct NoClip(pub bool);
 
-    #[derive(Component, Reflect, Default, Copy, Clone, Debug,  Inspectable)]
+    #[derive(Component, Reflect, Default, Copy, Clone, Debug, Inspectable)]
     pub struct Hp(pub i32);
 
-    #[derive(Component, Reflect, Default, Copy, Clone, Debug,  Inspectable)]
+    #[derive(Component, Reflect, Default, Copy, Clone, Debug, Inspectable)]
     pub struct MaxHp(pub i32);
 
-    #[derive(Component, Reflect, Default, Copy, Clone, Debug,  Inspectable)]
+    #[derive(Component, Reflect, Default, Copy, Clone, Debug, Inspectable)]
     pub struct MaxJumpHeight(pub f32);
 
-    #[derive(Component, Reflect, Default, Copy, Clone, Debug,  Inspectable)]
+    #[derive(Component, Reflect, Default, Copy, Clone, Debug, Inspectable)]
     pub struct MaxVelocity(pub f32);
 
-    #[derive(Component, Reflect, Default, Copy, Clone, Debug,  Inspectable)]
+    #[derive(Component, Reflect, Default, Copy, Clone, Debug, Inspectable)]
     pub struct Weight(pub f32);
 
-    #[derive(Component, Reflect, Default, Copy, Clone, Debug,  Inspectable)]
+    #[derive(Component, Reflect, Default, Copy, Clone, Debug, Inspectable)]
     pub struct WalkAcceleration(pub f32);
 
-    #[derive(Component, Reflect, Default, Copy, Clone, Debug,  Inspectable)]
+    #[derive(Component, Reflect, Default, Copy, Clone, Debug, Inspectable)]
     pub struct RayToi(pub f32);
 
     #[derive(Component, Debug, Reflect, Default, Copy, Clone, Deserialize)]

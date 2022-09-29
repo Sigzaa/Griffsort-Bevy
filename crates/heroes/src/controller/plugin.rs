@@ -2,9 +2,8 @@ use std::marker::PhantomData;
 
 use crate::hud::hp_bar;
 
-
 use super::resources::*;
-use super::systems::{insert_body, insert_physics, insert_other};
+use super::systems::{insert_body, insert_other, insert_physics};
 use bevy::prelude::{shape::*, *};
 use bevy::render::camera::Projection;
 use bevy_inspector_egui::{Inspectable, InspectorPlugin};
@@ -18,9 +17,13 @@ pub struct Controller1<T: Component + Plugin, Conf: ConfigProps + Send + Sync + 
     pub conf_path: &'static str,
 }
 
-impl<T: Component + Plugin, Conf: ConfigProps + Send + Sync + 'static> Controller1 <T, Conf> {
-    pub fn new(config_path: &'static str, hero: T) -> Self{
-        Self { char_type: hero, conf_type: PhantomData::default(), conf_path: config_path }
+impl<T: Component + Plugin, Conf: ConfigProps + Send + Sync + 'static> Controller1<T, Conf> {
+    pub fn new(config_path: &'static str, hero: T) -> Self {
+        Self {
+            char_type: hero,
+            conf_type: PhantomData::default(),
+            conf_path: config_path,
+        }
     }
 }
 
@@ -37,25 +40,36 @@ where
         + 'static,
 {
     fn build(&self, app: &mut App) {
-        app
-            .add_plugin(self.char_type)
+        app.add_plugin(self.char_type)
             .add_plugin(InspectorPlugin::<Conf>::new())
             .add_plugin(Synx::<Conf>::new(self.conf_path))
             .add_system(insert_body::<T>)
             .add_system(insert_physics::<T>)
-            .add_system(insert_other::<T>)
+            .add_system(insert_other::<T, Conf>)
             .add_system(sync_config_res_with_components::<T, Conf>);
     }
 }
+// Fill this if you want to sync egui config resource with actual components
 
 pub fn sync_config_res_with_components<T: Component, Conf: ConfigProps + Send + Sync + 'static>(
-    mut query: Query<(&mut MaxHp, &mut MaxJumpHeight), With<T>>,
+    mut query: Query<
+        (
+            &mut MaxHp,
+            &mut MaxJumpHeight,
+            &mut AmmoCapacity,
+            &mut FireRate,
+        ),
+        With<T>,
+    >,
     conf: ResMut<Conf>,
 ) {
-    for (mut max_hp, mut max_jump_height) in &mut query{
-        max_hp.0 = conf.props().max_hp;
-        max_jump_height.0 = conf.props().max_jump_height;
+    for (mut max_hp, mut max_jump_height, mut ammo_capacity, mut fire_rate) in &mut query
+    {
+        let props = conf.props();
+
+        max_hp.0 = props.max_hp;
+        max_jump_height.0 = props.max_jump_height;
+        fire_rate.0 = props.fire_rate;
+        ammo_capacity.0 = props.ammo_capacity;
     }
 }
-
-

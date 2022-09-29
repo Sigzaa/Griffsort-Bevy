@@ -1,7 +1,7 @@
-mod plugin;
 mod commands;
-mod systems;
 mod conf_command;
+mod plugin;
+mod systems;
 
-pub use plugin::ConsoleCommands;
 pub use conf_command::toggle_visibility;
+pub use plugin::ConsoleCommands;

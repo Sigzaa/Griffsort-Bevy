@@ -10,12 +10,10 @@ use std::time::Duration;
 
 use crate::Action;
 
-
-pub fn sync_configs(){
+pub fn sync_configs() {
     // We have Config in components and the same Config in resources
     // We can read both, but we can onl
     // Syncing Heroes::Config
-
 }
 
 pub fn look<C: Component>(
@@ -79,27 +77,45 @@ pub fn pointing_on<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
     rapier_context: Res<RapierContext>,
     mut hero_q: Query<(&CameraLink, &mut RayPointingOn), With<C>>,
     q_cam: Query<&GlobalTransform>,
-    mut commands: Commands,
+    mut lines: ResMut<DebugLines>,
 ) {
     for (camera_entity, mut pointing_on) in &mut hero_q
     {
-
         let cam_transform = q_cam.get(camera_entity.0).unwrap();
 
+        let start = cam_transform.translation() + cam_transform.forward() * 1.5;
+
+        let mut max_toi = conf.props().pointing_ray_toi;
+
         if let Some((entity, toi)) = rapier_context.cast_ray(
-            cam_transform.translation() + cam_transform.forward() * 1.5, 
-            cam_transform.forward(), 
-            conf.props().pointing_ray_toi, 
-            true, 
-            QueryFilter::only_dynamic()
-        ) {
+            start,
+            cam_transform.forward(),
+            max_toi,
+            true,
+            QueryFilter::only_dynamic(),
+        )
+        {
+            max_toi = toi;
             // The first collider hit has the entity `entity` and it hit after
             // the ray travelled a distance equal to `ray_dir * toi`.
 
             pointing_on.0 = Some((entity, toi));
         }
-
+        else
+        {
+            pointing_on.0 = None;
         }
+
+        if global_conf.showray
+        {
+            lines.line_colored(
+                start,
+                cam_transform.translation() + cam_transform.forward() * max_toi,
+                0.,
+                global_conf.ray_color,
+            );
+        }
+    }
 }
 
 // pub fn fly<C: Component>(mut q_sel: Query<
@@ -289,7 +305,7 @@ pub fn camera_roll<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
         {
             // Mouse is moving
 
-            // cam_transform.rotation = ease(cam_transform.rotation.wrap(), Quat::from_rotation_z(out * max_roll).wrap()); 
+            // cam_transform.rotation = ease(cam_transform.rotation.wrap(), Quat::from_rotation_z(out * max_roll).wrap());
 
             is_idle = false;
         }

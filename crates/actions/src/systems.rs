@@ -14,11 +14,10 @@ pub fn collect_actions<
     mouse: Res<Input<MouseButton>>,
     mut q_selected: Query<&mut Actions<Keys>, With<Sel>>,
     bindings: Res<Keybindings<Keys>>,
-    is_locked: Res<IsLocked>
+    is_locked: Res<IsLocked>,
 ) {
     for mut actions in &mut q_selected
     {
-
         if is_locked.0
         {
             actions.just_released.clear();

@@ -1,8 +1,8 @@
+mod commands;
 mod plugin;
 mod resources;
-mod widgets;
-mod commands;
 mod systems;
+mod widgets;
 
+pub use bevy_console::{AddConsoleCommand, ConsoleCommand, ConsoleConfiguration, ConsolePlugin, *};
 pub use plugin::Inspector;
-pub use bevy_console::{ConsoleConfiguration, ConsolePlugin, AddConsoleCommand, ConsoleCommand, *};

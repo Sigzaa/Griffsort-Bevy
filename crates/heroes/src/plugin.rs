@@ -1,9 +1,11 @@
-use crate::{hud::*, systems::sync_selected, id_manager::IdManager};
+use crate::{hud::*, id_manager::IdManager, systems::sync_selected};
 
 use super::controller::resources::*;
 use bevy::prelude::*;
+use bevy_inspector_egui::InspectorPlugin;
 use bevy_prototype_debug_lines::{DebugLines, DebugLinesPlugin};
 use bevy_rapier3d::prelude::*;
+use synx::Synx;
 
 pub struct CharController;
 impl Plugin for CharController {
@@ -11,9 +13,8 @@ impl Plugin for CharController {
         app.add_startup_system(setup)
             .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
             //.add_plugin(RapierDebugRenderPlugin::default())
-            .add_plugin(DebugLinesPlugin::default())
+            .add_plugin(DebugLinesPlugin::with_depth_test(true))
             .insert_resource(SelectedId(None))
-            .insert_resource(HeroesConfig::default())
             .insert_resource(IdManager::new())
             .add_system(sync_selected)
             .add_system(hp_bar)

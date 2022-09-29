@@ -1,15 +1,16 @@
+use super::commands::*;
 use super::resources::*;
 use super::widgets::*;
-use super::commands::*;
-use bevy::{ app::AppExit,
+use bevy::{
+    app::AppExit,
     diagnostic::{Diagnostics, FrameTimeDiagnosticsPlugin},
     prelude::*,
 };
 use bevy_console::AddConsoleCommand;
+use bevy_console::{ConsoleConfiguration, ConsolePlugin};
 use bevy_egui::{egui, EguiContext, EguiPlugin};
 use egui::Ui;
 use std::process::Command;
-use bevy_console::{ConsoleConfiguration, ConsolePlugin};
 
 #[derive(Default)]
 struct GSVersion(&'static str);
@@ -17,8 +18,8 @@ struct GSVersion(&'static str);
 pub struct Inspector {
     pub game_version: &'static str,
 }
-impl Inspector{
-    pub fn new(game_version: &'static str) -> Self{
+impl Inspector {
+    pub fn new(game_version: &'static str) -> Self {
         Self { game_version }
     }
 }

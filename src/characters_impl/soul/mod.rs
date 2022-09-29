@@ -49,7 +49,8 @@ impl Plugin for Soul {
 }
 
 pub fn insert_other(mut commands: Commands, query: Query<Entity, Added<Soul>>) {
-    for entity in query.iter() {
+    for entity in query.iter()
+    {
         commands
             .entity(entity)
             .insert(ShieldCD(CDProps::default()))

@@ -1,4 +1,8 @@
-use bevy::{prelude::{shape::*, *}, render::camera::Projection, ecs::entity};
+use bevy::{
+    ecs::entity,
+    prelude::{shape::*, *},
+    render::camera::Projection,
+};
 
 use crate::HeroCam;
 
@@ -9,22 +13,21 @@ pub fn body(
     entity: Entity,
 ) -> Entity {
     commands
-    .entity(entity)
-    .insert_bundle(PbrBundle {
-        mesh: meshes.add(Mesh::from(Capsule {
-            radius: 0.3,
+        .entity(entity)
+        .insert_bundle(PbrBundle {
+            mesh: meshes.add(Mesh::from(Capsule {
+                radius: 0.3,
+                ..Default::default()
+            })),
+            material: materials.add(StandardMaterial {
+                base_color: Color::rgba(0.9, 0.2, 0.1, 0.5),
+                alpha_mode: AlphaMode::Blend,
+                ..Default::default()
+            }),
+            //transform: *transform,
             ..Default::default()
-        })),
-        material: materials.add(StandardMaterial {
-            base_color: Color::rgba(0.9, 0.2, 0.1, 0.5),
-            alpha_mode: AlphaMode::Blend,
-            ..Default::default()
-        }),
-        //transform: *transform,
-        ..Default::default()
-    })
-
-    .id()
+        })
+        .id()
 }
 
 pub fn head(
@@ -51,20 +54,20 @@ pub fn camera(
     materials: &mut Assets<StandardMaterial>,
 ) -> Entity {
     commands
-    .spawn_bundle(Camera3dBundle {
-        projection: Projection::Perspective(PerspectiveProjection {
-            fov: 1.4, // a float of your fov in radians,
-            ..default()
-        }),
-        camera: Camera {
-            is_active: false,
-            priority: 1,
-            ..Default::default()
-        },
-        transform: Transform::from_xyz(0., 0., 0.),
+        .spawn_bundle(Camera3dBundle {
+            projection: Projection::Perspective(PerspectiveProjection {
+                fov: 1.4, // a float of your fov in radians,
+                ..default()
+            }),
+            camera: Camera {
+                is_active: false,
+                priority: 1,
+                ..Default::default()
+            },
+            transform: Transform::from_xyz(0., 0., 0.),
 
-        ..Default::default()
-    })
-    .insert(HeroCam)
-    .id()
+            ..Default::default()
+        })
+        .insert(HeroCam)
+        .id()
 }

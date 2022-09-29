@@ -1,8 +1,8 @@
 use bevy::prelude::Component;
 use bevy_inspector_egui::Inspectable;
-use heroes::{CDProps, CooldownManager, ConfigProps};
-use serde::Serialize;
 pub use components::*;
+use heroes::{CDProps, ConfigProps, CooldownManager};
+use serde::Serialize;
 
 #[derive(Component)]
 pub struct ShootCD(pub CDProps);
@@ -12,7 +12,6 @@ impl CooldownManager for ShootCD {
         &mut self.0
     }
 }
-
 
 #[derive(serde::Deserialize, Serialize, Clone, Inspectable)]
 pub struct ShangConfig {
@@ -60,7 +59,7 @@ impl Default for ShangConfig {
     }
 }
 
-mod components{
+mod components {
     use super::*;
 
     #[derive(serde::Deserialize, Serialize, Clone, Inspectable)]
@@ -69,5 +68,4 @@ mod components{
         pub to_idle_duration: f32,
         pub to_pointing_duration: f32,
     }
-
 }

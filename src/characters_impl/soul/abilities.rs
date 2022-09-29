@@ -174,7 +174,8 @@ pub fn sprint(
 
             // force.force += direction * 50000.;
         }
-        if !cd.is_cooldown(1) && cd.left() < 15{
+        if !cd.is_cooldown(1) && cd.left() < 15
+        {
             cd.add(1);
             cd.cooldown(1, 2.5);
         }

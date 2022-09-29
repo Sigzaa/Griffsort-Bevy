@@ -1,11 +1,15 @@
 (
-    showray: false,
+    showray: true,
     sensitivity: 1.0,
     ray_color: Rgba(
-        red: 1.0,
-        green: 0.0,
-        blue: 0.0,
+        red: 0.0,
+        green: 0.8862745,
+        blue: 1.0,
         alpha: 1.0,
     ),
-    debug_rapier: true,
+    debug_rapier: false,
+    hp_bar_size: (
+        150.0,
+        19.5,
+    ),
 )
