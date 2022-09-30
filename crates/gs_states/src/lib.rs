@@ -12,8 +12,14 @@ impl Plugin for StatesPlugin {
             .add_loopless_state(GameState::MainMenu)
             .add_loopless_state(CursorState::Showed)
             .add_loopless_state(KeyboardState::Unlocked)
+
+            // Automatic hide cursor on enter the match
             .add_enter_system(GameState::InGame, hide_cursor)
+
+            // Cursor visibility toggler according to cursor state (CursorState)
             .add_system(handle_cursor)
+
+            // Cursor visibility toggler on Alt
             .add_system(alt_switch_cursor);
     }
 }

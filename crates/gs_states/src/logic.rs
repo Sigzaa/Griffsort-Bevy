@@ -16,7 +16,7 @@ pub fn unhide_cursor(mut state: ResMut<CurrentState<CursorState>>) {
     state.0 = CursorState::Showed;
 }
 
-pub fn handle_cursor(mut state: ResMut<CurrentState<CursorState>>, mut windows: ResMut<Windows>) {
+pub fn handle_cursor(state: ResMut<CurrentState<CursorState>>, mut windows: ResMut<Windows>) {
     if !state.is_changed()
     {
         return;

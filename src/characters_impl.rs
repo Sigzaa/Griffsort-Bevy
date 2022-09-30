@@ -7,10 +7,8 @@ pub mod zero;
 
 use actions::Actions;
 use bevy::prelude::*;
-use bevy_inspector_egui::{InspectorPlugin};
 use heroes::*;
 pub use heroes_structs::*;
-use synx::Synx;
 
 use crate::{heroes_mapping::spawn_hero, Action};
 
@@ -24,8 +22,8 @@ impl Plugin for Characters {
         app.add_event::<SpawnHeroEv>()
             .add_event::<DespawnHeroEv>()
             //.add_plugin(InspectorPlugin::<InspectorQuerySingle<&mut Hp, With<Selected>>>::new())
-            .add_plugin(InspectorPlugin::<HeroesConfig>::new())
-            .add_plugin(Synx::<HeroesConfig>::new("./config/heroes.ron"))
+            
+            
             .add_plugin(Controller1::<Jacqueline, JacquelineConfig>::new(
                 "./config/jacqueline.ron",
                 Jacqueline,
@@ -40,6 +38,7 @@ impl Plugin for Characters {
                 "./config/soul.ron",
                 Soul,
             ))
+            
             .add_system(shared)
             .add_system(spawn)
             .add_system(despawn);
