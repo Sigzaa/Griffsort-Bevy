@@ -5,8 +5,8 @@ use actions::Actions;
 use bevy::prelude::*;
 
 pub(crate) fn attack(
-    char: Query<(&ShapeIntersections, &Team, &Actions<Action>), (With<Soul>, Without<Dead>)>,
-    mut enemy: Query<(&mut Hp, &Team), (With<Hero>, Without<Dead>)>,
+    _char: Query<(&ShapeIntersections, &Team, &Actions<Action>), (With<Soul>, Without<Dead>)>,
+    _enemy: Query<(&mut Hp, &Team), (With<Hero>, Without<Dead>)>,
     _time: Res<Time>,
 ) {
     // for (pointing_on, team, act) in char.iter() {
@@ -29,7 +29,7 @@ pub(crate) fn place_n_get_shield(
     mut char: Query<(&ShieldUp, &ShieldPos, Entity, &Children), (With<Soul>, Changed<ShieldUp>)>,
     shield_q: Query<(Entity, &ShieldFather)>,
 ) {
-    for (shield_up, shield_pos, entity, children) in char.iter_mut()
+    for (_shield_up, shield_pos, entity, _children) in char.iter_mut()
     {
         match shield_pos.0
         {
@@ -75,9 +75,9 @@ pub(crate) fn place_n_get_shield(
 }
 
 pub(crate) fn shield_toggler(
-    mut char: Query<(&Actions<Action>, &mut ShieldUp, &mut ShieldPos, &Transform), With<Soul>>,
-    mut ev_wr: EventWriter<ShieldEvent>,
-    time: Res<Time>,
+    _char: Query<(&Actions<Action>, &mut ShieldUp, &mut ShieldPos, &Transform), With<Soul>>,
+    _ev_wr: EventWriter<ShieldEvent>,
+    _time: Res<Time>,
 
     _commands: Commands,
 ) {
@@ -158,7 +158,7 @@ pub fn sprint(
     mut q: Query<(&Actions<Action>, &mut EscCD, &mut ExternalForce, &Transform), With<Soul>>,
     time: Res<Time>,
 ) {
-    for (ginp, mut cd, mut force, transform) in &mut q
+    for (ginp, mut cd, _force, _transform) in &mut q
     {
         cd.tick_timers(time.delta_seconds());
 

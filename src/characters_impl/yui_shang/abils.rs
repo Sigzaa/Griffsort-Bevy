@@ -1,6 +1,5 @@
 use bevy::{
     prelude::{Query, With},
-    transform,
 };
 use heroes::CameraLink;
 
@@ -11,7 +10,7 @@ use super::*;
 pub fn shoot(
     mut q: Query<(&CameraLink, &mut ShootCD, &Actions<Action>), With<YuiShang>>,
     cam_q: Query<&Transform>,
-    mut commands: Commands,
+    _commands: Commands,
     time: Res<Time>,
 ) {
     for (cam_link, mut cd, act) in &mut q
@@ -31,7 +30,7 @@ pub fn shoot(
             cd.cooldown(0, 2.);
         }
 
-        let transform = cam_q.get(cam_link.0).unwrap();
+        let _transform = cam_q.get(cam_link.0).unwrap();
         println!("cd: {:?}", cd.0);
     }
 }

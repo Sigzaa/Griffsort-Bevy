@@ -1,7 +1,7 @@
 use super::*;
 use bevy::asset::LoadState;
 use bevy::prelude::shape::*;
-use bevy::{input::mouse::MouseMotion, prelude::*};
+use bevy::{prelude::*};
 use heroes::*;
 
 #[derive(Component)]
@@ -79,7 +79,7 @@ fn check_textures(
     }
 }
 
-use bevy::input::mouse::MouseWheel;
+
 impl Tamara {
     // fn fly<C: Component>(
     //     mut q_sel: Query<(&GoInputs, &mut ExternalForce, &MaxJump, &Transform), With<C>>,

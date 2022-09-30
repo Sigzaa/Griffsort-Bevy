@@ -7,8 +7,8 @@ use bevy_prototype_debug_lines::{DebugLines, DebugLinesPlugin};
 use bevy_rapier3d::prelude::*;
 use synx::Synx;
 
-pub struct CharController;
-impl Plugin for CharController {
+pub struct Heroes;
+impl Plugin for Heroes {
     fn build(&self, app: &mut App) {
         app.add_startup_system(setup)
             .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())

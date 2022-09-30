@@ -7,12 +7,12 @@ pub mod zero;
 
 use actions::Actions;
 use bevy::prelude::*;
-use bevy_inspector_egui::{widgets::InspectorQuerySingle, InspectorPlugin};
+use bevy_inspector_egui::{InspectorPlugin};
 use heroes::*;
 pub use heroes_structs::*;
 use synx::Synx;
 
-use crate::{commands_impl, heroes_mapping::spawn_hero, Action};
+use crate::{heroes_mapping::spawn_hero, Action};
 
 use self::{
     jacqueline::resources::JacquelineConfig, soul::SoulConfig, yui_shang::resources::ShangConfig,

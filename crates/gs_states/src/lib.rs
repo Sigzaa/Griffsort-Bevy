@@ -8,7 +8,8 @@ pub struct StatesPlugin;
 
 impl Plugin for StatesPlugin {
     fn build(&self, app: &mut App) {
-        app.add_loopless_state(GameState::MainMenu)
+        app
+            .add_loopless_state(GameState::MainMenu)
             .add_loopless_state(CursorState::Showed)
             .add_loopless_state(KeyboardState::Unlocked)
             .add_enter_system(GameState::InGame, hide_cursor)

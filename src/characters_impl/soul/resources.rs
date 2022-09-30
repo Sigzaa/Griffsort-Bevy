@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy::reflect::TypeUuid;
+
 use bevy_inspector_egui::Inspectable;
 pub use components::*;
 use heroes::{CDProps, ConfigProps, CooldownManager};
@@ -72,7 +72,7 @@ impl Default for SoulConfig {
 mod components {
     use bevy::prelude::*;
     use bevy_inspector_egui::Inspectable;
-    use bevy_rapier3d::prelude::Toi;
+    
     use serde::Serialize;
 
     #[derive(serde::Deserialize, Serialize, Clone, Inspectable)]

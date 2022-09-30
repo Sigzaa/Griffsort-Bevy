@@ -1,5 +1,4 @@
 use super::{
-    resources::{MarkState, MarksLinks},
     *,
 };
 
@@ -10,7 +9,7 @@ pub(crate) fn attack(
 ) {
     for (pointing_on, team, act) in char.iter()
     {
-        if let Some((entity, toi)) = pointing_on.0
+        if let Some((entity, _toi)) = pointing_on.0
         {
             let en = enemy.get_mut(entity);
             if en.is_ok()

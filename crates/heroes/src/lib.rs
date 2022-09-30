@@ -15,6 +15,6 @@ pub use cd_manager::*;
 pub use clamped::Clamp;
 pub use controller::{plugin::*, resources::*};
 pub use id_manager::IdManager;
-pub use plugin::CharController;
+pub use plugin::Heroes;
 pub use round::{round, round_down, round_up};
 pub use toolchain::{maths::*, ray_casting::*};

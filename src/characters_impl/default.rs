@@ -1,12 +1,11 @@
 use actions::Actions;
-use bevy::prelude::{shape::*, *};
+use bevy::prelude::{*};
 use bevy::{
     input::mouse::MouseMotion,
-    prelude::{KeyCode, *},
 };
 use heroes::*;
 
-use std::time::Duration;
+
 
 use crate::Action;
 
@@ -37,12 +36,12 @@ pub fn look<C: Component>(
 }
 
 pub fn pointing_on_shape<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
-    global_conf: Res<HeroesConfig>,
+    _global_conf: Res<HeroesConfig>,
     conf: Res<Conf>,
     rapier_context: Res<RapierContext>,
     mut hero_q: Query<(&CameraLink, &mut ShapeIntersections), With<C>>,
     q_cam: Query<&GlobalTransform>,
-    mut commands: Commands,
+    _commands: Commands,
 ) {
     for (camera_entity, mut pointing_on) in &mut hero_q
     {
@@ -288,12 +287,12 @@ pub fn camera_shake<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
 pub fn camera_roll<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
     mut q_cam: Query<&mut Transform>,
     mut q_sel: Query<&CameraLink, (With<Selected>, With<C>)>,
-    conf: Res<Conf>,
+    _conf: Res<Conf>,
     mut motion_evr: EventReader<MouseMotion>,
 ) {
     for camera_link in &mut q_sel
     {
-        let mut cam_transform = q_cam.get_mut(camera_link.0).unwrap();
+        let _cam_transform = q_cam.get_mut(camera_link.0).unwrap();
 
         let mut is_idle = true;
 
@@ -301,7 +300,7 @@ pub fn camera_roll<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
 
         // println!("camera transform: {:?}", cam_transform.rotation.to_scaled_axis());
 
-        for ev in motion_evr.iter()
+        for _ev in motion_evr.iter()
         {
             // Mouse is moving
 
@@ -324,11 +323,11 @@ pub fn camera_roll<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
 pub fn is_grounded<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
     mut q_sel: Query<(&Transform, Entity, &mut Damping), With<C>>,
     rapier_context: Res<RapierContext>,
-    mut lines: ResMut<DebugLines>,
+    _lines: ResMut<DebugLines>,
     mut commands: Commands,
     //show_ray: Res<ShowRay>,
 ) {
-    for (transform, ent, mut damping) in q_sel.iter_mut()
+    for (transform, ent, _damping) in q_sel.iter_mut()
     {
         //
         // damping.linear_damping = 0.5;
@@ -340,7 +339,7 @@ pub fn is_grounded<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
         let max_toi = 0.4;
         let filter = QueryFilter::new().exclude_collider(ent);
 
-        if let Some((entity, hit)) =
+        if let Some((_entity, _hit)) =
             rapier_context.cast_shape(shape_pos, shape_rot, shape_vel, &shape, max_toi, filter)
         {
             // The first collider hit has the entity `entity`. The `hit` is a

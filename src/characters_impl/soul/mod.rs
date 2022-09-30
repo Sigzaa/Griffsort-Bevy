@@ -7,19 +7,19 @@ mod sfx;
 mod vfx;
 
 use super::*;
-use super::{super::Action, default::*};
+use super::{default::*};
 use abilities::*;
-use actions::Actions;
-use bevy::{prelude::*, reflect::TypeUuid};
-use bevy_inspector_egui::InspectorPlugin;
+
+use bevy::{prelude::*};
+
 use crosshair::*;
-use general::*;
+
 use gs_states::{cursor_showed, GameState};
 use iyes_loopless::prelude::*;
 pub use resources::*;
-use sfx::*;
-use synx::Synx;
-use vfx::*;
+
+
+
 
 impl Plugin for Soul {
     fn build(&self, app: &mut App) {

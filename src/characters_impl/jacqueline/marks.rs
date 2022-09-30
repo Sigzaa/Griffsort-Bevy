@@ -1,11 +1,10 @@
-use actions::Actions;
 use bevy::prelude::*;
 use keyframe::{ease, functions::EaseInQuint};
 use std::{collections::HashSet, f32::consts::PI};
 
 use crate::{
     characters_impl::{jacqueline::resources::MarksLinks, Jacqueline},
-    Action,
+    
 };
 
 use heroes::*;
@@ -75,7 +74,7 @@ pub fn follow_hero(
 
                 offset *= conf.marks.distance;
 
-                offset += transform.translation * transform.back() * 0.02;
+                offset += transform.translation * transform.back() * 0.1;
 
                 let to = transform.translation + offset;
 
@@ -94,9 +93,9 @@ pub fn follow_hero(
 
 pub fn insert_marks(
     query: Query<Entity, (With<Jacqueline>, Added<Transform>)>,
-    mut evwr: EventWriter<SpawnMarkEv>,
+    _evwr: EventWriter<SpawnMarkEv>,
     mut commands: Commands,
-    conf: Res<JacquelineConfig>,
+    _conf: Res<JacquelineConfig>,
 ) {
     for entity in query.iter() {
         // evwr.send(SpawnMarkEv {
@@ -125,8 +124,6 @@ pub fn rearrange_angles(
                     in_idle += 1;
                 }
             }
-
-            println!("in idle {in_idle}");
 
             let mut index = 0;
 
@@ -162,10 +159,12 @@ pub fn spawn_mark(
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut query: Query<(&mut MarksLinks, &Transform), With<Jacqueline>>,
     conf: Res<JacquelineConfig>,
+    mut rearrange: EventWriter<RecalkAnglesEv>,
 ) {
-    for spawn in ev.iter() {
+    for spawn in ev.iter() 
+    {
+        rearrange.send(RecalkAnglesEv);
 
-        println!("spawn event");
         let sided = conf.marks.max_amount;
 
         for i in 0..spawn.amount {
@@ -201,6 +200,8 @@ pub fn spawn_mark(
             marks_links.0.insert(mark);
         }
     }
+
+    
 }
 
 // Returning an Angle in Radians

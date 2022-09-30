@@ -1,13 +1,12 @@
-use actions::Actions;
-use bevy::{prelude::*, render::camera::Projection, transform::TransformBundle};
+
+use bevy::{prelude::*, render::camera::Projection};
 use bevy_console::*;
-use bevy_console_parser::parse_console_command;
+
 use gs_states::{GameState, NextState};
 use heroes::*;
 
 use crate::{
-    characters_impl::{Jacqueline, SpawnHeroEv},
-    Action,
+    characters_impl::{SpawnHeroEv},
 };
 
 //use crate::heroes_mapping::spawn_hero;
@@ -21,7 +20,7 @@ pub struct RunCommand {
 }
 
 pub fn run_command(mut log: ConsoleCommand<RunCommand>) {
-    if let Some(RunCommand { script_path }) = log.take()
+    if let Some(RunCommand { script_path: _ }) = log.take()
     {
         // handle command
     }
@@ -38,7 +37,7 @@ pub fn match_command(
     mut log: ConsoleCommand<MatchCommand>,
     query: Query<(Entity, &Id, &Team), With<Hero>>,
 ) {
-    if let Some(MatchCommand { script_path }) = log.take()
+    if let Some(MatchCommand { script_path: _ }) = log.take()
     {
         for (ent, id, team) in &query
         {
@@ -62,7 +61,7 @@ pub struct ConnectCommand {
 }
 
 pub fn connect_command(mut log: ConsoleCommand<ConnectCommand>, mut commands: Commands) {
-    if let Some(ConnectCommand { ip }) = log.take()
+    if let Some(ConnectCommand { ip: _ }) = log.take()
     {
         commands.insert_resource(NextState(GameState::InGame));
         // handle command
@@ -99,7 +98,7 @@ pub fn watchme_command(
         {
             (Some(x), Some(y), Some(z)) =>
             {
-                let mut transform = sel.single();
+                let transform = sel.single();
 
                 let x = x.parse::<f32>().unwrap_or(transform.translation[0]);
                 let y = y.parse::<f32>().unwrap_or(transform.translation[1]);
@@ -162,7 +161,7 @@ pub fn spawn_command(
     query: Query<&Transform, With<Selected>>,
     mut spawner: EventWriter<SpawnHeroEv>,
 ) {
-    if let Some(SpawnCommand { name, team, id }) = log.take()
+    if let Some(SpawnCommand { name, team, id: _ }) = log.take()
     {
         for transform in &query
         {

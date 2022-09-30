@@ -9,10 +9,10 @@ use super::{default::*, YuiShang};
 use abils::*;
 use actions::Actions;
 use bevy::prelude::*;
-use bevy_inspector_egui::InspectorPlugin;
+
 use gs_states::{cursor_showed, ConditionSet, IntoConditionalSystem};
 use heroes::*;
-use synx::Synx;
+
 
 impl Plugin for YuiShang {
     fn build(&self, app: &mut App) {

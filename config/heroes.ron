@@ -1,5 +1,5 @@
 (
-    showray: true,
+    showray: false,
     sensitivity: 1.0,
     ray_color: Rgba(
         red: 0.0,

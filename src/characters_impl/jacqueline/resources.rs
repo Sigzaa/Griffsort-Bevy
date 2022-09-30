@@ -1,6 +1,6 @@
 use bevy::prelude::*;
-use bevy_inspector_egui::{widgets::InspectorQuery, Inspectable};
-use heroes::{CDProps, Config, ConfigProps, CooldownManager, Hero, Hp, Velocity};
+use bevy_inspector_egui::{ Inspectable};
+use heroes::*;
 use serde::{Deserialize, Serialize};
 
 pub use self::components::*;

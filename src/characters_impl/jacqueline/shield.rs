@@ -1,20 +1,22 @@
 use std::collections::HashSet;
 
 use super::resources::*;
-use crate::*;
+use crate::{*, characters_impl::Jacqueline};
+use actions::Actions;
 use bevy::prelude::*;
-use keyframe::{ease, functions::EaseInQuint};
+use heroes::CooldownManager;
+use keyframe::{ease, functions::*};
 
 // Converting mark states from Idle to Shield
 // Handling inputs and cooldowns
 pub fn idle_to_shield(
-    mut query: Query<(&MarksLinks, &mut ShieldState, &Actions<Action>, &mut MarksCD), With<Jacqueline>>,
+    mut query: Query<(&MarksLinks, &Actions<Action>, &mut MarksCD), With<Jacqueline>>,
     mut markq: Query<&mut MarkState, Without<Jacqueline>>,
     mut evwr: EventWriter<RecalkAnglesEv>,
     mut commands: Commands,
 
 ) {
-    for (links, mut shield_state, act, mut mcd) in query.iter_mut() {
+    for (links, act, mut mcd) in query.iter_mut() {
         // Detecting inputs
         if !act.pressed(Action::Abil1) {
             return;
@@ -40,7 +42,7 @@ pub fn idle_to_shield(
 
                 // Adding expiration timer
                 commands.entity(*mark).insert(MarkDespawnTimer {
-                    timer: Timer::from_seconds(1., false),
+                    timer: Timer::from_seconds(0.5, false),
                 });
 
                 // Sending Event to reallocate angles of marks in new state
@@ -67,7 +69,7 @@ pub fn mark_to_shield(
         // Expecting position of the shield
         let mut final_transform = transform.clone();
 
-        final_transform.translation += transform.forward() * 2.;
+        final_transform.translation += transform.forward() * 1.4;
 
         // We will use it later
         let shield_exists = shield_state.link.is_some();
@@ -77,14 +79,35 @@ pub fn mark_to_shield(
             // Its safe
             let mut shield_transform = shieldq.get_mut(shield_state.link.unwrap()).unwrap();
 
-            for i in 0..3 {
-                shield_transform.translation[i] = ease(
-                    EaseInQuint,
-                    shield_transform.translation[i],
-                    final_transform.translation[i],
-                    0.5,
-                );
-            }
+            // for i in 0..3 {
+            //     shield_transform.translation[i] = ease(
+            //         EaseInQuint,
+            //         shield_transform.translation[i],
+            //         final_transform.translation[i],
+            //         0.7,
+            //     );
+            // }
+
+
+            // let current_rotation = shield_transform.rotation.to_scaled_axis()[1];
+
+            //let to_rotation = transform.rotation.to_scaled_axis()[1];
+
+            // // Rotating a shield like a hero
+            // let rotation = ease(
+            //     EaseInQuint,
+            //     current_rotation,
+            //     to_rotation,
+            //     0.8,
+            // );
+
+            //shield_transform.rotation = Quat::from_scaled_axis(Vec3::new(0., to_rotation, 0.));
+
+            // Just teleporting it directly to its location
+            // No animations
+            // Also animations impl comments are on top
+
+            *shield_transform = final_transform.clone();
         }
 
         // We need this, to push there all marks which should be removed from MarksLinks, and then remove it
@@ -110,17 +133,17 @@ pub fn mark_to_shield(
 
                 for i in 0..3 {
                     mark_transform.translation[i] = ease(
-                        EaseInQuint,
+                        EaseInQuad,
                         mark_transform.translation[i],
                         final_transform.translation[i],
-                        0.5,
+                        0.4,
                     );
                 }
 
                 if desp_timer.timer.just_finished() {
                     // Time to despawn a mark.
 
-                    shield_state.duration += 1.;
+                    shield_state.duration += 2.;
 
                     if !shield_exists {
                         // Creating a shield if it does not exist
@@ -169,7 +192,7 @@ pub fn mark_to_shield(
     }
 }
 
-
+// Ticking shield timer
 pub fn shield_handler(
     mut query: Query<(&mut ShieldState, &MarksLinks, &Transform), With<Jacqueline>>,
     time: Res<Time>,
@@ -177,31 +200,21 @@ pub fn shield_handler(
 ) {
     for (mut shield_state, _links, _tr) in &mut query {
 
-        if shield_state.link.is_none() {
+        // Checking the existance of the shield
+        if shield_state.link.is_none() 
+        {
             return;
         }
         let mark_ent = shield_state.link.unwrap();
 
-        if shield_state.duration <= 0. {
+        if shield_state.duration <= 0. 
+        {
             commands.entity(mark_ent).despawn();
             shield_state.link = None;
-        } else {
+        } 
+        else 
+        {
             shield_state.duration -= time.delta_seconds();
         }
     }
-}
-
-pub fn shield_follow_hero() {}
-
-pub fn setup_shield(
-    query: Query<(Entity, &Transform), (With<Jacqueline>, Added<Transform>)>,
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-) {
-    for (ent, transform) in &query {}
-}
-
-pub fn animation_handler() {
-    todo!();
 }

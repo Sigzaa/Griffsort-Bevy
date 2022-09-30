@@ -1,5 +1,5 @@
-use crate::{characters_impl::*, heroes_mapping::conf_commands};
-use bevy::prelude::{Commands, ResMut};
+use crate::{heroes_mapping::conf_commands};
+use bevy::prelude::{ResMut};
 use bevy_console::*;
 use bevy_inspector_egui::{plugin::InspectorWindows, Inspectable};
 
@@ -12,7 +12,7 @@ pub struct ConfCommand {
 
 pub fn conf_command(
     mut log: ConsoleCommand<ConfCommand>,
-    mut inspector_windows: ResMut<InspectorWindows>,
+    inspector_windows: ResMut<InspectorWindows>,
 ) {
     if let Some(ConfCommand { inspectable_name }) = log.take()
     {
