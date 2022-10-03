@@ -91,6 +91,8 @@ mod components {
     pub struct ShieldUp(pub bool);
     #[derive(Component, Default)]
     pub struct ShieldPos(pub Option<Transform>);
+
+    #[allow(dead_code)] 
     pub enum ShieldEvent {
         Up,
         Down,
@@ -106,5 +108,5 @@ mod components {
     pub struct T(pub f32);
 
     //Vfx Events
-    pub struct ShootEv();
+    //pub struct ShootVFXEv();
 }
