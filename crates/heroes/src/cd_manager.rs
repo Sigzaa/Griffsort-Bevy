@@ -1,4 +1,3 @@
-use clamped::Clamp;
 
 #[derive(Debug)]
 pub struct CDProps {

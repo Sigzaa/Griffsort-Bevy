@@ -1,5 +1,4 @@
 use bevy::{
-    ecs::entity,
     prelude::{shape::*, *},
     render::camera::Projection,
 };
@@ -49,9 +48,7 @@ pub fn head(
         .id()
 }
 pub fn camera(
-    commands: &mut Commands,
-    meshes: &mut Assets<Mesh>,
-    materials: &mut Assets<StandardMaterial>,
+    commands: &mut Commands
 ) -> Entity {
     commands
         .spawn_bundle(Camera3dBundle {

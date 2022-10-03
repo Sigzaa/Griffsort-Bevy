@@ -5,7 +5,9 @@ use bevy::{
 };
 use bevy_inspector_egui::plugin::InspectorWindows;
 
+// Hardcoded String-to-action mapping
 
+// Toggle visibility of characters Egui configs
 pub fn conf_commands(name: &str, mut inspector_windows: ResMut<InspectorWindows>) {
     match name
     {
@@ -17,6 +19,9 @@ pub fn conf_commands(name: &str, mut inspector_windows: ResMut<InspectorWindows>
         {}
     }
 }
+
+// Extend entity
+// Uses for spawning heros with string
 
 pub fn spawn_hero(name: String, mut ec: EntityCommands) {
     let name: &str = &name;

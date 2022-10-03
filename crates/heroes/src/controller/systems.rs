@@ -10,11 +10,11 @@ pub fn insert_body<T: Component>(
     mut commands: Commands,
     query: Query<(Entity, Option<&Transform>, Option<&Id>), Added<T>>,
 ) {
-    for (entity, transform, id) in query.iter()
+    for (entity, transform, _id) in query.iter()
     {
         let head = head(&mut commands, &mut meshes, &mut materials);
 
-        let camera = camera(&mut commands, &mut meshes, &mut materials);
+        let camera = camera(&mut commands);
 
         let body = body(&mut commands, &mut meshes, &mut materials, entity.clone());
 
@@ -41,7 +41,7 @@ pub fn insert_physics<T: Component>(
     mut commands: Commands,
     query: Query<(Entity, Option<&Transform>), Added<T>>,
 ) {
-    for (entity, transform) in query.iter()
+    for (entity, _transform) in query.iter()
     {
         commands
             .entity(entity)
@@ -68,7 +68,7 @@ pub fn insert_physics<T: Component>(
             .insert(RigidBody::Dynamic);
     }
 }
-pub fn insert_other<T: Component, Conf: ConfigProps + Send + Sync + 'static>(
+pub fn insert_rest<T: Component, Conf: ConfigProps + Send + Sync + 'static>(
     mut commands: Commands,
     query: Query<(Entity, Option<&Team>, Option<&Id>), Added<T>>,
     mut idm: ResMut<IdManager>,

@@ -20,7 +20,7 @@ pub struct RunCommand {
 }
 
 pub fn run_command(mut log: ConsoleCommand<RunCommand>) {
-    if let Some(RunCommand { script_path: _ }) = log.take()
+    if let Some(RunCommand { script_path: _path }) = log.take()
     {
         // handle command
     }
@@ -37,7 +37,7 @@ pub fn match_command(
     mut log: ConsoleCommand<MatchCommand>,
     query: Query<(Entity, &Id, &Team), With<Hero>>,
 ) {
-    if let Some(MatchCommand { script_path: _ }) = log.take()
+    if let Some(MatchCommand { script_path: _path }) = log.take()
     {
         for (ent, id, team) in &query
         {
@@ -61,7 +61,7 @@ pub struct ConnectCommand {
 }
 
 pub fn connect_command(mut log: ConsoleCommand<ConnectCommand>, mut commands: Commands) {
-    if let Some(ConnectCommand { ip: _ }) = log.take()
+    if let Some(ConnectCommand { ip: _ip }) = log.take()
     {
         commands.insert_resource(NextState(GameState::InGame));
         // handle command
@@ -161,7 +161,7 @@ pub fn spawn_command(
     query: Query<&Transform, With<Selected>>,
     mut spawner: EventWriter<SpawnHeroEv>,
 ) {
-    if let Some(SpawnCommand { name, team, id: _ }) = log.take()
+    if let Some(SpawnCommand { name, team, id: _id }) = log.take()
     {
         for transform in &query
         {

@@ -9,11 +9,12 @@ use heroes::*;
 
 use crate::Action;
 
-pub fn sync_configs() {
-    // We have Config in components and the same Config in resources
-    // We can read both, but we can onl
-    // Syncing Heroes::Config
-}
+// pub fn sync_configs() {
+//     todo!();
+//     // We have Config in components and the same Config in resources
+//     // We can read both, but we can onl
+//     // Syncing Heroes::Config
+// }
 
 pub fn look<C: Component>(
     mut hero_q: Query<(&CameraLink, &mut Transform), (With<C>, With<Selected>)>,

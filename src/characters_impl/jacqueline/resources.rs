@@ -97,11 +97,11 @@ mod components {
 
     #[derive(Component)]
     pub enum MarkState {
-        // Enemy entity
-        Travelling(Entity),
+        // // Enemy entity
+        // Travelling(Entity),
 
-        // Mark is near the enemy
-        ReadyToJump(Entity),
+        // // Mark is near the enemy
+        // ReadyToJump(Entity),
 
         // Is using as a shield
         Shield,

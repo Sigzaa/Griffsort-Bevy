@@ -1,9 +1,7 @@
 use super::systems::*;
 use bevy::prelude::*;
-use notify::{watcher, DebouncedEvent, RecursiveMode, Watcher};
 use serde::{Deserialize, Serialize};
-use std::sync::mpsc::channel;
-use std::{marker::PhantomData, sync::mpsc::Receiver, time::Duration};
+use std::{marker::PhantomData};
 
 // Resource should be inserted manually.
 // Add plugin after inserting resource.

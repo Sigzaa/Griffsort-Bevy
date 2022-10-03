@@ -1,6 +1,6 @@
 mod commands;
 mod plugin;
-mod resources;
+//mod resources;
 mod systems;
 mod widgets;
 

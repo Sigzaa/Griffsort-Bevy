@@ -1,6 +1,5 @@
 use bevy::prelude::*;
 use bevy_inspector_egui::{bevy_egui::*, egui::*};
-use bevy_rapier3d::parry::transformation;
 
 use crate::*;
 
@@ -16,7 +15,7 @@ pub(crate) fn hp_bar(
         _ => return,
     };
 
-    for (hp, max_hp, team, transform, entity) in &q_non_sel
+    for (hp, max_hp, _team, transform, entity) in &q_non_sel
     {
         let pos = match cam.world_to_viewport(cam_transform, transform.translation)
         {

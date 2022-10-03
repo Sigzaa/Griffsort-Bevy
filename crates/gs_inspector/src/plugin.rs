@@ -1,16 +1,9 @@
-use super::commands::*;
-use super::resources::*;
-use super::widgets::*;
+//use super::resources::*;
 use bevy::{
-    app::AppExit,
-    diagnostic::{Diagnostics, FrameTimeDiagnosticsPlugin},
+    diagnostic::{ FrameTimeDiagnosticsPlugin},
     prelude::*,
 };
-use bevy_console::AddConsoleCommand;
 use bevy_console::{ConsoleConfiguration, ConsolePlugin};
-use bevy_egui::{egui, EguiContext, EguiPlugin};
-use egui::Ui;
-use std::process::Command;
 
 #[derive(Default)]
 struct GSVersion(&'static str);
@@ -34,14 +27,13 @@ impl Plugin for Inspector {
                 ..Default::default()
             })
             
-            .add_console_command::<ExampleCommand, _, _>(example_command)
-            .insert_resource(Update::default())
-            .insert_resource(OpenTab::Console)
+            // .insert_resource(Update::default())
+            // .insert_resource(OpenTab::Console)
             .insert_resource(GSVersion(self.game_version))
-            .insert_resource(Stats::new())
-            .insert_resource(Config::new())
-            .insert_resource(Console::new())
-            .insert_resource(gs_inspectorToggle::default())
+            // .insert_resource(Stats::new())
+            // .insert_resource(Config::new())
+            // .insert_resource(Console::new())
+            // .insert_resource(gs_inspectorToggle::default())
             
             //.add_plugin(EguiPlugin)
             // .add_system(show_gs_inspector)

@@ -16,7 +16,7 @@ pub(crate) fn load_map(mut commands: Commands, ass: Res<AssetServer>) {
         })
         .insert(RigidBody::Fixed);
 }
-pub(crate) fn load_custom_models(mut commands: Commands, ass: Res<AssetServer>) {
+pub(crate) fn load_custom_models(mut _commands: Commands, _ass: Res<AssetServer>) {
     // commands.spawn_bundle(SceneBundle {
     //     scene: ass.load("models/shield.gltf#Scene0"),
     //     transform: Transform{

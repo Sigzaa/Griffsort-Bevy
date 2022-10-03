@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_inspector_egui::widgets::{InspectorQuery, InspectorQuerySingle};
+use bevy_inspector_egui::widgets::{InspectorQuerySingle};
 use bevy_inspector_egui::*;
 pub use components::*;
 use serde::{Deserialize, Serialize};
@@ -125,8 +125,7 @@ pub struct HeroComponentsBundle {
 mod components {
     use bevy::prelude::*;
     use bevy_inspector_egui::Inspectable;
-    use bevy_rapier3d::prelude::Toi;
-    use serde::{Deserialize, Serialize};
+    use serde::{Deserialize};
 
     #[derive(Component, Default, Reflect, Inspectable)]
     pub struct FireRate(pub f32);

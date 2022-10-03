@@ -1,2 +1,2 @@
-pub mod plugin;
-pub use plugin::GoSnapPlugin;
+// pub mod plugin;
+// pub use plugin::GoSnapPlugin;

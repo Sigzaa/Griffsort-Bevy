@@ -1,15 +1,14 @@
 use super::resources::*;
 use bevy::prelude::*;
-use gs_states::{CurrentState, GameState, NextState};
+use gs_states::{GameState, NextState};
 
 const NORMAL_BUTTON: Color = Color::rgb(0.15, 0.15, 0.15);
-const HOVERED_BUTTON: Color = Color::rgb(0.25, 0.25, 0.25);
+//const HOVERED_BUTTON: Color = Color::rgb(0.25, 0.25, 0.25);
 const PRESSED_BUTTON: Color = Color::rgb(0.35, 0.75, 0.35);
 
 pub fn startup_menu(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    mut windows: ResMut<Windows>,
 ) {
     // commands.spawn_bundle(SpriteBundle {
     //     texture: asset_server.load("pepe.png"),
@@ -79,31 +78,31 @@ pub fn startup_menu(
             });
         });
 }
-pub fn label_update(
-    time: Res<Time>,
-    mut query: Query<(&mut Text, &mut Style), With<MainMenuLabel>>,
-    mut windows: ResMut<Windows>,
-) {
-    let win = windows.primary_mut();
-    for (mut text, mut style) in query.iter_mut()
-    {
-        let seconds = time.seconds_since_startup() as f32;
-        // We used the `Text::with_section` helper method, but it is still just a `Text`,
-        // so to update it, we are still updating the one and only section
-        // text.sections[0].style.color = Color::Rgba {
-        //     red: (1.25 * seconds).sin() / 2.0 + 0.5,
-        //     green: (0.75 * seconds).sin() / 2.0 + 0.5,
-        //     blue: (0.50 * seconds).sin() / 2.0 + 0.5,
-        //     alpha: 1.0,
-        // };
-        // style.position = Rect {
-        //     bottom: Val::Px(win.height() * 0.8),
-        //     right: Val::Px((win.width() / 2. )),
-        //     ..default()
-        // };
-    }
-}
-pub fn cleanup(mut query: Query<Entity, With<MainMenu>>, mut commands: Commands) {
+// pub fn label_update(
+//     time: Res<Time>,
+//     mut query: Query<(&mut Text, &mut Style), With<MainMenuLabel>>,
+//     mut windows: ResMut<Windows>,
+// ) {
+//     let win = windows.primary_mut();
+//     for (mut text, mut style) in query.iter_mut()
+//     {
+//         let seconds = time.seconds_since_startup() as f32;
+//         // We used the `Text::with_section` helper method, but it is still just a `Text`,
+//         // so to update it, we are still updating the one and only section
+//         // text.sections[0].style.color = Color::Rgba {
+//         //     red: (1.25 * seconds).sin() / 2.0 + 0.5,
+//         //     green: (0.75 * seconds).sin() / 2.0 + 0.5,
+//         //     blue: (0.50 * seconds).sin() / 2.0 + 0.5,
+//         //     alpha: 1.0,
+//         // };
+//         // style.position = Rect {
+//         //     bottom: Val::Px(win.height() * 0.8),
+//         //     right: Val::Px((win.width() / 2. )),
+//         //     ..default()
+//         // };
+//     }
+// }
+pub fn cleanup(query: Query<Entity, With<MainMenu>>, mut commands: Commands) {
     for entity in query.iter()
     {
         commands.entity(entity).despawn_recursive();

@@ -1,31 +1,10 @@
 use std::marker::PhantomData;
-
-use crate::hud::hp_bar;
-
 use super::resources::*;
-use super::systems::{insert_body, insert_other, insert_physics};
-use bevy::prelude::{shape::*, *};
-use bevy::render::camera::Projection;
+use super::systems::{insert_body, insert_rest, insert_physics};
+use bevy::prelude::{*};
 use bevy_inspector_egui::{Inspectable, InspectorPlugin};
-use bevy_rapier3d::prelude::*;
 use serde::{Deserialize, Serialize};
 use synx::Synx;
-
-pub struct Controller1<T: Component + Plugin, Conf: ConfigProps + Send + Sync + 'static> {
-    pub char_type: T,
-    pub conf_type: PhantomData<Conf>,
-    pub conf_path: &'static str,
-}
-
-impl<T: Component + Plugin, Conf: ConfigProps + Send + Sync + 'static> Controller1<T, Conf> {
-    pub fn new(config_path: &'static str, hero: T) -> Self {
-        Self {
-            char_type: hero,
-            conf_type: PhantomData::default(),
-            conf_path: config_path,
-        }
-    }
-}
 
 impl<T, Conf> Plugin for Controller1<T, Conf>
 where
@@ -40,17 +19,36 @@ where
         + 'static,
 {
     fn build(&self, app: &mut App) {
-        app.add_plugin(self.char_type)
+        app
+            // Adding hero`s struct which implented Plugin
+            .add_plugin(self.char_type)
+
+            // Egui config for CharacterConfig
             .add_plugin(InspectorPlugin::<Conf>::new())
+
+            // Sync this config with filesystem
             .add_plugin(Synx::<Conf>::new(self.conf_path))
+
+            // Creating character
             .add_system(insert_body::<T>)
             .add_system(insert_physics::<T>)
-            .add_system(insert_other::<T, Conf>)
+            .add_system(insert_rest::<T, Conf>)
+
+            // Syncing config (witch is resource) with accesable static components
             .add_system(sync_config_res_with_components::<T, Conf>);
     }
 }
-// Fill this if you want to sync egui config resource with actual components
 
+/*
+    Fill this if you want to sync egui config resource with actual components
+    Hardcoded
+    Todo! rework inspector plugin and make config not a resource, make it query of components   
+
+    To sync:
+        1. Add component to query.
+        2. component.0 = props.value; 
+        
+*/
 pub fn sync_config_res_with_components<T: Component, Conf: ConfigProps + Send + Sync + 'static>(
     mut query: Query<
         (
@@ -71,5 +69,22 @@ pub fn sync_config_res_with_components<T: Component, Conf: ConfigProps + Send + 
         max_jump_height.0 = props.max_jump_height;
         fire_rate.0 = props.fire_rate;
         ammo_capacity.0 = props.ammo_capacity;
+
+    }
+}
+
+pub struct Controller1<T: Component + Plugin, Conf: ConfigProps + Send + Sync + 'static> {
+    pub char_type: T,
+    pub conf_type: PhantomData<Conf>,
+    pub conf_path: &'static str,
+}
+
+impl<T: Component + Plugin, Conf: ConfigProps + Send + Sync + 'static> Controller1<T, Conf> {
+    pub fn new(config_path: &'static str, hero: T) -> Self {
+        Self {
+            char_type: hero,
+            conf_type: PhantomData::default(),
+            conf_path: config_path,
+        }
     }
 }

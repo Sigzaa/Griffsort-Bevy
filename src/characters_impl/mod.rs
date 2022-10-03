@@ -19,30 +19,39 @@ use self::{
 pub struct Characters;
 impl Plugin for Characters {
     fn build(&self, app: &mut App) {
-        app.add_event::<SpawnHeroEv>()
+        app
+            // Additional Events
+            .add_event::<SpawnHeroEv>()
             .add_event::<DespawnHeroEv>()
-            //.add_plugin(InspectorPlugin::<InspectorQuerySingle<&mut Hp, With<Selected>>>::new())
-            
+
+            // Handling this Events
+            .add_system(spawn)
+            .add_system(despawn)
+
+            // Extends with every hero 
+            .add_system(shared)
+
+            // Adding heroes implementations:
             
             .add_plugin(Controller1::<Jacqueline, JacquelineConfig>::new(
                 "./config/jacqueline.ron",
                 Jacqueline,
             ))
-            //.add_plugin(Controller1::<Zero, Zero>::new(Zero))
+
+
             .add_plugin(Controller1::<YuiShang, ShangConfig>::new(
                 "./config/yui_shang.ron",
                 YuiShang,
             ))
-            //.add_plugin(Controller::<Jacqueline>::new(Jacqueline))
+
+
             .add_plugin(Controller1::<Soul, SoulConfig>::new(
                 "./config/soul.ron",
                 Soul,
             ))
             
-            .add_system(shared)
-            .add_system(spawn)
-            .add_system(despawn);
-    }
+            
+    ;}
 }
 
 pub fn spawn(mut spawn_ev: EventReader<SpawnHeroEv>, mut commands: Commands) {
@@ -89,8 +98,10 @@ impl SpawnHeroEv {
     }
 }
 
+#[allow(dead_code)]
 impl DespawnHeroEv {
     pub fn new(entity: Entity, id: i32) -> Self {
+        // Todo
         Self { entity, id }
     }
 }
