@@ -1,13 +1,10 @@
-
 use bevy::{prelude::*, render::camera::Projection};
 use bevy_console::*;
 
 use gs_states::{GameState, NextState};
 use heroes::*;
 
-use crate::{
-    characters_impl::{SpawnHeroEv},
-};
+use crate::characters_impl::SpawnHeroEv;
 
 //use crate::heroes_mapping::spawn_hero;
 
@@ -161,7 +158,11 @@ pub fn spawn_command(
     query: Query<&Transform, With<Selected>>,
     mut spawner: EventWriter<SpawnHeroEv>,
 ) {
-    if let Some(SpawnCommand { name, team, id: _id }) = log.take()
+    if let Some(SpawnCommand {
+        name,
+        team,
+        id: _id,
+    }) = log.take()
     {
         for transform in &query
         {

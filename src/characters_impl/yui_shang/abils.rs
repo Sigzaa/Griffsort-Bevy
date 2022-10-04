@@ -1,6 +1,4 @@
-use bevy::{
-    prelude::{Query, With},
-};
+use bevy::prelude::{Query, With};
 use heroes::CameraLink;
 
 use crate::characters_impl::YuiShang;

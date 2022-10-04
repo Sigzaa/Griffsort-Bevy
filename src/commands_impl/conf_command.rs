@@ -1,5 +1,5 @@
-use crate::{heroes_mapping::conf_commands};
-use bevy::prelude::{ResMut};
+use crate::heroes_mapping::conf_commands;
+use bevy::prelude::ResMut;
 use bevy_console::*;
 use bevy_inspector_egui::{plugin::InspectorWindows, Inspectable};
 

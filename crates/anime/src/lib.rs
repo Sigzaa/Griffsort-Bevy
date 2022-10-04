@@ -4,7 +4,6 @@
 // pub use plugin::*;
 // pub use resources::*;
 
-
 // #[cfg(test)]
 // mod tests {
 //     use std::{
@@ -126,7 +125,6 @@
 //                 transform.translation[0] = anime.get(vec!["crosshair to attack"]);
 
 //             */
-
 //             println!("translation: {}", transform.translation);
 //         }
 //     }
@@ -209,12 +207,9 @@
 
 //                 timer++;
 
-
-
 //             }
 
 //         */
-
 //         //println!("vec {}");
 
 //         let tr3 = tr2.translation + tr.translation;

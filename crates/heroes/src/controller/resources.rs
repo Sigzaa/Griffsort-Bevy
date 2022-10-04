@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_inspector_egui::widgets::{InspectorQuerySingle};
+use bevy_inspector_egui::widgets::InspectorQuerySingle;
 use bevy_inspector_egui::*;
 pub use components::*;
 use serde::{Deserialize, Serialize};
@@ -46,8 +46,13 @@ pub struct CameraConfig {
 
 #[derive(Inspectable, Reflect, Clone, Deserialize, Serialize, Component, Default)]
 pub struct IntersectionShape {
+    #[inspectable(min = 0., max = 4.)]
     pub radius: f32,
+
+    #[inspectable(min = 0., max = 20.)]
     pub toi: f32,
+
+    #[inspectable(min = 0., max = 10.)]
     pub source_distance: f32,
 }
 
@@ -125,7 +130,7 @@ pub struct HeroComponentsBundle {
 mod components {
     use bevy::prelude::*;
     use bevy_inspector_egui::Inspectable;
-    use serde::{Deserialize};
+    use serde::Deserialize;
 
     #[derive(Component, Default, Reflect, Inspectable)]
     pub struct FireRate(pub f32);

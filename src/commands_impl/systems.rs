@@ -16,11 +16,17 @@ pub fn run_binded_commands(
     query: Query<&Actions<Action>, With<Selected>>,
     mut command_entered: EventWriter<ConsoleCommandEntered>,
 ) {
-    for act in &query {
-        for action in &act.just_pressed {
-            match action {
+    for act in &query
+    {
+        //act.debug();
+        for action in &act.just_pressed
+        {
+            
+            match action
+            {
                 Action::Command(cmd) => enter_command(cmd, &mut command_entered),
-                _ => {}
+                _ =>
+                {}
             }
         }
     }
@@ -38,10 +44,13 @@ pub fn in_game_script(command_entered: EventWriter<ConsoleCommandEntered>) {
 // Sending commands to console
 fn run_file(filename: &'static str, mut command_entered: EventWriter<ConsoleCommandEntered>) {
     // File hosts must exist in current path before this produces output
-    if let Ok(lines) = read_lines(filename) {
+    if let Ok(lines) = read_lines(filename)
+    {
         // Consumes the iterator, returns an (Optional) String
-        for line in lines {
-            if let Ok(cmd) = line {
+        for line in lines
+        {
+            if let Ok(cmd) = line
+            {
                 enter_command(&cmd, &mut command_entered);
             }
         }
@@ -49,8 +58,10 @@ fn run_file(filename: &'static str, mut command_entered: EventWriter<ConsoleComm
 }
 
 fn enter_command(cmd: &String, command_entered: &mut EventWriter<ConsoleCommandEntered>) {
-    match parse_console_command(&cmd) {
-        Ok(cmd) => {
+    match parse_console_command(&cmd)
+    {
+        Ok(cmd) =>
+        {
             let command = ConsoleCommandEntered {
                 command: cmd.command.to_string(),
                 args: cmd.args.into_iter().map(ValueRawOwned::from).collect(),
@@ -58,7 +69,8 @@ fn enter_command(cmd: &String, command_entered: &mut EventWriter<ConsoleCommandE
 
             command_entered.send(command);
         }
-        Err(_) => {}
+        Err(_) =>
+        {}
     }
 }
 

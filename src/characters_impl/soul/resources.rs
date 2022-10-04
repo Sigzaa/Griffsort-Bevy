@@ -72,7 +72,7 @@ impl Default for SoulConfig {
 mod components {
     use bevy::prelude::*;
     use bevy_inspector_egui::Inspectable;
-    
+
     use serde::Serialize;
 
     #[derive(serde::Deserialize, Serialize, Clone, Inspectable)]
@@ -92,7 +92,7 @@ mod components {
     #[derive(Component, Default)]
     pub struct ShieldPos(pub Option<Transform>);
 
-    #[allow(dead_code)] 
+    #[allow(dead_code)]
     pub enum ShieldEvent {
         Up,
         Down,

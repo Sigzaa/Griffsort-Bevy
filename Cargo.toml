@@ -11,7 +11,7 @@ members = [ "crates/*" ]
 [dependencies]
 
 # Bevy ecosystem
-bevy_rapier3d = { version = "0.16.2" , features = [ "enhanced-determinism" ] }
+bevy_rapier3d = { version = "0.17" , features = [ "enhanced-determinism", "debug-render" ] }
 bevy = { version = "0.8.0", features = ["jpeg", "serialize"]}
 iyes_loopless = "0.7"
 bevy_hanabi = "0.3"

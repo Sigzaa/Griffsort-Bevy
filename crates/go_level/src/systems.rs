@@ -8,13 +8,14 @@ pub(crate) fn load_map(mut commands: Commands, ass: Res<AssetServer>) {
             scene: handle.clone(),
             ..Default::default()
         })
-        .insert(CollisionGroups::new(0b10, 0b11))
+        .insert(CollisionGroups::new(Group::GROUP_1, Group::GROUP_1))
         .insert(AsyncSceneCollider {
             handle: handle,
             shape: Some(ComputedColliderShape::TriMesh),
             named_shapes: Default::default(),
         })
-        .insert(RigidBody::Fixed);
+        .insert(RigidBody::Fixed)
+        .insert(ColliderDebugColor(Color::ALICE_BLUE));
 }
 pub(crate) fn load_custom_models(mut _commands: Commands, _ass: Res<AssetServer>) {
     // commands.spawn_bundle(SceneBundle {

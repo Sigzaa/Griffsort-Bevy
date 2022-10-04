@@ -1,13 +1,13 @@
 use bevy::{prelude::*, window::PresentMode};
 use bevy_rapier3d::prelude::*;
 use gs_states::*;
-use heroes::SelectedId;
+use heroes::{SelectedId, Team};
 
-use crate::characters_impl::{SpawnHeroEv, Jacqueline};
+use crate::characters_impl::{Jacqueline, SpawnHeroEv};
 
 pub struct TempPlugin;
 
-impl Plugin for TempPlugin{
+impl Plugin for TempPlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(WindowDescriptor {
             title: "griffsort".to_string(),
@@ -18,8 +18,7 @@ impl Plugin for TempPlugin{
             ..Default::default()
         })
         .add_enter_system(GameState::InGame, _temp_setup)
-        .add_system(switch.run_in_state(GameState::InGame))
-        ;
+        .add_system(switch.run_in_state(GameState::InGame));
     }
 }
 
@@ -102,6 +101,13 @@ fn _temp_setup(
         .spawn_bundle(TransformBundle::from_transform(
             Transform::from_translation(Vec3::new(15., 15., 15.)),
         ))
+        .insert(Jacqueline);
+
+    commands
+        .spawn_bundle(TransformBundle::from_transform(
+            Transform::from_translation(Vec3::new(25., 15., 15.)),
+        ))
+        .insert(Team::Light)
         .insert(Jacqueline);
 
     selected.0 = Some(0);

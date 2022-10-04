@@ -1,7 +1,7 @@
 use super::systems::*;
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
-use std::{marker::PhantomData};
+use std::marker::PhantomData;
 
 // Resource should be inserted manually.
 // Add plugin after inserting resource.

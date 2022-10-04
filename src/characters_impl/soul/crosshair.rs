@@ -7,7 +7,6 @@ use keyframe::functions::*;
 use super::super::*;
 use super::resources::*;
 
-
 pub(crate) fn crosshair(
     is_pointing: Query<(&ShapeIntersections, &Actions<Action>), (With<Selected>, Without<Dead>)>,
     mut crosshair_val: Query<&mut CrosshairValue>,

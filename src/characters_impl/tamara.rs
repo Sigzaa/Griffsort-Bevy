@@ -1,7 +1,7 @@
 use super::*;
 use bevy::asset::LoadState;
 use bevy::prelude::shape::*;
-use bevy::{prelude::*};
+use bevy::prelude::*;
 use heroes::*;
 
 #[derive(Component)]
@@ -78,7 +78,6 @@ fn check_textures(
         state.set(SpriteState::Finished).unwrap();
     }
 }
-
 
 impl Tamara {
     // fn fly<C: Component>(

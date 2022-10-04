@@ -1,8 +1,5 @@
 //use super::resources::*;
-use bevy::{
-    diagnostic::{ FrameTimeDiagnosticsPlugin},
-    prelude::*,
-};
+use bevy::{diagnostic::FrameTimeDiagnosticsPlugin, prelude::*};
 use bevy_console::{ConsoleConfiguration, ConsolePlugin};
 
 #[derive(Default)]

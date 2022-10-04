@@ -13,7 +13,6 @@ use bevy::prelude::*;
 use gs_states::{cursor_showed, ConditionSet, IntoConditionalSystem};
 use heroes::*;
 
-
 impl Plugin for YuiShang {
     fn build(&self, app: &mut App) {
         app

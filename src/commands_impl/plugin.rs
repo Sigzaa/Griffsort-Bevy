@@ -12,14 +12,12 @@ pub struct ConsoleCommands;
 
 impl Plugin for ConsoleCommands {
     fn build(&self, app: &mut bevy::prelude::App) {
-        app
-            .add_console_command::<RunCommand, _, _>(run_command)
+        app.add_console_command::<RunCommand, _, _>(run_command)
             .add_console_command::<ConnectCommand, _, _>(connect_command)
             .add_console_command::<ConfCommand, _, _>(conf_command)
             .add_console_command::<SpawnCommand, _, _>(spawn_command)
             .add_console_command::<MatchCommand, _, _>(match_command)
             .add_console_command::<WatchmeCommand, _, _>(watchme_command)
-            
             .add_system(open_console)
             .add_system(watchme_look_at)
             .add_system(run_binded_commands)
@@ -27,7 +25,6 @@ impl Plugin for ConsoleCommands {
             .add_enter_system(GameState::InGame, in_game_script);
     }
 }
-
 
 pub fn open_console(
     mut is_locked_actions: ResMut<IsLocked>,

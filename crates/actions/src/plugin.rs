@@ -22,6 +22,9 @@ where
             .insert_resource(IsLocked(false))
             .add_startup_system(load_bindings::<Keys>)
             .add_system(watch_for_changes::<Keys>)
+            // Temp
+            .add_system(update_inputs::<Sel, Keys>)
+            
             .add_system(collect_actions::<Sel, Keys>.after(update_inputs::<Sel, Keys>));
     }
 }

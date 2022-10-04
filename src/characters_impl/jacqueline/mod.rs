@@ -1,4 +1,5 @@
 mod abilities;
+mod chase;
 mod marks;
 pub mod resources;
 mod shield;
@@ -7,10 +8,9 @@ use actions::Actions;
 
 use gs_states::{cursor_showed, ConditionSet, IntoConditionalSystem};
 
-
 use crate::Action;
 
-use self::{marks::*, resources::*, shield::*};
+use self::{chase::ChaseAbil, marks::*, resources::*, shield::*};
 
 use super::{default::*, *};
 
@@ -18,13 +18,15 @@ impl Plugin for Jacqueline {
     fn build(&self, app: &mut App) {
         app.add_event::<RecalkAnglesEv>()
             .add_event::<SpawnMarkEv>()
+            .add_plugin(ChaseAbil)
+            .add_system(insert_marks)
+            .add_system(respawn_marks.after(insert_marks))
+            .add_system(spawn_mark.after(respawn_marks))
+            .add_system(rearrange_angles.before(spawn_mark).label("last"))
             .add_system_set(
                 ConditionSet::new()
-                    .label("main")
+                    
                     .with_system(insert_other)
-                    .with_system(insert_marks)
-                    .with_system(spawn_mark)
-                    .with_system(respawn_marks)
                     .with_system(walk::<Jacqueline, JacquelineConfig>)
                     .with_system(look::<Jacqueline>.run_if(cursor_showed))
                     .with_system(camera_shake::<Jacqueline, JacquelineConfig>)
@@ -37,31 +39,22 @@ impl Plugin for Jacqueline {
                     .with_system(idle_to_shield)
                     .with_system(mark_to_shield)
                     .with_system(shield_handler)
-                    .with_system(rearrange_angles)
                     // .with_system(fly::<Soul>)
                     .into(),
             )
-            .add_system_set(
-                ConditionSet::new()
-                    .after("main")
-                    
-                    .into(),
-            );
+            .add_system_set(ConditionSet::new().after("main").into());
     }
 }
 
-pub fn insert_other(
-    mut commands: Commands,
-    query: Query<Entity, Added<Jacqueline>>,
-) {
-    for entity in query.iter() {
+pub fn insert_other(mut commands: Commands, query: Query<Entity, Added<Jacqueline>>) {
+    for entity in query.iter()
+    {
         commands
             .entity(entity)
             .insert(ShieldState {
                 link: None,
                 duration: 0.,
             })
-            .insert(MarksCD(CDProps::new(0)))
-            ;
+            .insert(MarksCD(CDProps::new(0)));
     }
 }

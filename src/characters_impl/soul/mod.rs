@@ -6,20 +6,17 @@ pub mod resources;
 mod sfx;
 mod vfx;
 
+use super::default::*;
 use super::*;
-use super::{default::*};
 use abilities::*;
 
-use bevy::{prelude::*};
+use bevy::prelude::*;
 
 use crosshair::*;
 
 use gs_states::{cursor_showed, GameState};
 use iyes_loopless::prelude::*;
 pub use resources::*;
-
-
-
 
 impl Plugin for Soul {
     fn build(&self, app: &mut App) {

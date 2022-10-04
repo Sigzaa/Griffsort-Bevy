@@ -1,4 +1,4 @@
-use bevy::{utils::HashSet};
+use bevy::utils::HashSet;
 
 use crate::Id;
 

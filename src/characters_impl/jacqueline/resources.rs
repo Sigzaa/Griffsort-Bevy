@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_inspector_egui::{ Inspectable};
+use bevy_inspector_egui::Inspectable;
 use heroes::*;
 use serde::{Deserialize, Serialize};
 
@@ -15,7 +15,7 @@ impl CooldownManager for MarksCD {
 }
 pub struct RecalkAnglesEv;
 
-pub struct SpawnMarkEv{
+pub struct SpawnMarkEv {
     pub amount: usize,
     pub owner: Entity,
 }
@@ -97,11 +97,11 @@ mod components {
 
     #[derive(Component)]
     pub enum MarkState {
-        // // Enemy entity
-        // Travelling(Entity),
+        // Enemy entity
+        Chasing(Entity),
 
-        // // Mark is near the enemy
-        // ReadyToJump(Entity),
+        // Mark close to the enemy
+        ReadyToJump(Entity),
 
         // Is using as a shield
         Shield,
@@ -109,6 +109,9 @@ mod components {
         // Angle
         Idle(f32),
     }
+
+    #[derive(Component)]
+    pub struct JumpingTo(pub Entity);
 
     #[derive(Component)]
     pub struct ShieldState {

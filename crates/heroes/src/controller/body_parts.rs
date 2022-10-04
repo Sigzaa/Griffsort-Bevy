@@ -47,9 +47,7 @@ pub fn head(
         })
         .id()
 }
-pub fn camera(
-    commands: &mut Commands
-) -> Entity {
+pub fn camera(commands: &mut Commands) -> Entity {
     commands
         .spawn_bundle(Camera3dBundle {
             projection: Projection::Perspective(PerspectiveProjection {

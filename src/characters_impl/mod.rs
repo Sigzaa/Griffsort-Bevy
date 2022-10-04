@@ -23,35 +23,25 @@ impl Plugin for Characters {
             // Additional Events
             .add_event::<SpawnHeroEv>()
             .add_event::<DespawnHeroEv>()
-
             // Handling this Events
             .add_system(spawn)
             .add_system(despawn)
-
-            // Extends with every hero 
+            // Extends with every hero
             .add_system(shared)
-
             // Adding heroes implementations:
-            
             .add_plugin(Controller1::<Jacqueline, JacquelineConfig>::new(
                 "./config/jacqueline.ron",
                 Jacqueline,
             ))
-
-
             .add_plugin(Controller1::<YuiShang, ShangConfig>::new(
                 "./config/yui_shang.ron",
                 YuiShang,
             ))
-
-
             .add_plugin(Controller1::<Soul, SoulConfig>::new(
                 "./config/soul.ron",
                 Soul,
-            ))
-            
-            
-    ;}
+            ));
+    }
 }
 
 pub fn spawn(mut spawn_ev: EventReader<SpawnHeroEv>, mut commands: Commands) {
@@ -84,7 +74,8 @@ pub fn shared(q: Query<Entity, Added<Hero>>, mut commands: Commands) {
         commands
             .entity(ent)
             .insert(Actions::<Action>::new())
-            .insert(CollisionGroups::new(0b01, 0b110));
+            .insert(CollisionGroups::new(Group::GROUP_1, Group::GROUP_1))
+            .insert(Velocity::default());
     }
 }
 

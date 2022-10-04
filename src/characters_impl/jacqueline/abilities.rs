@@ -1,6 +1,4 @@
-use super::{
-    *,
-};
+use super::*;
 
 pub(crate) fn attack(
     char: Query<(&RayPointingOn, &Team, &Actions<Action>), (With<Jacqueline>, Without<Dead>)>,

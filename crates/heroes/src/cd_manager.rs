@@ -1,4 +1,3 @@
-
 #[derive(Debug)]
 pub struct CDProps {
     pub charges: i8,

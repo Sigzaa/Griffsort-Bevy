@@ -1,11 +1,7 @@
 use actions::Actions;
-use bevy::prelude::{*};
-use bevy::{
-    input::mouse::MouseMotion,
-};
+use bevy::input::mouse::MouseMotion;
+use bevy::prelude::*;
 use heroes::*;
-
-
 
 use crate::Action;
 
@@ -77,7 +73,7 @@ pub fn pointing_on<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
     rapier_context: Res<RapierContext>,
     mut hero_q: Query<(&CameraLink, &mut RayPointingOn), With<C>>,
     q_cam: Query<&GlobalTransform>,
-    mut lines: ResMut<DebugLines>,
+    //mut lines: ResMut<DebugLines>,
 ) {
     for (camera_entity, mut pointing_on) in &mut hero_q
     {
@@ -108,12 +104,12 @@ pub fn pointing_on<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
 
         if global_conf.showray
         {
-            lines.line_colored(
-                start,
-                cam_transform.translation() + cam_transform.forward() * max_toi,
-                0.,
-                global_conf.ray_color,
-            );
+            // lines.line_colored(
+            //     start,
+            //     cam_transform.translation() + cam_transform.forward() * max_toi,
+            //     0.,
+            //     global_conf.ray_color,
+            // );
         }
     }
 }
@@ -324,7 +320,7 @@ pub fn camera_roll<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
 pub fn is_grounded<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
     mut q_sel: Query<(&Transform, Entity, &mut Damping), With<C>>,
     rapier_context: Res<RapierContext>,
-    _lines: ResMut<DebugLines>,
+    //_lines: ResMut<DebugLines>,
     mut commands: Commands,
     //show_ray: Res<ShowRay>,
 ) {
@@ -359,6 +355,7 @@ pub fn jump<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
 ) {
     for (inputs, mut vel) in q_sel.iter_mut()
     {
+        inputs.debug();
         if inputs.just_pressed(Action::Jump)
         {
             vel.linvel += Vec3::new(0., conf.props().max_jump_height, 0.);

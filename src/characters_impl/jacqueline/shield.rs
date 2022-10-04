@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 use super::resources::*;
-use crate::{*, characters_impl::Jacqueline};
+use crate::{characters_impl::Jacqueline, *};
 use actions::Actions;
 use bevy::prelude::*;
 use heroes::CooldownManager;
@@ -14,14 +14,16 @@ pub fn idle_to_shield(
     mut markq: Query<&mut MarkState, Without<Jacqueline>>,
     mut evwr: EventWriter<RecalkAnglesEv>,
     mut commands: Commands,
-
 ) {
-    for (links, act, mut mcd) in query.iter_mut() {
+    for (links, act, mut mcd) in query.iter_mut()
+    {
         // Detecting inputs
-        if !act.pressed(Action::Abil1) {
+        if !act.pressed(Action::Abil1)
+        {
             return;
         }
-        if !mcd.is_ready(0){
+        if !mcd.is_ready(0)
+        {
             return;
         }
 
@@ -33,23 +35,26 @@ pub fn idle_to_shield(
         mcd.cooldown(1, 2.);
 
         // Using first free mark to become a shield
-        for mark in links.0.iter() {
-            let mut state = markq.get_mut(*mark).unwrap();
+        for mark in links.0.iter()
+        {
+            if let Ok(mut state) = markq.get_mut(*mark)
+            {
+                if let MarkState::Idle(_angle) = *state
+                {
+                    // Changing a state of mark
+                    *state = MarkState::Shield;
 
-            if let MarkState::Idle(_angle) = *state {
-                // Changing a state of mark
-                *state = MarkState::Shield;
+                    // Adding expiration timer
+                    commands.entity(*mark).insert(MarkDespawnTimer {
+                        timer: Timer::from_seconds(0.5, false),
+                    });
 
-                // Adding expiration timer
-                commands.entity(*mark).insert(MarkDespawnTimer {
-                    timer: Timer::from_seconds(0.5, false),
-                });
+                    // Sending Event to reallocate angles of marks in new state
+                    evwr.send(RecalkAnglesEv);
 
-                // Sending Event to reallocate angles of marks in new state
-                evwr.send(RecalkAnglesEv);
-
-                // Returning because we need only one mark
-                return;
+                    // Returning because we need only one mark
+                    return;
+                }
             }
         }
     }
@@ -65,7 +70,8 @@ pub fn mark_to_shield(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    for (mut shield_state, mut links, &transform) in query.iter_mut() {
+    for (mut shield_state, mut links, &transform) in query.iter_mut()
+    {
         // Expecting position of the shield
         let mut final_transform = transform.clone();
 
@@ -75,7 +81,8 @@ pub fn mark_to_shield(
         let shield_exists = shield_state.link.is_some();
 
         // We have to move a shield at his proper position (if shield exists)
-        if shield_exists {
+        if shield_exists
+        {
             // Its safe
             let mut shield_transform = shieldq.get_mut(shield_state.link.unwrap()).unwrap();
 
@@ -87,7 +94,6 @@ pub fn mark_to_shield(
             //         0.7,
             //     );
             // }
-
 
             // let current_rotation = shield_transform.rotation.to_scaled_axis()[1];
 
@@ -115,23 +121,27 @@ pub fn mark_to_shield(
         let mut to_remove = HashSet::new();
 
         // Iterating over marks to find marks with with shield state
-        for mark in links.0.iter() {
+        for mark in links.0.iter()
+        {
             let res = markq.get_mut(*mark);
 
             // Skipping this iteration of loop if mark has non-shield state or doesnt has despawn timer
-            if res.is_err() {
+            if res.is_err()
+            {
                 continue;
             }
 
             // We are safe here to unwrap.
             let (state, mut mark_transform, mut desp_timer) = res.unwrap();
 
-            if let MarkState::Shield = *state {
+            if let MarkState::Shield = *state
+            {
                 desp_timer.timer.tick(time.delta());
 
                 // We have to move mark to this position
 
-                for i in 0..3 {
+                for i in 0..3
+                {
                     mark_transform.translation[i] = ease(
                         EaseInQuad,
                         mark_transform.translation[i],
@@ -140,12 +150,14 @@ pub fn mark_to_shield(
                     );
                 }
 
-                if desp_timer.timer.just_finished() {
+                if desp_timer.timer.just_finished()
+                {
                     // Time to despawn a mark.
 
                     shield_state.duration += 2.;
 
-                    if !shield_exists {
+                    if !shield_exists
+                    {
                         // Creating a shield if it does not exist
 
                         // Position on front of the character
@@ -180,13 +192,14 @@ pub fn mark_to_shield(
                     to_remove.insert(*mark);
 
                     // Killing the mark;
-                    commands.entity(*mark).despawn();
+                    commands.entity(*mark).despawn_recursive();
                 }
             }
         }
 
         // Finaly removing marks from Links
-        for mark_ent in to_remove {
+        for mark_ent in to_remove
+        {
             links.0.remove(&mark_ent);
         }
     }
@@ -198,21 +211,21 @@ pub fn shield_handler(
     time: Res<Time>,
     mut commands: Commands,
 ) {
-    for (mut shield_state, _links, _tr) in &mut query {
-
+    for (mut shield_state, _links, _tr) in &mut query
+    {
         // Checking the existance of the shield
-        if shield_state.link.is_none() 
+        if shield_state.link.is_none()
         {
             return;
         }
         let mark_ent = shield_state.link.unwrap();
 
-        if shield_state.duration <= 0. 
+        if shield_state.duration <= 0.
         {
             commands.entity(mark_ent).despawn();
             shield_state.link = None;
-        } 
-        else 
+        }
+        else
         {
             shield_state.duration -= time.delta_seconds();
         }

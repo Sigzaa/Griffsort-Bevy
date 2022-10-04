@@ -1,5 +1,4 @@
-use serde::{Serialize, Deserialize};
-
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone, Hash, PartialEq, Eq, Debug)]
 pub enum Action {
