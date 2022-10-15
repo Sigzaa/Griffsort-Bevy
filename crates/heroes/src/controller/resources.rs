@@ -1,6 +1,6 @@
 use bevy::prelude::*;
-use bevy_inspector_egui::widgets::InspectorQuerySingle;
-use bevy_inspector_egui::*;
+pub use bevy_inspector_egui::{widgets::{InspectorQuerySingle, InspectorQuery}, Inspectable, InspectorPlugin, egui, egui::Grid};
+pub use bevy_inspector_egui::*;
 pub use components::*;
 use serde::{Deserialize, Serialize};
 
@@ -49,7 +49,7 @@ pub struct IntersectionShape {
     #[inspectable(min = 0., max = 4.)]
     pub radius: f32,
 
-    #[inspectable(min = 0., max = 20.)]
+    #[inspectable(min = 0., max = 400.)]
     pub toi: f32,
 
     #[inspectable(min = 0., max = 10.)]
@@ -111,10 +111,9 @@ impl Default for Config {
 }
 
 #[derive(Bundle, Component, Reflect, Default)]
-pub struct HeroComponentsBundle {
+pub struct StaticHeroesBundle {
     pub id: Id,
     pub team: Team,
-    pub hp: Hp,
     pub max_hp: MaxHp,
     pub max_jump_height: MaxJumpHeight,
     pub max_velocity: MaxVelocity,
@@ -122,15 +121,20 @@ pub struct HeroComponentsBundle {
     pub walk_acceleration: WalkAcceleration,
     pub intersections_shape: IntersectionShape,
     pub poinging_ray_toi: RayToi,
-    pub noclip: NoClip,
     pub fire_rate: FireRate,
     pub ammo_capacity: AmmoCapacity,
+}
+#[derive(Bundle, Component, Reflect, Default)]
+pub struct DynamicHeroesBundle {
+    pub hp: Hp,
+    pub noclip: NoClip,
 }
 
 mod components {
     use bevy::prelude::*;
-    use bevy_inspector_egui::Inspectable;
+    //use bevy_inspector_egui::{*, egui::Grid, egui};
     use serde::Deserialize;
+    use super::*;
 
     #[derive(Component, Default, Reflect, Inspectable)]
     pub struct FireRate(pub f32);
@@ -169,8 +173,32 @@ mod components {
     #[derive(Component, Reflect, Default, Copy, Clone, Debug, Inspectable)]
     pub struct Hp(pub i32);
 
-    #[derive(Component, Reflect, Default, Copy, Clone, Debug, Inspectable)]
+    #[derive(Component, Reflect, Default, Copy, Clone, Debug)]
+    
     pub struct MaxHp(pub i32);
+
+    impl Inspectable for MaxHp{
+        type Attributes = ();
+
+        fn ui(&mut self, ui: &mut bevy_inspector_egui::egui::Ui, options: Self::Attributes, context: &mut bevy_inspector_egui::Context) -> bool {
+
+
+        let mut changed = false;
+
+            ui.vertical_centered(|ui| {
+                Grid::new(context.id()).show(ui, |ui| {
+                    ui.add(egui::Slider::new(&mut self.0, 0..=2000));
+                    //changed |= self.translation.ui(ui, Default::default(), context);
+                    ui.end_row();
+                });
+            });
+
+        changed
+        
+        }
+        
+        
+    }
 
     #[derive(Component, Reflect, Default, Copy, Clone, Debug, Inspectable)]
     pub struct MaxJumpHeight(pub f32);

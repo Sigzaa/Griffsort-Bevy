@@ -1,24 +1,43 @@
 mod abilities;
 mod chase;
+mod bomb;
 mod marks;
 pub mod resources;
 mod shield;
 use abilities::*;
 use actions::Actions;
 
+use bevy_inspector_egui::{widgets::{InspectorQuerySingle, InspectorQuery}, Inspectable, InspectorPlugin, egui};
 use gs_states::{cursor_showed, ConditionSet, IntoConditionalSystem};
 
 use crate::Action;
 
-use self::{chase::ChaseAbil, marks::*, resources::*, shield::*};
+use self::{chase::ChaseAbil, marks::*, resources::*, shield::*, bomb::*};
 
 use super::{default::*, *};
+
+#[derive(Inspectable, Default)]
+struct Config<Q: Inspectable + Default>{
+    tranform: InspectorQuery<&'static mut Transform, With<Selected>>,
+    _h: Q,
+    //dynamic:
+
+    //static:
+}
+
+#[derive(Inspectable, Default)]
+struct Jacqueline_{
+    
+    max_hp: InspectorQuery<&'static mut MaxHp, With<Hero>>,
+}
+
 
 impl Plugin for Jacqueline {
     fn build(&self, app: &mut App) {
         app.add_event::<RecalkAnglesEv>()
             .add_event::<SpawnMarkEv>()
             .add_plugin(ChaseAbil)
+            .add_plugin(InspectorPlugin::<Config::<Jacqueline_>>::new())
             .add_system(insert_marks)
             .add_system(respawn_marks.after(insert_marks))
             .add_system(spawn_mark.after(respawn_marks))

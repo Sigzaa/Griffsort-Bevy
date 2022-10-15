@@ -81,13 +81,18 @@ pub fn insert_rest<T: Component, Conf: ConfigProps + Send + Sync + 'static>(
         ec.insert(Hero)
             .insert(ShapeIntersections::default())
             .insert(RayPointingOn::default())
-            .insert_bundle(HeroComponentsBundle {
-                id: idm.alloc_id(),
-                team: Team::Dark,
+            
+            .insert_bundle(DynamicHeroesBundle {
                 hp: Hp(conf.props().max_hp),
                 ..Default::default()
-            });
+            })
 
+            .insert_bundle(StaticHeroesBundle {
+                id: idm.alloc_id(),
+                team: Team::Dark,
+                ..Default::default()
+            });
+            
         if let Some(team) = team
         {
             ec.insert(team.clone());

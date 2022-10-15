@@ -23,7 +23,7 @@
         acceleration: 1000.0,
         fire_rate: 1.4,
         ammo_capacity: 20,
-        intersections_shape: (radius: 4.0, toi: 11.0, source_distance: 0.5),
+        intersections_shape: (radius: 4.0, toi: 100.0, source_distance: 0.0),
         pointing_shape: (radius: 2.0, toi: 13.2, source_distance: 1.0),
         pointing_ray_toi: 40.0,
         camera: (shake_ampl: 0.03, shake_rate: 15.0, roll_angle: 0.0, roll_in_time: 0.0, roll_out_time: 0.0),

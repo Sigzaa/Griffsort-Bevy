@@ -20,11 +20,11 @@ pub fn idle_to_shield(
         // Detecting inputs
         if !act.pressed(Action::Abil1)
         {
-            return;
+            continue;
         }
         if !mcd.is_ready(0)
         {
-            return;
+            continue;
         }
 
         // Time between use of marks
@@ -41,19 +41,21 @@ pub fn idle_to_shield(
             {
                 if let MarkState::Idle(_angle) = *state
                 {
-                    // Changing a state of mark
-                    *state = MarkState::Shield;
 
-                    // Adding expiration timer
-                    commands.entity(*mark).insert(MarkDespawnTimer {
-                        timer: Timer::from_seconds(0.5, false),
-                    });
+                        // Changing a state of mark
+                        *state = MarkState::Shield;
 
-                    // Sending Event to reallocate angles of marks in new state
-                    evwr.send(RecalkAnglesEv);
+                        // Adding expiration timer
+                        commands.entity(*mark).insert(MarkDespawnTimer {
+                            timer: Timer::from_seconds(0.5, false),
+                        });
 
-                    // Returning because we need only one mark
-                    return;
+                        // Sending Event to reallocate angles of marks in new state
+                        evwr.send(RecalkAnglesEv);
+
+                        // Returning because we need only one mark
+                        return;
+
                 }
             }
         }
@@ -154,7 +156,7 @@ pub fn mark_to_shield(
                 {
                     // Time to despawn a mark.
 
-                    shield_state.duration += 2.;
+                    shield_state.duration += 1.;
 
                     if !shield_exists
                     {
@@ -216,13 +218,15 @@ pub fn shield_handler(
         // Checking the existance of the shield
         if shield_state.link.is_none()
         {
-            return;
+            continue;
         }
-        let mark_ent = shield_state.link.unwrap();
+        let shield_ent = shield_state.link.unwrap();
+
+        println!("shield duration: {}", shield_state.duration);
 
         if shield_state.duration <= 0.
         {
-            commands.entity(mark_ent).despawn();
+            commands.entity(shield_ent).despawn_recursive();
             shield_state.link = None;
         }
         else

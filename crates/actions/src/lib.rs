@@ -43,6 +43,7 @@ mod tests {
         Jump,
         Sprint,
         Abil1,
+        Abil2,
         Command(String),
     }
 }

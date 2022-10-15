@@ -61,7 +61,7 @@ pub fn sync_config_res_with_components<T: Component, Conf: ConfigProps + Send + 
     {
         let props = conf.props();
 
-        max_hp.0 = props.max_hp;
+        //max_hp.0 = props.max_hp;
         max_jump_height.0 = props.max_jump_height;
         fire_rate.0 = props.fire_rate;
         ammo_capacity.0 = props.ammo_capacity;

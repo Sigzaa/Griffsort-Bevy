@@ -13,6 +13,16 @@ impl CooldownManager for MarksCD {
         &mut self.0
     }
 }
+
+#[derive(Component)]
+pub struct BombCD(pub CDProps);
+
+impl CooldownManager for BombCD {
+    fn pull_props<'a>(&'a mut self) -> &'a mut CDProps {
+        &mut self.0
+    }
+}
+
 pub struct RecalkAnglesEv;
 
 pub struct SpawnMarkEv {
@@ -95,13 +105,22 @@ mod components {
     #[derive(Component)]
     pub struct MarksLinks(pub HashSet<Entity>);
 
+    // #[derive(Component)]
+    // pub struct FreeMark;
+
+    // #[derive(Component)]
+    // pub struct Mark;
+
     #[derive(Component)]
     pub enum MarkState {
         // Enemy entity
         Chasing(Entity),
 
         // Mark close to the enemy
-        ReadyToJump(Entity),
+        ReadyToJump{
+            target: Option<Entity>,
+            expire_time: f32
+        },
 
         // Is using as a shield
         Shield,
@@ -109,6 +128,9 @@ mod components {
         // Angle
         Idle(f32),
     }
+
+    #[derive(Component)]
+    pub struct Bomb;
 
     #[derive(Component)]
     pub struct JumpingTo(pub Entity);

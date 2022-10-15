@@ -88,7 +88,7 @@ pub fn pointing_on<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
             cam_transform.forward(),
             max_toi,
             true,
-            QueryFilter::only_dynamic(),
+            QueryFilter::new(),
         )
         {
             max_toi = toi;
@@ -214,13 +214,14 @@ pub fn walk<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
             &mut ExternalForce,
             &mut Velocity,
             &Transform,
+            Option<&Grounded>,
         ),
         With<C>,
     >,
     conf: Res<Conf>,
     time: Res<Time>,
 ) {
-    for (ginp, mut force, mut velocity, transform) in q_sel.iter_mut()
+    for (ginp, mut force, mut velocity, transform, is_grounded) in q_sel.iter_mut()
     {
         let (right, forward) =
             ginp.cross(Action::Left, Action::Right, Action::Back, Action::Forward);
@@ -228,7 +229,11 @@ pub fn walk<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
         let direction = transform.forward() * forward + transform.right() * right;
 
         let props = conf.props();
-        let coef = time.delta_seconds() * props.acceleration * 10.;
+        let mut coef = time.delta_seconds() * props.acceleration * 10.;
+
+        if is_grounded.is_none(){
+            coef *= 0.1;
+        }
 
         force.force = direction * coef;
 

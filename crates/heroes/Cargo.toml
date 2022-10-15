@@ -12,7 +12,7 @@ bevy_rapier3d = { version = "0.17" , features = [ "enhanced-determinism", "debug
 bevy = { version = "0.8.0" }
 serde = "1.0.137"
 serde_json = "1.0.81"
-bevy-inspector-egui = "0.12.1"
+bevy-inspector-egui = { path = "../bevy-inspector-egui" }
 bevy_prototype_debug_lines = { version = "0.8", features = ["3d"] }
 bevy_debug_shapes = { path = "../bevy_debug_shapes" }
 synx = { path = "../synx" }

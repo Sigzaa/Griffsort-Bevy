@@ -56,7 +56,7 @@ pub fn follow_hero(
 
                     offset *= conf.marks.distance;
 
-                    offset += transform.translation * transform.back() * 0.1;
+                    offset += transform.back() * 2.;
 
                     let to = transform.translation + offset;
 
@@ -96,8 +96,8 @@ pub fn rearrange_angles(
     mut markq: Query<&mut MarkState, Without<Jacqueline>>,
     mut ev: EventReader<RecalkAnglesEv>,
 ) {
-    for _i in ev.iter()
-    {
+    // for _i in ev.iter()
+    // {
         for (_eni, links) in query.iter()
         {
             // Amount of marks in idle
@@ -147,7 +147,7 @@ pub fn rearrange_angles(
                 }
             }
         }
-    }
+    //}
 }
 
 pub fn spawn_mark(

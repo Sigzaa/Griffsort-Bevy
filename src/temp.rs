@@ -1,9 +1,9 @@
 use bevy::{prelude::*, window::PresentMode};
 use bevy_rapier3d::prelude::*;
 use gs_states::*;
-use heroes::{SelectedId, Team};
+use heroes::{SelectedId, Team, Id, MaxHp};
 
-use crate::characters_impl::{Jacqueline, SpawnHeroEv};
+use crate::characters_impl::{Jacqueline, SpawnHeroEv, Soul};
 
 pub struct TempPlugin;
 
@@ -18,10 +18,15 @@ impl Plugin for TempPlugin {
             ..Default::default()
         })
         .add_enter_system(GameState::InGame, _temp_setup)
+        .add_system(debug_component)
         .add_system(switch.run_in_state(GameState::InGame));
     }
 }
-
+fn debug_component(q: Query<(Entity, &MaxHp)>){
+    for (ent, hp) in &q{
+        //println!("ent :{ent:?}, hp: {}", hp.0);
+    }
+}
 fn switch(
     buttons: Res<Input<MouseButton>>,
     mut selected: ResMut<SelectedId>,
@@ -101,14 +106,16 @@ fn _temp_setup(
         .spawn_bundle(TransformBundle::from_transform(
             Transform::from_translation(Vec3::new(15., 15., 15.)),
         ))
-        .insert(Jacqueline);
+        .insert(Jacqueline)
+        .insert(Id(-1));
 
     commands
         .spawn_bundle(TransformBundle::from_transform(
             Transform::from_translation(Vec3::new(25., 15., 15.)),
         ))
         .insert(Team::Light)
-        .insert(Jacqueline);
+        .insert(Jacqueline)
+        .insert(Id(1));
 
-    selected.0 = Some(0);
+    selected.0 = Some(1);
 }

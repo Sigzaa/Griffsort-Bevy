@@ -2,6 +2,7 @@ use actions::Actions;
 use bevy::prelude::*;
 use heroes::*;
 use keyframe::{ease, functions::*};
+use std::collections::HashSet;
 
 use crate::{characters_impl::Jacqueline, resources::Action};
 
@@ -15,24 +16,29 @@ impl Plugin for ChaseAbil {
             .add_system(move_marks)
             .add_system(chase)
             .add_system(detect_jump)
+            .add_system(expire_marks)
             .add_system(move_jacqueline);
     }
 }
 
 fn detect_jump(
     rapier_context: Res<RapierContext>,
-    mut jacquelineq: Query<(&CameraLink, &Actions<Action>, Entity, &MarksLinks), With<Jacqueline>>,
+    mut jacquelineq: Query<(&CameraLink, &Actions<Action>, Entity, &MarksLinks, &mut MarksCD), With<Jacqueline>>,
     cameraq: Query<&GlobalTransform>,
-    mut markq: Query<(&mut MarkState, Entity), Without<Hero>>,
+    mut markq: Query<&mut MarkState, Without<Hero>>,
     mut commands: Commands,
     conf: Res<JacquelineConfig>,
 ) {
-    for (camera_link, actions, jacqueline_entity, marks_links) in &mut jacquelineq
+    for (camera_link, actions, jacqueline_entity, marks_links, mut mcd) in &mut jacquelineq
     {
         //Detecting inputs
-        if !actions.pressed(Action::Sprint)
+        if !actions.just_released(Action::Sprint)
         {
-            return;
+           continue;
+        }
+        if !mcd.is_ready(0)
+        {
+            continue;
         }
 
         let global_transform = cameraq.get(camera_link.0).unwrap();
@@ -42,35 +48,66 @@ fn detect_jump(
 
         rapier_context.intersections_with_shape(
             global_transform.translation()
-                + global_transform.forward() * (props.source_distance + props.toi),
+                + global_transform.forward() * (props.source_distance),
             c_rotation,
-            &Collider::cylinder(10., 3.),
+            &Collider::cuboid(props.radius, props.radius, props.toi),
             QueryFilter::new(),
             |entity| {
-                //
-
-                if let Ok((mark_state, mark_entity)) = markq.get_mut(entity)
+                //println!("ent {entity:?}");
+                if marks_links.0.contains(&entity)
                 {
-                    if marks_links.0.contains(&mark_entity)
-                    {
-                        if let MarkState::ReadyToJump(_chased_entity) = *mark_state
+                    let mut changed = false;
+                    if let Ok(mark_state) = markq.get_mut(entity){
+                        if let MarkState::ReadyToJump
                         {
-                            println!("ent {entity:?}");
+                            target: chased_entity,
+                            expire_time: exp_time,
+
+                        } = *mark_state{
+
+
 
                             commands
                                 .entity(jacqueline_entity)
-                                .insert(JumpingTo(mark_entity))
+                                .insert(JumpingTo(entity))
                                 .insert(RigidBody::Fixed);
 
-                            // vel.angvel = Vec3::ZERO;
-                            // vel.linvel = Vec3::ZERO;
-                            // coll_groups.memberships = Group::NONE;
-
-                            return false;
+                            // Prevent looping of marks teleporting
+                            if chased_entity.is_some(){
+                                changed = true;
+                            }
                         }
                     }
+                    //
+                    if changed {
+
+                        for mark_link in marks_links.0.iter()
+                        {
+
+
+                            let mut mark_state = markq.get_mut(*mark_link).unwrap();
+
+
+                            if let MarkState::Idle(_angle) = *mark_state {
+                                    *mark_state = MarkState::ReadyToJump{
+                                        target: None,
+                                        expire_time: 10.,
+
+                                    };
+
+                                    mcd.add(-1);
+                                    // Time to respawn mark
+                                    mcd.cooldown(1, 2.);
+                                    break;
+                            }
+                        }
+                        return false;
+                    
+                    }  
                 }
+                 
                 true
+
             },
         );
 
@@ -80,12 +117,12 @@ fn detect_jump(
 
 fn move_jacqueline(
     mut jacq: Query<(Entity, &mut Transform, &JumpingTo, &mut MarksLinks), Without<MarkState>>,
-    target: Query<(Entity, &Transform), With<MarkState>>,
+    mark_target: Query<(Entity, &Transform), With<MarkState>>,
     mut commands: Commands,
 ) {
     for (jac_ent, mut jac_transform, jumping_to, mut marks_links) in &mut jacq
     {
-        if let Ok((mark_entity, to_mark_transform)) = target.get(jumping_to.0)
+        if let Ok((mark_entity, to_mark_transform)) = mark_target.get(jumping_to.0)
         {
             if marks_links.0.contains(&mark_entity)
             {
@@ -95,13 +132,13 @@ fn move_jacqueline(
                         EaseInOutQuad,
                         jac_transform.translation[i],
                         to_mark_transform.translation[i],
-                        0.1,
+                        0.3,
                     );
 
                     if to_mark_transform
                         .translation
                         .distance(jac_transform.translation)
-                        < 0.5
+                        < 1.5
                     {
                         commands.entity(jac_ent).insert(RigidBody::Dynamic);
                         commands.entity(mark_entity).despawn_recursive();
@@ -114,6 +151,7 @@ fn move_jacqueline(
 }
 
 fn move_marks(
+
     mut markq: Query<(&mut MarkState, &mut Transform), Without<Hero>>,
     enemyq: Query<&Transform, With<Hero>>,
 ) {
@@ -128,29 +166,90 @@ fn move_marks(
                 .distance(mark_transform.translation)
                 < 5.
             {
-                *mark_state = MarkState::ReadyToJump(entity);
+                *mark_state = MarkState::ReadyToJump{
+                    target: Some(entity),
+                    expire_time: 10.,
+                };
             }
         }
     }
 }
+fn expire_marks(
+    mut jacq: Query<(Entity, &mut MarksLinks), Without<MarkState>>,
+    mut markq: Query<(&mut MarkState, Entity), Without<Hero>>,
+    time: Res<Time>,
+    mut commands: Commands,
+    )
+{
+    for (ent, mut marks_links) in &mut jacq{
+
+        let mut to_remove = HashSet::new();
+
+        for mut mark_link in marks_links.0.iter(){
+
+            if let Ok((mut mark_state, mark_entity)) = markq.get_mut(*mark_link){
+
+            if let MarkState::ReadyToJump{target: target_entity, expire_time: mut exp_time} = *mark_state{
+                exp_time -= time.delta_seconds();
+
+                *mark_state = MarkState::ReadyToJump{target: target_entity, expire_time: exp_time};
+
+                if exp_time <= 0.{
+                    to_remove.insert(mark_entity);
+                    commands.entity(mark_entity).despawn_recursive();
+                }
+
+            }
+            }
+        }
+        for mark_ent in to_remove
+        {
+            marks_links.0.remove(&mark_ent);
+        }
+
+    }
+
+}
 
 fn chase(
-    mut markq: Query<(&mut MarkState, &mut Transform), Without<Hero>>,
+    mut markq: Query<(&mut MarkState, &mut Transform, Entity), Without<Hero>>,
     enemyq: Query<&Transform, With<Hero>>,
+
 ) {
-    for (mark_state, mut mark_transform) in &mut markq
+    for (mut mark_state, mut mark_transform, mark_entity) in &mut markq
     {
-        if let MarkState::Chasing(entity) = *mark_state
+        if let MarkState::Chasing(target_entity) = *mark_state
         {
-            let target_transform = enemyq.get(entity).unwrap();
+            let target_transform = enemyq.get(target_entity).unwrap();
+
+            let to = target_transform.translation + target_transform.back() * 1.5;
 
             for i in 0..3
             {
                 mark_transform.translation[i] = ease(
                     EaseInOutQuad,
                     mark_transform.translation[i],
-                    target_transform.translation[i],
+                    to[i],
                     0.1,
+                );
+            }
+        }
+        if let MarkState::ReadyToJump{target: Some(target_entity), expire_time: mut exp_time}= *mark_state
+        {
+            let target_transform = enemyq.get(target_entity).unwrap();
+
+
+
+
+            let to = target_transform.translation + target_transform.back() * 1.5;
+            
+            for i in 0..3
+            {
+                mark_transform.translation[i] = ease(
+                    EaseInOutQuad,
+                    mark_transform.translation[i],
+                    to[i],
+                    0.05,
                 );
             }
         }
@@ -189,36 +288,26 @@ fn idle_to_chase(
                 if aiming_on_team == team
                 {
                     // Uncomment if you want Jacqueline not to teleport to teammates
-                    //return;
+                    // return;
                 }
-
-                // Time between use of marks
-                mcd.cooldown(0, 0.5);
-
-                mcd.add(-1);
-                // Time to respawn mark
-                mcd.cooldown(1, 2.);
 
                 for mark in links.0.iter()
                 {
-                    let state = markq.get_mut(*mark).unwrap();
+                    // We cant doublesend marks to same character
+                    if match *markq.get_mut(*mark).unwrap()
+                    {
+                        MarkState::Chasing(chased_entity) => Some(chased_entity),
+                        MarkState::ReadyToJump{
+                            target: chased_entity,
+                            expire_time: exp_time,
+                        } => chased_entity,
+                        _=> None,
+                        
+                    } == Some(entity)
+                    {
+                        return;  
+                    }
 
-                    if let MarkState::Chasing(chasing_entity) = *state
-                    {
-                        // We cant send marks to same character
-                        if chasing_entity == entity
-                        {
-                            return;
-                        }
-                    }
-                    if let MarkState::ReadyToJump(chasing_entity) = *state
-                    {
-                        // We cant send marks to same character
-                        if chasing_entity == entity
-                        {
-                            return;
-                        }
-                    }
                 }
                 for mark in links.0.iter()
                 {
@@ -226,6 +315,14 @@ fn idle_to_chase(
 
                     if let MarkState::Idle(_angle) = *state
                     {
+
+                        // Time between use of marks
+                        mcd.cooldown(0, 0.5);
+
+                        mcd.add(-1);
+                        // Time to respawn mark
+                        mcd.cooldown(1, 2.);
+
                         // Changing a state of mark
                         *state = MarkState::Chasing(entity);
                         return;
