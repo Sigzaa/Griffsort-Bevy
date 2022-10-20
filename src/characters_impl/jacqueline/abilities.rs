@@ -1,3 +1,5 @@
+use gs_inspector::ShapeDebugger;
+
 use super::*;
 
 pub(crate) fn attack(

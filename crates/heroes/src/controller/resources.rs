@@ -66,6 +66,7 @@ pub struct Config {
     pub acceleration: f32,
     pub fire_rate: f32,
     pub ammo_capacity: i32,
+    pub head_ride_height: f32,
 
     #[inspectable(collapse)]
     pub intersections_shape: IntersectionShape,
@@ -106,6 +107,7 @@ impl Default for Config {
             pointing_ray_toi: 10.,
             fire_rate: 1.4,
             ammo_capacity: 20,
+            head_ride_height: 0.7,
         }
     }
 }
@@ -123,11 +125,13 @@ pub struct StaticHeroesBundle {
     pub poinging_ray_toi: RayToi,
     pub fire_rate: FireRate,
     pub ammo_capacity: AmmoCapacity,
+    pub head_ride_height: HeadRideHeight,
 }
 #[derive(Bundle, Component, Reflect, Default)]
 pub struct DynamicHeroesBundle {
     pub hp: Hp,
     pub noclip: NoClip,
+    pub resists: Resists
 }
 
 mod components {
@@ -140,7 +144,19 @@ mod components {
     pub struct FireRate(pub f32);
 
     #[derive(Component, Default, Reflect, Inspectable)]
+    pub struct CameraShakeIn(pub f32);
+
+    #[derive(Component, Default, Reflect, Inspectable)]
+    pub struct HeadRideHeight(pub f32);
+
+    #[derive(Component, Default, Reflect, Inspectable)]
     pub struct AmmoCapacity(pub i32);
+
+    #[derive(Component, Default, Reflect, Inspectable)]
+    pub struct Resists{
+        common_attack: f32,
+        poison: f32
+    }
 
     #[derive(Component)]
     pub struct Hero;

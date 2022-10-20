@@ -42,6 +42,7 @@ impl Plugin for Jacqueline {
             .add_system(respawn_marks.after(insert_marks))
             .add_system(spawn_mark.after(respawn_marks))
             .add_system(rearrange_angles.before(spawn_mark).label("last"))
+            .add_system(color_marks)
             .add_system_set(
                 ConditionSet::new()
                     

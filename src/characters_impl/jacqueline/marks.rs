@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_draw_debug_tools::DebugLinesExt;
 use bevy_rapier3d::geometry::Sensor;
 use bevy_rapier3d::prelude::*;
 use keyframe::{ease, functions::EaseInQuint};
@@ -10,6 +11,37 @@ use heroes::*;
 
 use super::resources::*;
 
+
+pub fn color_marks(
+        query: Query<&MarksLinks, With<Jacqueline>>,
+        markq: Query<(&Transform, &MarkState), Without<Hero>>,
+        mut lines: ResMut<DebugLines>,
+        ){
+
+    let mark_shape = Mesh::from(shape::UVSphere {
+        radius: 0.2,
+        sectors: 10,
+        stacks: 10,
+    });
+
+    for marks_links in &query{
+        for mark_link in marks_links.0.iter(){
+            if let Ok((transform, mark_state)) = markq.get(*mark_link){
+
+
+                if let MarkState::Chasing(_ent) = *mark_state
+                {
+                    lines.shape(transform.translation, transform.rotation, &mark_shape, 0., Color::GRAY);
+                }
+                if let MarkState::ReadyToJump { target: _, expire_time: _ } = *mark_state
+                {
+                    lines.shape(transform.translation, transform.rotation, &mark_shape, 0., Color::YELLOW_GREEN);
+                }
+            }
+        }
+    }
+
+}
 pub fn respawn_marks(
     mut query: Query<(&mut MarksCD, Entity), With<Jacqueline>>,
     conf: Res<JacquelineConfig>,

@@ -1,6 +1,10 @@
 //use super::resources::*;
 use bevy::{diagnostic::FrameTimeDiagnosticsPlugin, prelude::*};
 use bevy_console::{ConsoleConfiguration, ConsolePlugin};
+use bevy_inspector_egui::InspectorPlugin;
+use synx::Synx;
+
+use crate::{resources::ShapeDebugger, ToScreenDebugger};
 
 #[derive(Default)]
 struct GSVersion(&'static str);
@@ -24,9 +28,16 @@ impl Plugin for Inspector {
                 ..Default::default()
             })
             
+            //.add_plugin(Synx::<GSDebugger>::new("./config/to_screen_debugger"))
+            .add_plugin(InspectorPlugin::<ToScreenDebugger>::default())
+
+            .add_plugin(InspectorPlugin::<ShapeDebugger>::new())
             // .insert_resource(Update::default())
             // .insert_resource(OpenTab::Console)
             .insert_resource(GSVersion(self.game_version))
+
+            .insert_resource(ShapeDebugger::default())
+            .add_plugin(Synx::<ShapeDebugger>::new("./config/debugger.ron"))
             // .insert_resource(Stats::new())
             // .insert_resource(Config::new())
             // .insert_resource(Console::new())

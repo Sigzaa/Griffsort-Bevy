@@ -3,10 +3,14 @@ mod commands_impl;
 pub mod heroes_mapping;
 mod resources;
 mod temp;
+mod debugger;
 
 use actions::{update_inputs, ActionsPlugin};
+use bevy_debug_text_overlay::OverlayPlugin;
+use bevy_draw_debug_tools::DebugLinesPlugin;
 use characters_impl::Characters;
 use commands_impl::ConsoleCommands;
+use debugger::GSDebugger;
 use go_level::plugin::Level;
 use gs_inspector::Inspector;
 use gs_states::{StatesPlugin, IntoConditionalSystem};
@@ -42,12 +46,20 @@ ___________________        _____/\\\\\\\\\\\___        _______/\\\\\______      
 fn main() {
     App::new()
         
-        // Bevy default plugins
-        .add_plugins(DefaultPlugins)
-        
         // Handling states of this game
         .add_plugin(StatesPlugin)
+
+        // Debugging and Hardcode
+        .add_plugin(TempPlugin)
         
+        // Bevy default plugins
+        .add_plugins(DefaultPlugins)
+
+        // For screen printing
+        .add_plugin(OverlayPlugin { font_size: 24.0, fallback_color: Color::AZURE, ..default() })
+        
+        .add_plugin(DebugLinesPlugin::default())
+
         // Console + Configs
         .add_plugin(Inspector::new(env!("CARGO_PKG_VERSION")))
 
@@ -63,14 +75,13 @@ fn main() {
         // Using ActionsPlugin API to work it properly
         //.add_system_to_stage(CoreStage::First, update_inputs::<Selected, Action>)
 
-        // Debugging and Hardcode
-        .add_plugin(TempPlugin)
-
         // Character controller
         .add_plugin(Heroes)
 
         // Implementation of heroes using HeroesPlugin APIs
         .add_plugin(Characters)
+
+        .add_plugin(GSDebugger)
 
         .add_plugin(Level)
 

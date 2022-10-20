@@ -81,6 +81,7 @@ pub fn insert_rest<T: Component, Conf: ConfigProps + Send + Sync + 'static>(
         ec.insert(Hero)
             .insert(ShapeIntersections::default())
             .insert(RayPointingOn::default())
+            .insert(CameraShakeIn::default())
             
             .insert_bundle(DynamicHeroesBundle {
                 hp: Hp(conf.props().max_hp),

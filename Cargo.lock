@@ -370,11 +370,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "bevy-debug-text-overlay"
+version = "3.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2ed1cda93d0b16c27d44901d45ae4327f1ec0b487d4a3438af9f011e9b65d2e5"
+dependencies = [
+ "bevy",
+ "lazy_static",
+]
+
+[[package]]
 name = "bevy-inspector-egui"
 version = "0.13.0"
 dependencies = [
  "bevy",
- "bevy-inspector-egui-derive",
+ "bevy-inspector-egui-derive 0.13.0",
  "bevy_egui 0.16.1",
  "image 0.23.14",
  "nalgebra",
@@ -384,8 +394,32 @@ dependencies = [
 ]
 
 [[package]]
+name = "bevy-inspector-egui"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3e18f673a7040930e20c899ad5e98d62f5db702a742c9cd96b5862d051a7b5da"
+dependencies = [
+ "bevy",
+ "bevy-inspector-egui-derive 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "bevy_egui 0.16.1",
+ "image 0.23.14",
+ "pretty-type-name",
+]
+
+[[package]]
 name = "bevy-inspector-egui-derive"
 version = "0.13.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "bevy-inspector-egui-derive"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2ce0a659fdb2c31c2ae7f2ee8020fa758aff458a4ae4dc4e55bc27dcc31ef487"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -575,6 +609,16 @@ dependencies = [
  "bevy_log",
  "bevy_time",
  "bevy_utils",
+]
+
+[[package]]
+name = "bevy_draw_debug_tools"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "bevy_egui 0.16.1",
+ "bevy_prototype_debug_lines",
+ "bevy_rapier3d",
 ]
 
 [[package]]
@@ -2366,12 +2410,15 @@ version = "0.1.1"
 dependencies = [
  "actions",
  "bevy",
- "bevy-inspector-egui",
+ "bevy-debug-text-overlay",
+ "bevy-inspector-egui 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "bevy_console",
  "bevy_console_parser",
+ "bevy_draw_debug_tools",
  "bevy_hanabi",
  "bevy_rapier3d",
  "bincode",
+ "clamped",
  "go_level",
  "gs_inspector",
  "gs_states",
@@ -2391,8 +2438,11 @@ name = "gs_inspector"
 version = "0.1.1"
 dependencies = [
  "bevy",
+ "bevy-inspector-egui 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "bevy_console",
  "bevy_egui 0.15.1",
+ "serde",
+ "synx",
 ]
 
 [[package]]
@@ -2481,7 +2531,7 @@ version = "0.1.0"
 dependencies = [
  "actions",
  "bevy",
- "bevy-inspector-egui",
+ "bevy-inspector-egui 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "bevy_atmosphere",
  "bevy_debug_shapes",
  "bevy_mod_picking",

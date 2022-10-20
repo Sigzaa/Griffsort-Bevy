@@ -88,7 +88,7 @@ impl<A: Eq + Hash + Clone + Debug> Actions<A> {
     pub fn just_released(&self, key: A) -> bool {
         self.just_released.contains(&key)
     }
-    pub fn debug(&self) {
+    pub fn debug(&self) -> String{
         if !(self.pressed.is_empty()
             && self.just_pressed.is_empty()
             && self.just_released.is_empty())
@@ -98,10 +98,12 @@ impl<A: Eq + Hash + Clone + Debug> Actions<A> {
             let just_pressed = format!("{:?}", self.just_pressed).green();
             let just_released = format!("{:?}", self.just_released).green();
 
-            println!(
+            return format!(
                 "pressed: {pressed}, just_pressed {just_pressed}, just_released {just_released}"
-            );
+            )
         }
+
+        return "".to_string();
     }
     pub fn print(&self, key: A) {
         let (pressed, just_pressed, just_released) = (

@@ -2,9 +2,9 @@
     showray: true,
     sensitivity: 1.0,
     ray_color: Rgba(
-        red: 0.0,
-        green: 0.8862745,
-        blue: 1.0,
+        red: 0.42745098,
+        green: 0.18431373,
+        blue: 0.9254902,
         alpha: 1.0,
     ),
     debug_rapier: false,

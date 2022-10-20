@@ -1,5 +1,8 @@
 use actions::Actions;
-use bevy::prelude::*;
+use bevy::prelude::{*, shape::{Capsule, Box}};
+use bevy_draw_debug_tools::DebugLinesExt;
+use bevy_inspector_egui::bevy_egui::EguiContext;
+use gs_inspector::ShapeDebugger;
 use heroes::*;
 use keyframe::{ease, functions::*};
 use std::collections::HashSet;
@@ -28,34 +31,69 @@ fn detect_jump(
     mut markq: Query<&mut MarkState, Without<Hero>>,
     mut commands: Commands,
     conf: Res<JacquelineConfig>,
+
+    intersected: Query<&Transform, With<MarkState>>,
+    mut lines: ResMut<DebugLines>,
+    debugger: Res<ShapeDebugger>,
+    mut egui_context: ResMut<EguiContext>
 ) {
+    let props = conf.props().intersections_shape.clone();
+
+    let mesh = Mesh::from(Box::new(props.radius, props.radius, props.toi));
+    //let shape = Collider::from_bevy_mesh(&mesh, &ComputedColliderShape::TriMesh).unwrap();
+    let collider = Collider::cuboid(props.radius/2., props.radius/2., props.toi/2.);
+
+    let mark_shape = Mesh::from(shape::UVSphere {
+        radius: 0.4,
+        sectors: 10,
+        stacks: 10,
+    });
+
     for (camera_link, actions, jacqueline_entity, marks_links, mut mcd) in &mut jacquelineq
     {
-        //Detecting inputs
-        if !actions.just_released(Action::Sprint)
-        {
-           continue;
-        }
-        if !mcd.is_ready(0)
-        {
-            continue;
+
+
+        let transform = cameraq.get(camera_link.0).unwrap().compute_transform();
+
+
+
+        let position = transform.translation + transform.forward() * (props.toi/2.);
+
+
+        if debugger.shape_casting.enable{
+            lines.shape(position, transform.rotation, &mesh, 0., debugger.shape_casting.color);
+            //lines.distance(transform.translation, position, 0., debugger.heroes_aiming.color, &mut egui_context)
         }
 
-        let global_transform = cameraq.get(camera_link.0).unwrap();
-        let (_, c_rotation, _) = global_transform.to_scale_rotation_translation();
-
-        let props = conf.props().intersections_shape.clone();
 
         rapier_context.intersections_with_shape(
-            global_transform.translation()
-                + global_transform.forward() * (props.source_distance),
-            c_rotation,
-            &Collider::cuboid(props.radius, props.radius, props.toi),
+            position,
+            transform.rotation,
+            &collider,
             QueryFilter::new(),
             |entity| {
-                //println!("ent {entity:?}");
                 if marks_links.0.contains(&entity)
                 {
+
+
+                        if let Ok(transform) = intersected.get(entity){
+
+                            lines.shape(transform.translation, transform.rotation, &mark_shape, 0., Color::RED);
+
+                        }
+
+
+                    //Detecting inputs
+                    if !actions.just_released(Action::Sprint)
+                    {
+                        return true;
+                    }
+                    if !mcd.is_ready(0)
+                    {
+                        return true;
+                    }
+
+
                     let mut changed = false;
                     if let Ok(mark_state) = markq.get_mut(entity){
                         if let MarkState::ReadyToJump

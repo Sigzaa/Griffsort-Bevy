@@ -4,6 +4,11 @@
             "name": "run",
             "type": "cargo",
             "cargoArgs": ["run"]
+        },
+        {
+            "name": "run release",
+            "type": "cargo",
+            "cargoArgs": ["run", "--release"]
         }
     ]
 }

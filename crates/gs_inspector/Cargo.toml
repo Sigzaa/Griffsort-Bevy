@@ -9,3 +9,7 @@ edition = "2021"
 bevy = "0.8.0"
 bevy_egui = "0.15"
 bevy_console = "0.4.0"
+#bevy-inspector-egui = { path = "../bevy-inspector-egui" }
+bevy-inspector-egui = "0.13"
+serde = "1.0.137"
+synx = { path = "../synx" }

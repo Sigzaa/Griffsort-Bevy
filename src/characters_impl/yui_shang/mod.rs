@@ -23,6 +23,8 @@ impl Plugin for YuiShang {
                     .with_system(shoot)
                     .with_system(walk::<YuiShang, ShangConfig>)
                     .with_system(look::<YuiShang>.run_if(cursor_showed))
+                    .with_system(is_grounded::<YuiShang, ShangConfig>)
+                    .with_system(jump::<YuiShang, ShangConfig>)
                     .with_system(camera_shake::<YuiShang, ShangConfig>)
                     .into(),
             );

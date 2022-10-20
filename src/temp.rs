@@ -3,7 +3,7 @@ use bevy_rapier3d::prelude::*;
 use gs_states::*;
 use heroes::{SelectedId, Team, Id, MaxHp};
 
-use crate::characters_impl::{Jacqueline, SpawnHeroEv, Soul};
+use crate::characters_impl::{Jacqueline, SpawnHeroEv, Soul, YuiShang};
 
 pub struct TempPlugin;
 
@@ -114,7 +114,7 @@ fn _temp_setup(
             Transform::from_translation(Vec3::new(25., 15., 15.)),
         ))
         .insert(Team::Light)
-        .insert(Jacqueline)
+        .insert(YuiShang)
         .insert(Id(1));
 
     selected.0 = Some(1);

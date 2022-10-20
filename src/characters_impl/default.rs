@@ -1,8 +1,12 @@
 use actions::Actions;
 use bevy::input::mouse::MouseMotion;
 use bevy::prelude::*;
+use bevy_debug_text_overlay::screen_print;
+use bevy_draw_debug_tools::DebugLinesExt;
+use gs_inspector::{ToScreenDebugger, ShapeDebugger};
 use heroes::*;
-
+use clamped::Clamp;
+use keyframe::{ease, functions::EaseInOutQuad};
 use crate::Action;
 
 // pub fn sync_configs() {
@@ -17,17 +21,26 @@ pub fn look<C: Component>(
     mut q_cam: Query<&mut Transform, Without<C>>,
     mut motion_evr: EventReader<MouseMotion>,
     conf: Res<HeroesConfig>,
-) {
-    for (cam_link, mut body_transform) in hero_q.iter_mut()
-    {
+    ) {
+    for (cam_link, mut body_transform) in hero_q.iter_mut() {
         //println!("pos: {}", body_transform.translation);
         let mut cam_transform = q_cam.get_mut(cam_link.0).unwrap();
 
-        for ev in motion_evr.iter()
-        {
+
+
+        for ev in motion_evr.iter() {
             body_transform.rotation *=
-                Quat::from_rotation_y(-ev.delta.x * conf.sensitivity * 0.001);
-            cam_transform.rotation *= Quat::from_rotation_x(-ev.delta.y * conf.sensitivity * 0.001);
+            Quat::from_rotation_y(-ev.delta.x * conf.sensitivity * 0.001);
+
+            let new_rotation = cam_transform.rotation * Quat::from_rotation_x(-ev.delta.y * conf.sensitivity * 0.001);
+
+            let cam_axis = new_rotation.to_array()[0];
+            if cam_axis >= -0.7 && cam_axis <= 0.7{
+                cam_transform.rotation = new_rotation;
+            }
+
+
+
         }
     }
 }
@@ -40,8 +53,7 @@ pub fn pointing_on_shape<C: Component, Conf: ConfigProps + Send + Sync + 'static
     q_cam: Query<&GlobalTransform>,
     _commands: Commands,
 ) {
-    for (camera_entity, mut pointing_on) in &mut hero_q
-    {
+    for (camera_entity, mut pointing_on) in &mut hero_q {
         pointing_on.0.clear();
 
         let cam_transform = q_cam.get(camera_entity.0).unwrap();
@@ -73,43 +85,37 @@ pub fn pointing_on<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
     rapier_context: Res<RapierContext>,
     mut hero_q: Query<(&CameraLink, &mut RayPointingOn), With<C>>,
     q_cam: Query<&GlobalTransform>,
-    //mut lines: ResMut<DebugLines>,
+    mut lines: ResMut<DebugLines>,
+    debuggerconf: Res<ShapeDebugger>,
 ) {
-    for (camera_entity, mut pointing_on) in &mut hero_q
-    {
+    for (camera_entity, mut pointing_on) in &mut hero_q {
         let cam_transform = q_cam.get(camera_entity.0).unwrap();
 
         let start = cam_transform.translation() + cam_transform.forward() * 1.5;
 
         let mut max_toi = conf.props().pointing_ray_toi;
 
-        if let Some((entity, toi)) = rapier_context.cast_ray(
+        let ray_res = rapier_context.cast_ray_and_get_normal(
             start,
             cam_transform.forward(),
             max_toi,
             true,
             QueryFilter::new(),
-        )
+        );
+        if let Some((entity, intersection)) = ray_res
         {
-            max_toi = toi;
+            max_toi = intersection.toi;
             // The first collider hit has the entity `entity` and it hit after
             // the ray travelled a distance equal to `ray_dir * toi`.
+            screen_print!(sec: 0.1,"entity: {entity:?}");
 
-            pointing_on.0 = Some((entity, toi));
-        }
-        else
-        {
+            pointing_on.0 = Some((entity, intersection.toi));
+        } else {
             pointing_on.0 = None;
         }
 
-        if global_conf.showray
-        {
-            // lines.line_colored(
-            //     start,
-            //     cam_transform.translation() + cam_transform.forward() * max_toi,
-            //     0.,
-            //     global_conf.ray_color,
-            // );
+        if debuggerconf.heroes_aiming.enable{
+            lines.ray_cast_with_normal(start, cam_transform.forward(), max_toi, ray_res, 0., debuggerconf.heroes_aiming.color)
         }
     }
 }
@@ -221,8 +227,7 @@ pub fn walk<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
     conf: Res<Conf>,
     time: Res<Time>,
 ) {
-    for (ginp, mut force, mut velocity, transform, is_grounded) in q_sel.iter_mut()
-    {
+    for (ginp, mut force, mut velocity, transform, is_grounded) in q_sel.iter_mut() {
         let (right, forward) =
             ginp.cross(Action::Left, Action::Right, Action::Back, Action::Forward);
 
@@ -231,7 +236,7 @@ pub fn walk<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
         let props = conf.props();
         let mut coef = time.delta_seconds() * props.acceleration * 10.;
 
-        if is_grounded.is_none(){
+        if is_grounded.is_none() {
             coef *= 0.1;
         }
 
@@ -246,8 +251,7 @@ pub fn walk<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
         //     flat_velocity.clone().normalize_or_zero()
         // );
 
-        if speed > props.max_velocity * 0.3
-        {
+        if speed > props.max_velocity * 0.3 {
             let limited_vel = flat_velocity.normalize_or_zero() * props.max_velocity * 0.3;
             velocity.linvel = Vec3::new(limited_vel[0], velocity.linvel[1], limited_vel[2]);
         }
@@ -261,27 +265,37 @@ pub struct SinIn(pub f32);
 
 pub fn camera_shake<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
     conf: Res<Conf>,
-    q_sel: Query<(&HeadLink, &Actions<Action>), With<C>>,
+    mut heroq: Query<(&HeadLink, &Actions<Action>, &mut CameraShakeIn), With<C>>,
     mut head: Query<&mut Transform>,
-    mut sin_input: Local<SinIn>,
     time: Res<Time>,
 ) {
-    for (link, act) in &q_sel
-    {
+    let props = conf.props();
+    for (link, act, mut sin_input) in &mut heroq {
         let mut head_transform = head.get_mut(link.0).unwrap();
+
+        let mut to = Vec3::new(0., props.head_ride_height, 0.);
 
         if act.pressed(Action::Left)
             || act.pressed(Action::Right)
             || act.pressed(Action::Back)
             || act.pressed(Action::Forward)
         {
-            head_transform.translation =
-                Vec3::new(0., sin_input.0.sin() * conf.props().camera.shake_ampl, 0.);
+
+            to = Vec3::new(0., props.head_ride_height + (sin_input.0.sin() * props.camera.shake_ampl), 0.);
+
+
             sin_input.0 += time.delta_seconds() * conf.props().camera.shake_rate;
-        }
-        else
-        {
+        } else {
             sin_input.0 = 0.;
+        }
+
+        for i in 0..3{
+            head_transform.translation[i] = ease(
+                    EaseInOutQuad,
+            head_transform.translation[i],
+            to[i],
+            1.,
+            );
         }
     }
 }
@@ -292,8 +306,7 @@ pub fn camera_roll<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
     _conf: Res<Conf>,
     mut motion_evr: EventReader<MouseMotion>,
 ) {
-    for camera_link in &mut q_sel
-    {
+    for camera_link in &mut q_sel {
         let _cam_transform = q_cam.get_mut(camera_link.0).unwrap();
 
         let mut is_idle = true;
@@ -302,16 +315,14 @@ pub fn camera_roll<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
 
         // println!("camera transform: {:?}", cam_transform.rotation.to_scaled_axis());
 
-        for _ev in motion_evr.iter()
-        {
+        for _ev in motion_evr.iter() {
             // Mouse is moving
 
             // cam_transform.rotation = ease(cam_transform.rotation.wrap(), Quat::from_rotation_z(out * max_roll).wrap());
 
             is_idle = false;
         }
-        if is_idle
-        {
+        if is_idle {
             // Mouse not moving
 
             //val_to(&mut func_input.0, 0., time.delta_seconds() * out_time);
@@ -329,8 +340,7 @@ pub fn is_grounded<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
     mut commands: Commands,
     //show_ray: Res<ShowRay>,
 ) {
-    for (transform, ent, _damping) in q_sel.iter_mut()
-    {
+    for (transform, ent, _damping) in q_sel.iter_mut() {
         //
         // damping.linear_damping = 0.5;
 
@@ -347,9 +357,7 @@ pub fn is_grounded<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
             // The first collider hit has the entity `entity`. The `hit` is a
             // structure containing details about the hit configuration.
             commands.entity(ent).insert(Grounded);
-        }
-        else
-        {
+        } else {
             commands.entity(ent).remove::<Grounded>();
         }
     }
@@ -358,11 +366,9 @@ pub fn jump<C: Component, Conf: ConfigProps + Send + Sync + 'static>(
     mut q_sel: Query<(&Actions<Action>, &mut Velocity), (With<C>, With<Grounded>)>,
     conf: Res<Conf>,
 ) {
-    for (inputs, mut vel) in q_sel.iter_mut()
-    {
-        inputs.debug();
-        if inputs.just_pressed(Action::Jump)
-        {
+    for (inputs, mut vel) in q_sel.iter_mut() {
+        //inputs.debug();
+        if inputs.just_pressed(Action::Jump) {
             vel.linvel += Vec3::new(0., conf.props().max_jump_height, 0.);
         }
     }
