@@ -1,0 +1,6 @@
+(
+    time_to_place_shield: 10.,
+    time_to_get_shield: 1.,
+    shield_cooldown: 2.,
+    config: Config,
+)

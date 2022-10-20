@@ -1,0 +1,24 @@
+[package]
+name = "reactive"
+version = "0.1.0"
+edition = "2021"
+
+# rename to reactive
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bevy = "0.8.0"
+bevy_renet = "0.0.5"
+renet = "0.0.9"
+go_snap = { path = "../go_snap"}
+
+serde = { version = "1.0", features = [ "derive" ] } 
+bincode = "1.3.1"
+
+
+[features]
+default = ["client"]
+client = ["server"]
+server = []
+offline = []
+localhost = []

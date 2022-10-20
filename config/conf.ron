@@ -1,0 +1,23 @@
+(
+    mouse_bindings: {
+        Left: Shoot,
+        Middle: Command("ha-ha its my perfect win, L"),
+        Right: Abil1,
+    },
+    keyboard_bindings: {
+        C: Command("watchme 5. 2. 0."),
+        F: Abil3,
+        P: Command("sayto SinzAnn I know who you are, little gay"),
+        D: Right,
+        Tab: ToggleInspector,
+        S: Back,
+        Space: Jump,
+        LShift: Sprint,
+        X: Command("watchme"),
+        T: Command("spawn soul dark"),
+        W: Forward,
+        Q: Abil2,
+        E: Ult,
+        A: Left,
+    },
+)

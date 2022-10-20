@@ -1,0 +1,32 @@
+(
+    sprint_duration: 2.0,
+    marks: (
+        max_amount: 5,
+        rotation_offset: 81.8,
+        distance: 0.9,
+        animation_delay: 0.6,
+    ),
+    shield_cd: 16.1,
+    sprint_cd: 3.0,
+    reload: 2.0,
+    crosshair: (
+        to_attack_duration: 0.6,
+        to_idle_duration: 0.5,
+        to_pointing_duration: 0.6,
+    ),
+    config: (
+        character_name: "Jacqueline",
+        max_hp: 500,
+        max_jump_height: 7.8,
+        max_velocity: 15.0,
+        weight: 2.0,
+        acceleration: 1000.0,
+        fire_rate: 1.4,
+        ammo_capacity: 20,
+        head_ride_height: 0.4,
+        intersections_shape: (radius: 4.0, toi: 123.0, source_distance: 0.0),
+        pointing_shape: (radius: 2.0, toi: 13.2, source_distance: 1.0),
+        pointing_ray_toi: 40.0,
+        camera: (shake_ampl: 0.03, shake_rate: 15.0, roll_angle: 0.0, roll_in_time: 0.0, roll_out_time: 0.0),
+    ),
+)

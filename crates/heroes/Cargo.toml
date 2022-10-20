@@ -1,0 +1,23 @@
+[package]
+name = "heroes"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bevy_mod_picking = "0.8.0"
+
+bevy_rapier3d = { version = "0.17" , features = [ "enhanced-determinism", "debug-render" ] }
+bevy = { version = "0.8.0" }
+serde = "1.0.137"
+serde_json = "1.0.81"
+#bevy-inspector-egui = { path = "../bevy-inspector-egui" }
+bevy-inspector-egui = "0.13"
+bevy_prototype_debug_lines = { version = "0.8", features = ["3d"] }
+bevy_debug_shapes = { path = "../bevy_debug_shapes" }
+synx = { path = "../synx" }
+clamped = "1.0.0"
+round = "0.1.2"
+bevy_atmosphere = "0.4.0"
+actions = { path = "../actions"}
